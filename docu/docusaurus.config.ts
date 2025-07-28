@@ -98,14 +98,7 @@ const config: Config = {
               label: 'Getting Started',
               to: '/docs/intro',
             },
-            {
-              label: 'CLI Usage',
-              to: '/docs/cli-usage',
-            },
-            {
-              label: 'Available Templates',
-              to: '/docs/available-templates',
-            },
+            
           ],
         },
         {
