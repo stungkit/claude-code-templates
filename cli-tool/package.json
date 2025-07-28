@@ -1,6 +1,6 @@
 {
   "name": "claude-code-templates",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "CLI tool to setup Claude Code configurations with framework-specific commands, automation hooks and MCP Servers for your projects",
   "main": "src/index.js",
   "bin": {
@@ -31,7 +31,6 @@
     "dev:link": "npm link",
     "dev:unlink": "npm unlink -g claude-code-templates",
     "pretest:commands": "npm run dev:link",
-    "prepublishOnly": "npm run test:coverage",
     "analytics:start": "node src/analytics.js",
     "analytics:test": "npm run test:analytics"
   },
