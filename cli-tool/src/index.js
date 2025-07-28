@@ -8,6 +8,7 @@ const { getTemplateConfig, TEMPLATES_CONFIG } = require('./templates');
 const { createPrompts, interactivePrompts } = require('./prompts');
 const { copyTemplateFiles, runPostInstallationValidation } = require('./file-operations');
 const { getHooksForLanguage, getMCPsForLanguage } = require('./hook-scanner');
+const { installAgents } = require('./agents');
 const { runCommandStats } = require('./command-stats');
 const { runHookStats } = require('./hook-stats');
 const { runMCPStats } = require('./mcp-stats');
@@ -15,7 +16,6 @@ const { runAnalytics } = require('./analytics');
 const { runHealthCheck } = require('./health-check');
 
 async function showMainMenu() {
-  console.log(chalk.blue('🚀 Welcome to Claude Code Templates!'));
   console.log('');
   
   const initialChoice = await inquirer.prompt([{
@@ -34,14 +34,14 @@ async function showMainMenu() {
         short: 'Chats Dashboard'
       },
       {
-        name: '🔍 Health Check - Verify your Claude Code setup and configuration',
-        value: 'health',
-        short: 'Health Check'
-      },
-      {
         name: '⚙️ Project Setup - Configure Claude Code for your project',
         value: 'setup',
         short: 'Project Setup'
+      },
+      {
+        name: '🔍 Health Check - Verify your Claude Code setup and configuration',
+        value: 'health',
+        short: 'Health Check'
       }
     ],
     default: 'analytics'
@@ -193,6 +193,12 @@ async function createClaudeConfig(options = {}) {
     templateConfig.language = config.language; // Ensure language is available for MCP filtering
   }
   
+  // Install selected agents
+  if (config.agents && config.agents.length > 0) {
+    console.log(chalk.blue('🤖 Installing Claude Code agents...'));
+    await installAgents(config.agents, targetDir);
+  }
+  
   if (options.dryRun) {
     console.log(chalk.yellow('🔍 Dry run - showing what would be copied:'));
     templateConfig.files.forEach(file => {
@@ -223,6 +229,7 @@ async function createClaudeConfig(options = {}) {
   console.log(chalk.white('  3. Start using Claude Code with: claude'));
   console.log('');
   console.log(chalk.blue('🌐 View all available templates at: https://davila7.github.io/claude-code-templates/'));
+  console.log(chalk.blue('📖 Read the complete documentation at: https://davila7.github.io/claude-code-templates/docu/'));
   
   if (config.language !== 'common') {
     console.log(chalk.yellow(`💡 Language-specific features for ${config.language} have been configured`));
