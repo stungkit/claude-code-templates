@@ -1,12 +1,15 @@
 {
   "total_downloads": 0,
   "downloads_by_type": {
-    "template": 0,
     "agent": 0,
     "command": 0,
-    "mcp": 0
+    "mcp": 0,
+    "template": 0,
+    "health-check": 0,
+    "analytics": 0
   },
   "downloads_by_component": {},
-  "last_updated": "2025-01-30T00:00:00.000Z",
-  "generated_at": "2025-01-30T00:00:00.000Z"
+  "downloads_by_date": {},
+  "last_updated": "2025-07-31T16:58:31.615Z",
+  "data_points": 0
 }
