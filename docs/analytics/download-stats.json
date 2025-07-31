@@ -1,12 +1,20 @@
 {
-  "total_downloads": 0,
+  "total_downloads": 1,
   "downloads_by_type": {
-    "template": 0,
-    "agent": 0,
+    "agent": 1,
     "command": 0,
-    "mcp": 0
+    "mcp": 0,
+    "template": 0,
+    "health-check": 0,
+    "analytics": 0
   },
-  "downloads_by_component": {},
-  "last_updated": "2025-01-30T00:00:00.000Z",
-  "generated_at": "2025-01-30T00:00:00.000Z"
+  "downloads_by_component": {
+    "api-security-audit": 1
+  },
+  "downloads_by_date": {
+    "2025-07-31": 1
+  },
+  "last_updated": "$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")",
+  "data_points": 1,
+  "tracking_method": "github_pages"
 }
