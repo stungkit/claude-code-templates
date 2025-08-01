@@ -1,21 +1,15 @@
 {
-  "total_downloads": 2,
+  "total_downloads": 0,
   "downloads_by_type": {
-    "agent": 2,
+    "agent": 0,
     "command": 0,
     "mcp": 0,
     "template": 0,
     "health-check": 0,
     "analytics": 0
   },
-  "downloads_by_component": {
-    "api-security-audit": 1,
-    "database-optimization": 1
-  },
-  "downloads_by_date": {
-    "2025-07-31": 2
-  },
-  "last_updated": "2025-07-31T23:06:21.000Z",
-  "data_points": 2,
-  "tracking_method": "github_pages"
+  "downloads_by_component": {},
+  "downloads_by_date": {},
+  "last_updated": "2025-08-01T12:02:43.145Z",
+  "data_points": 0
 }
