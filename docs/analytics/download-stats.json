@@ -1,7 +1,7 @@
 {
-  "total_downloads": 9,
+  "total_downloads": 10,
   "downloads_by_type": {
-    "agent": 7,
+    "agent": 8,
     "command": 1,
     "mcp": 1,
     "template": 0,
@@ -9,16 +9,16 @@
     "analytics": 0
   },
   "downloads_by_component": {
-    "api-security-audit": 6,
+    "api-security-audit": 7,
     "database-optimization": 1,
     "generate-tests": 1,
     "database-connector": 1
   },
   "downloads_by_date": {
     "2025-07-31": 2,
-    "2025-08-01": 7
+    "2025-08-01": 8
   },
-  "last_updated": "2025-08-01T12:28:45.236Z",
-  "data_points": 9,
-  "tracking_method": "simple_increment"
+  "last_updated": "2025-08-01T12:56:30.486Z",
+  "data_points": 10,
+  "tracking_method": "workflow_dispatch"
 }
