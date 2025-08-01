@@ -985,18 +985,28 @@ let componentsData = {
 };
 
 let currentFilter = 'agents';
+let currentCategoryFilter = 'all';
 let allDataLoaded = false;
 let downloadStats = null;
+let availableCategories = {
+    agents: new Set(),
+    commands: new Set(),
+    mcps: new Set()
+};
 
 // Unified filter functionality
 function setUnifiedFilter(filter) {
     currentFilter = filter;
+    currentCategoryFilter = 'all'; // Reset category filter when changing main filter
     
     // Update filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+    const targetFilterBtn = document.querySelector(`[data-filter="${filter}"]`);
+    if (targetFilterBtn) {
+        targetFilterBtn.classList.add('active');
+    }
     
     // Load and display content
     if (filter === 'templates') {
@@ -1005,6 +1015,26 @@ function setUnifiedFilter(filter) {
         loadAndDisplayComponents();
     }
 }
+
+// Set category filter
+function setCategoryFilter(category) {
+    currentCategoryFilter = category;
+    
+    // Update category filter buttons
+    document.querySelectorAll('.category-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const targetBtn = document.querySelector(`[data-category="${category}"]`);
+    if (targetBtn) {
+        targetBtn.classList.add('active');
+    }
+    
+    // Regenerate the component display
+    generateUnifiedComponentCards();
+}
+
+// Make setCategoryFilter available globally
+window.setCategoryFilter = setCategoryFilter;
 
 // Display templates (existing functionality)
 function displayTemplates() {
@@ -1047,6 +1077,9 @@ async function loadAllComponentsData() {
         const mcpsData = await loadComponentType('mcps');
         componentsData.mcps = mcpsData;
         
+        // Collect available categories
+        collectAvailableCategories();
+        
         allDataLoaded = true;
         
     } catch (error) {
@@ -1062,10 +1095,61 @@ async function loadAllComponentsData() {
     }
 }
 
+// Update category sub-filters in the unified-filter-bar
+function updateCategorySubFilters() {
+    const unifiedFilterBar = document.querySelector('.unified-filter-bar');
+    
+    // Remove existing category filters
+    const existingCategoryFilters = unifiedFilterBar.querySelector('.category-filter-row');
+    if (existingCategoryFilters) {
+        existingCategoryFilters.remove();
+    }
+    
+    // Get categories for current filter type
+    const currentCategories = Array.from(availableCategories[currentFilter] || []).sort();
+    
+    if (currentCategories.length <= 1 || currentFilter === 'templates') {
+        // Don't show sub-filters if there's only one category, none, or templates
+        return;
+    }
+    
+    // Create category filter row
+    const categoryFilterRow = document.createElement('div');
+    categoryFilterRow.className = 'category-filter-row';
+    categoryFilterRow.innerHTML = `
+        <div class="category-filter-label">Categories:</div>
+        <div class="category-filter-buttons">
+            <button class="category-filter-btn ${currentCategoryFilter === 'all' ? 'active' : ''}" 
+                    data-category="all">
+                All
+            </button>
+            ${currentCategories.map(category => `
+                <button class="category-filter-btn ${currentCategoryFilter === category ? 'active' : ''}" 
+                        data-category="${category}">
+                    ${formatComponentName(category)}
+                </button>
+            `).join('')}
+        </div>
+    `;
+    
+    // Add click event listeners
+    categoryFilterRow.querySelectorAll('.category-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setCategoryFilter(btn.getAttribute('data-category'));
+        });
+    });
+    
+    // Append to unified filter bar
+    unifiedFilterBar.appendChild(categoryFilterRow);
+}
+
 // Generate unified component cards
 function generateUnifiedComponentCards() {
     const unifiedGrid = document.getElementById('unifiedGrid');
     unifiedGrid.innerHTML = '';
+    
+    // Update category sub-filters in the unified-filter-bar
+    updateCategorySubFilters();
     
     // Get filtered components
     const filteredComponents = getFilteredComponents();
@@ -1090,50 +1174,68 @@ function generateUnifiedComponentCards() {
 function updateFilterCount() {
     const filterBtn = document.querySelector(`[data-filter="${currentFilter}"]`);
     if (filterBtn && currentFilter !== 'templates') {
-        const count = componentsData[currentFilter].length;
-        const originalText = filterBtn.textContent.split('(')[0].trim();
-        filterBtn.textContent = `${originalText} (${count})`;
+        const components = componentsData[currentFilter];
+        if (components && Array.isArray(components)) {
+            const count = components.length;
+            const originalText = filterBtn.textContent.split('(')[0].trim();
+            filterBtn.textContent = `${originalText} (${count})`;
+        }
     }
 }
 
-// Get filtered components based on current filter
+// Get filtered components based on current filter and category filter
 function getFilteredComponents() {
     if (currentFilter === 'templates') {
         return [];
     }
-    return componentsData[currentFilter] || [];
+    
+    let components = componentsData[currentFilter] || [];
+    
+    // Apply category filter if not 'all'
+    if (currentCategoryFilter !== 'all') {
+        components = components.filter(component => {
+            const category = component.category || 'general';
+            return category === currentCategoryFilter;
+        });
+    }
+    
+    return components;
+}
+
+// Collect available categories from loaded components
+function collectAvailableCategories() {
+    // Reset categories
+    availableCategories.agents.clear();
+    availableCategories.commands.clear();
+    availableCategories.mcps.clear();
+    
+    // Collect categories from each component type
+    if (componentsData.agents && Array.isArray(componentsData.agents)) {
+        componentsData.agents.forEach(component => {
+            const category = component.category || 'general';
+            availableCategories.agents.add(category);
+        });
+    }
+    
+    if (componentsData.commands && Array.isArray(componentsData.commands)) {
+        componentsData.commands.forEach(component => {
+            const category = component.category || 'general';  
+            availableCategories.commands.add(category);
+        });
+    }
+    
+    if (componentsData.mcps && Array.isArray(componentsData.mcps)) {
+        componentsData.mcps.forEach(component => {
+            const category = component.category || 'general';
+            availableCategories.mcps.add(category);
+        });
+    }
 }
 
 // Load components data from GitHub (legacy function for compatibility)
 async function loadComponentsData() {
-    const componentsGrid = document.getElementById('componentsGrid');
-    componentsGrid.innerHTML = '<div class="loading">Loading components from GitHub...</div>';
-    
-    try {
-        // Load agents
-        const agentsData = await loadComponentType('agents');
-        componentsData.agents = agentsData;
-        
-        // Load commands  
-        const commandsData = await loadComponentType('commands');
-        componentsData.commands = commandsData;
-        
-        // Load MCPs
-        const mcpsData = await loadComponentType('mcps');
-        componentsData.mcps = mcpsData;
-        
-        generateComponentCards();
-        
-    } catch (error) {
-        console.error('Error loading components:', error);
-        componentsGrid.innerHTML = `
-            <div class="error-message">
-                <h3>Error loading components</h3>
-                <p>Could not fetch components from GitHub. Please try again later.</p>
-                <button onclick="loadComponentsData()" class="retry-btn">Retry</button>
-            </div>
-        `;
-    }
+    // Redirect to unified loading function
+    await loadAndDisplayComponents();
 }
 
 // Load specific component type from GitHub
@@ -1147,6 +1249,7 @@ async function loadComponentType(type) {
         const files = await response.json();
         const componentPromises = files.map(async (file) => {
             if (file.name.endsWith('.md') || file.name.endsWith('.json')) {
+                // Direct file in root level
                 const contentResponse = await fetch(file.download_url);
                 const content = await contentResponse.text();
                 
@@ -1155,14 +1258,47 @@ async function loadComponentType(type) {
                     type: type,
                     filename: file.name,
                     content: content,
-                    url: file.html_url
+                    url: file.html_url,
+                    category: null // No category for root level components
                 };
+            } else if (file.type === 'dir') {
+                // Handle subdirectories for all component types (categories)
+                try {
+                    const categoryResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/cli-tool/components/${type}/${file.name}`);
+                    if (categoryResponse.ok) {
+                        const categoryFiles = await categoryResponse.json();
+                        const categoryComponentPromises = categoryFiles.map(async (categoryFile) => {
+                            if (categoryFile.name.endsWith('.md') || categoryFile.name.endsWith('.json')) {
+                                const contentResponse = await fetch(categoryFile.download_url);
+                                const content = await contentResponse.text();
+                                
+                                return {
+                                    name: `${file.name}/${categoryFile.name.replace(/\.(md|json)$/, '')}`,
+                                    type: type,
+                                    filename: categoryFile.name,
+                                    content: content,
+                                    url: categoryFile.html_url,
+                                    category: file.name
+                                };
+                            }
+                            return null;
+                        });
+                        
+                        const categoryComponents = await Promise.all(categoryComponentPromises);
+                        return categoryComponents.filter(c => c !== null);
+                    }
+                } catch (error) {
+                    console.warn(`Warning: Could not load category ${file.name}:`, error);
+                    return [];
+                }
             }
             return null;
         });
         
-        const components = await Promise.all(componentPromises);
-        return components.filter(c => c !== null);
+        const componentsNested = await Promise.all(componentPromises);
+        // Flatten the array since subdirectories return arrays
+        const components = componentsNested.flat().filter(c => c !== null);
+        return components;
         
     } catch (error) {
         console.error(`Error loading ${type}:`, error);
@@ -1252,13 +1388,6 @@ function setComponentFilter(filter) {
     generateComponentCards();
 }
 
-// Get filtered components based on current filter
-function getFilteredComponents() {
-    if (currentFilter === 'all') {
-        return [...componentsData.agents, ...componentsData.commands, ...componentsData.mcps];
-    }
-    return componentsData[currentFilter] || [];
-}
 
 // Create Add Component card
 function createAddComponentCard(type) {
@@ -1329,10 +1458,15 @@ function createComponentCard(component) {
     const downloadCount = getDownloadCount(component.name, component.type);
     const downloadBadge = createDownloadBadge(downloadCount);
     
+    // Create category label for all components (use "General" if no category)
+    const categoryName = component.category || 'general';
+    const categoryLabel = `<div class="category-label">${formatComponentName(categoryName)}</div>`;
+    
     card.innerHTML = `
         <div class="card-inner">
             <div class="card-front">
                 ${downloadBadge}
+                ${categoryLabel}
                 <div class="framework-logo" style="color: ${config.color}">
                     <span class="component-icon">${config.icon}</span>
                 </div>
@@ -1386,6 +1520,15 @@ function getInstallationNotes() {
 
 // Format component name for display
 function formatComponentName(name) {
+    // Handle subcategorized agents (e.g., "deep-research-team/academic-researcher")
+    if (name.includes('/')) {
+        const parts = name.split('/');
+        const actualName = parts[parts.length - 1]; // Get the last part after the slash
+        return actualName
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+    }
+    
     return name
         .replace(/-/g, ' ')
         .replace(/\b\w/g, l => l.toUpperCase());

@@ -50,11 +50,7 @@ MCPs enable Claude Code to interact with external services and tools, expanding 
 
 The **unified web interface** provides an intuitive way to browse and install individual components:
 
-```bash
-# Access the web interface
-npx claude-code-templates@latest
-# Then select "⚙️ Project Setup" → Browse Components
-```
+To access the web interface, simply go to https://aitmpl.com
 
 **Interface Features:**
 - **Unified Filter System**: Browse all component types (Templates, Agents, Commands, MCPs) in a single view

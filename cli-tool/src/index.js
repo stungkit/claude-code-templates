@@ -366,8 +366,16 @@ async function installIndividualCommand(commandName, targetDir, options) {
   console.log(chalk.blue(`⚡ Installing command: ${commandName}`));
   
   try {
-    // Download command directly from GitHub
-    const githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/commands/${commandName}.md`;
+    // Support both category/command-name and direct command-name formats
+    let githubUrl;
+    if (commandName.includes('/')) {
+      // Category/command format: security/vulnerability-scan
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/commands/${commandName}.md`;
+    } else {
+      // Direct command format: check-file
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/commands/${commandName}.md`;
+    }
+    
     console.log(chalk.gray(`📥 Downloading from GitHub (main branch)...`));
     
     const response = await fetch(githubUrl);
@@ -386,8 +394,17 @@ async function installIndividualCommand(commandName, targetDir, options) {
     const commandsDir = path.join(targetDir, '.claude', 'commands');
     await fs.ensureDir(commandsDir);
     
-    // Write the command file
-    const targetFile = path.join(commandsDir, `${commandName}.md`);
+    // Write the command file - preserve folder structure if it exists
+    let targetFile;
+    if (commandName.includes('/')) {
+      const [category, filename] = commandName.split('/');
+      const categoryDir = path.join(commandsDir, category);
+      await fs.ensureDir(categoryDir);
+      targetFile = path.join(categoryDir, `${filename}.md`);
+    } else {
+      targetFile = path.join(commandsDir, `${commandName}.md`);
+    }
+    
     await fs.writeFile(targetFile, commandContent, 'utf8');
     
     console.log(chalk.green(`✅ Command "${commandName}" installed successfully!`));
@@ -410,8 +427,16 @@ async function installIndividualMCP(mcpName, targetDir, options) {
   console.log(chalk.blue(`🔌 Installing MCP: ${mcpName}`));
   
   try {
-    // Download MCP directly from GitHub
-    const githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/mcps/${mcpName}.json`;
+    // Support both category/mcp-name and direct mcp-name formats
+    let githubUrl;
+    if (mcpName.includes('/')) {
+      // Category/mcp format: database/mysql-integration
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/mcps/${mcpName}.json`;
+    } else {
+      // Direct mcp format: web-fetch
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/mcps/${mcpName}.json`;
+    }
+    
     console.log(chalk.gray(`📥 Downloading from GitHub (main branch)...`));
     
     const response = await fetch(githubUrl);

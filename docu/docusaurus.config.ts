@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: '🔮 Claude Code Templates',
+  title: 'Claude Code Templates',
   tagline: 'Documentation for Claude Code Templates - AITMPL Platform',
   favicon: 'img/favicon.ico',
 
@@ -83,7 +83,7 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: '🔮 Claude Code Templates',
+      title: 'Claude Code Templates',
       logo: {
         alt: 'AITMPL Crystal Ball Logo',
         src: 'img/logo.svg',
