@@ -413,12 +413,11 @@ function hideStatisticsSection() {
 
 /**
  * Show statistics section when data is available
+ * Note: Stats section has been moved to dedicated page at /download-stats.html
  */
 function showStatisticsSection() {
-    const statsSection = document.getElementById('downloadStatsSection');
-    if (statsSection) {
-        statsSection.style.display = 'block';
-    }
+    // Stats section removed from main page - no action needed
+    console.log('Stats available at /download-stats.html');
 }
 
 /**
@@ -736,12 +735,11 @@ function hideStatisticsSection() {
 
 /**
  * Show statistics section when data is available
+ * Note: Stats section has been moved to dedicated page at /download-stats.html
  */
 function showStatisticsSection() {
-    const statsSection = document.getElementById('downloadStatsSection');
-    if (statsSection) {
-        statsSection.style.display = 'block';
-    }
+    // Stats section removed from main page - no action needed
+    console.log('Stats available at /download-stats.html');
 }
 
 /**
@@ -1632,12 +1630,11 @@ function hideStatisticsSection() {
 
 /**
  * Show statistics section when data is available
+ * Note: Stats section has been moved to dedicated page at /download-stats.html
  */
 function showStatisticsSection() {
-    const statsSection = document.getElementById('downloadStatsSection');
-    if (statsSection) {
-        statsSection.style.display = 'block';
-    }
+    // Stats section removed from main page - no action needed
+    console.log('Stats available at /download-stats.html');
 }
 
 /**
@@ -1888,12 +1885,11 @@ function hideStatisticsSection() {
 
 /**
  * Show statistics section when data is available
+ * Note: Stats section has been moved to dedicated page at /download-stats.html
  */
 function showStatisticsSection() {
-    const statsSection = document.getElementById('downloadStatsSection');
-    if (statsSection) {
-        statsSection.style.display = 'block';
-    }
+    // Stats section removed from main page - no action needed
+    console.log('Stats available at /download-stats.html');
 }
 
 /**
