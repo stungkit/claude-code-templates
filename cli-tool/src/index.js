@@ -305,15 +305,23 @@ async function installIndividualAgent(agentName, targetDir, options) {
   console.log(chalk.blue(`🤖 Installing agent: ${agentName}`));
   
   try {
-    // Download agent directly from GitHub
-    const githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/agents/${agentName}.md`;
+    // Support both category/agent-name and direct agent-name formats
+    let githubUrl;
+    if (agentName.includes('/')) {
+      // Category/agent format: deep-research-team/academic-researcher
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/agents/${agentName}.md`;
+    } else {
+      // Direct agent format: api-security-audit
+      githubUrl = `https://raw.githubusercontent.com/davila7/claude-code-templates/main/cli-tool/components/agents/${agentName}.md`;
+    }
+    
     console.log(chalk.gray(`📥 Downloading from GitHub (main branch)...`));
     
     const response = await fetch(githubUrl);
     if (!response.ok) {
       if (response.status === 404) {
         console.log(chalk.red(`❌ Agent "${agentName}" not found`));
-        console.log(chalk.yellow('Available agents: api-security-audit, database-optimization, react-performance-optimization'));
+        await showAvailableAgents();
         return;
       }
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -325,8 +333,17 @@ async function installIndividualAgent(agentName, targetDir, options) {
     const agentsDir = path.join(targetDir, '.claude', 'agents');
     await fs.ensureDir(agentsDir);
     
-    // Write the agent file
-    const targetFile = path.join(agentsDir, `${agentName}.md`);
+    // Write the agent file - preserve folder structure if it exists
+    let targetFile;
+    if (agentName.includes('/')) {
+      const [category, filename] = agentName.split('/');
+      const categoryDir = path.join(agentsDir, category);
+      await fs.ensureDir(categoryDir);
+      targetFile = path.join(categoryDir, `${filename}.md`);
+    } else {
+      targetFile = path.join(agentsDir, `${agentName}.md`);
+    }
+    
     await fs.writeFile(targetFile, agentContent, 'utf8');
     
     console.log(chalk.green(`✅ Agent "${agentName}" installed successfully!`));
@@ -478,6 +495,94 @@ function extractFrameworkFromAgent(content, agentName) {
   
   // For general agents, return none to install the base template
   return 'none';
+}
+
+/**
+ * Fetch available agents dynamically from GitHub repository
+ */
+async function getAvailableAgentsFromGitHub() {
+  try {
+    const response = await fetch('https://api.github.com/repos/davila7/claude-code-templates/contents/cli-tool/components/agents');
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+    
+    const contents = await response.json();
+    const agents = [];
+    
+    for (const item of contents) {
+      if (item.type === 'file' && item.name.endsWith('.md')) {
+        // Direct agent file
+        agents.push({
+          name: item.name.replace('.md', ''),
+          path: item.name.replace('.md', ''),
+          category: 'root'
+        });
+      } else if (item.type === 'dir') {
+        // Category directory, fetch its contents
+        try {
+          const categoryResponse = await fetch(`https://api.github.com/repos/davila7/claude-code-templates/contents/cli-tool/components/agents/${item.name}`);
+          if (categoryResponse.ok) {
+            const categoryContents = await categoryResponse.json();
+            for (const categoryItem of categoryContents) {
+              if (categoryItem.type === 'file' && categoryItem.name.endsWith('.md')) {
+                agents.push({
+                  name: categoryItem.name.replace('.md', ''),
+                  path: `${item.name}/${categoryItem.name.replace('.md', '')}`,
+                  category: item.name
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.warn(`Warning: Could not fetch category ${item.name}:`, error.message);
+        }
+      }
+    }
+    
+    return agents;
+  } catch (error) {
+    console.warn('Warning: Could not fetch agents from GitHub, using fallback list');
+    // Fallback to basic list if GitHub API fails
+    return [
+      { name: 'api-security-audit', path: 'api-security-audit', category: 'root' },
+      { name: 'database-optimization', path: 'database-optimization', category: 'root' },
+      { name: 'react-performance-optimization', path: 'react-performance-optimization', category: 'root' }
+    ];
+  }
+}
+
+/**
+ * Show available agents organized by category
+ */
+async function showAvailableAgents() {
+  console.log(chalk.yellow('\n📋 Available Agents:'));
+  console.log(chalk.gray('Use format: category/agent-name or just agent-name for root level\n'));
+  console.log(chalk.gray('⏳ Fetching latest agents from GitHub...\n'));
+  
+  const agents = await getAvailableAgentsFromGitHub();
+  
+  // Group agents by category
+  const groupedAgents = agents.reduce((acc, agent) => {
+    const category = agent.category === 'root' ? '🤖 General Agents' : `📁 ${agent.category}`;
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(agent);
+    return acc;
+  }, {});
+  
+  // Display agents by category
+  Object.entries(groupedAgents).forEach(([category, categoryAgents]) => {
+    console.log(chalk.cyan(category));
+    categoryAgents.forEach(agent => {
+      console.log(chalk.gray(`  • ${agent.path}`));
+    });
+    console.log('');
+  });
+  
+  console.log(chalk.blue('Examples:'));
+  console.log(chalk.gray('  cct --agent api-security-audit'));
+  console.log(chalk.gray('  cct --agent deep-research-team/academic-researcher'));
+  console.log('');
 }
 
 module.exports = { createClaudeConfig, showMainMenu };
