@@ -419,11 +419,19 @@ async function installIndividualMCP(mcpName, targetDir, options) {
       console.log(chalk.yellow('📝 Existing .mcp.json found, merging configurations...'));
     }
     
-    // Merge configurations
+    // Merge configurations with deep merge for mcpServers
     const mergedConfig = {
       ...existingConfig,
       ...mcpConfig
     };
+    
+    // Deep merge mcpServers specifically to avoid overwriting existing servers
+    if (existingConfig.mcpServers && mcpConfig.mcpServers) {
+      mergedConfig.mcpServers = {
+        ...existingConfig.mcpServers,
+        ...mcpConfig.mcpServers
+      };
+    }
     
     // Write the merged configuration
     await fs.writeJson(targetMcpFile, mergedConfig, { spaces: 2 });
