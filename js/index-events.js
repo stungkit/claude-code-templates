@@ -413,7 +413,7 @@ class IndexPageManager {
                         </div>
                         <h3 class="template-title">${this.formatComponentName(component.name)}</h3>
                         ${component.type === 'mcp' ? 
-                            `<p class="template-description">${component.description || 'MCP integration for enhanced development workflow'}</p>` : 
+                            `<p class="template-description">${this.truncateDescription(component.description || 'MCP integration for enhanced development workflow', 80)}</p>` : 
                             `<p class="template-description">${this.getComponentDescription(component)}</p>`
                         }
                     </div>
@@ -472,6 +472,12 @@ class IndexPageManager {
 
     formatComponentName(name) {
         return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
+    truncateDescription(description, maxLength = 80) {
+        if (!description) return '';
+        if (description.length <= maxLength) return description;
+        return description.substring(0, maxLength).trim() + '...';
     }
 
     getComponentDescription(component) {

@@ -993,48 +993,48 @@
       "path": "database/mysql-integration.json",
       "category": "database",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"mysql\": {\n      \"command\": \"uvx\",\n      \"args\": [\"mcp-server-mysql\"],\n      \"env\": {\n        \"MYSQL_CONNECTION_STRING\": \"mysql://user:password@localhost:3306/dbname\"\n      }\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"mysql\": {\n      \"description\": \"Connect to MySQL databases for direct data access, queries, and database management within Claude Code workflows.\",\n      \"command\": \"uvx\",\n      \"args\": [\"mcp-server-mysql\"],\n      \"env\": {\n        \"MYSQL_CONNECTION_STRING\": \"mysql://user:password@localhost:3306/dbname\"\n      }\n    }\n  }\n}",
+      "description": "Connect to MySQL databases for direct data access, queries, and database management within Claude Code workflows."
     },
     {
       "name": "postgresql-integration",
       "path": "database/postgresql-integration.json",
       "category": "database",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"postgresql\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-postgres\"],\n      \"env\": {\n        \"POSTGRES_CONNECTION_STRING\": \"postgresql://user:password@localhost:5432/dbname\"\n      }\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"postgresql\": {\n      \"description\": \"Connect to PostgreSQL databases for advanced data operations, complex queries, and enterprise database management.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-postgres\"],\n      \"env\": {\n        \"POSTGRES_CONNECTION_STRING\": \"postgresql://user:password@localhost:5432/dbname\"\n      }\n    }\n  }\n}",
+      "description": "Connect to PostgreSQL databases for advanced data operations, complex queries, and enterprise database management."
     },
     {
       "name": "deepgraph-nextjs",
       "path": "deepgraph/deepgraph-nextjs.json",
       "category": "deepgraph",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Next.js MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vercel/next.js\"\n      ]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Next.js MCP\": {\n      \"description\": \"Deep code analysis and visualization for Next.js projects. Understand component relationships, dependencies, and architecture patterns.\",\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vercel/next.js\"\n      ]\n    }\n  }\n}",
+      "description": "Deep code analysis and visualization for Next.js projects. Understand component relationships, dependencies, and architecture patterns."
     },
     {
       "name": "deepgraph-react",
       "path": "deepgraph/deepgraph-react.json",
       "category": "deepgraph",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph React MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"facebook/react\"\n      ]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph React MCP\": {\n      \"description\": \"Analyze React component hierarchies, state flows, and dependencies. Visualize your React application architecture.\",\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"facebook/react\"\n      ]\n    }\n  }\n}",
+      "description": "Analyze React component hierarchies, state flows, and dependencies. Visualize your React application architecture."
     },
     {
       "name": "deepgraph-typescript",
       "path": "deepgraph/deepgraph-typescript.json",
       "category": "deepgraph",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph TypeScript MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"microsoft/TypeScript\"\n      ]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph TypeScript MCP\": {\n      \"description\": \"Comprehensive TypeScript code analysis with type mapping, interface relationships, and module dependency tracking.\",\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"microsoft/TypeScript\"\n      ]\n    }\n  }\n}",
+      "description": "Comprehensive TypeScript code analysis with type mapping, interface relationships, and module dependency tracking."
     },
     {
       "name": "deepgraph-vue",
       "path": "deepgraph/deepgraph-vue.json",
       "category": "deepgraph",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Vue MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vuejs/core\"\n      ]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Vue MCP\": {\n      \"description\": \"Analyze Vue.js applications including component composition, reactive data flow, and template-script relationships.\",\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vuejs/core\"\n      ]\n    }\n  }\n}",
+      "description": "Analyze Vue.js applications including component composition, reactive data flow, and template-script relationships."
     },
     {
       "name": "cicleci",
@@ -1073,40 +1073,40 @@
       "path": "devtools/mcp-server-atlassian-bitbucket.json",
       "category": "devtools",
       "type": "mcp",
-      "content": "{\n\t\"mcpServers\": {\n        \"description\": \"A Node.js/TypeScript Model Context Protocol (MCP) server for Atlassian Bitbucket Cloud. Enables AI systems (e.g., LLMs like Claude or Cursor AI) to securely interact with your repositories, pull requests, workspaces, and code in real time.\",\n\t\t\"bitbucket\": {\n\t\t\t\"command\": \"npx\",\n\t\t\t\"args\": [\"-y\", \"@aashari/mcp-server-atlassian-bitbucket\"]\n\t\t}\n\t}\n}",
-      "description": ""
+      "content": "{\n\t\"mcpServers\": {\n\t\t\"bitbucket\": {\n            \"description\": \"A Node.js/TypeScript Model Context Protocol (MCP) server for Atlassian Bitbucket Cloud. Enables AI systems (e.g., LLMs like Claude or Cursor AI) to securely interact with your repositories, pull requests, workspaces, and code in real time.\",\n\t\t\t\"command\": \"npx\",\n\t\t\t\"args\": [\"-y\", \"@aashari/mcp-server-atlassian-bitbucket\"]\n\t\t}\n\t}\n}",
+      "description": "A Node.js/TypeScript Model Context Protocol (MCP) server for Atlassian Bitbucket Cloud. Enables AI systems (e.g., LLMs like Claude or Cursor AI) to securely interact with your repositories, pull requests, workspaces, and code in real time."
     },
     {
       "name": "filesystem-access",
       "path": "filesystem/filesystem-access.json",
       "category": "filesystem",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"filesystem\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"@modelcontextprotocol/server-filesystem\",\n        \"/path/to/allowed/files\"\n      ]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"filesystem\": {\n      \"description\": \"Secure filesystem access for Claude Code with configurable directory permissions and file operations.\",\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"@modelcontextprotocol/server-filesystem\",\n        \"/path/to/allowed/files\"\n      ]\n    }\n  }\n}",
+      "description": "Secure filesystem access for Claude Code with configurable directory permissions and file operations."
     },
     {
       "name": "github-integration",
       "path": "integration/github-integration.json",
       "category": "integration",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"github\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-github\"],\n      \"env\": {\n        \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"<YOUR_TOKEN>\"\n      }\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"github\": {\n      \"description\": \"Direct GitHub API integration for repository management, issue tracking, pull requests, and collaborative development workflows.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-github\"],\n      \"env\": {\n        \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"<YOUR_TOKEN>\"\n      }\n    }\n  }\n}",
+      "description": "Direct GitHub API integration for repository management, issue tracking, pull requests, and collaborative development workflows."
     },
     {
       "name": "memory-integration",
       "path": "integration/memory-integration.json",
       "category": "integration",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"memory\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-memory\"]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"memory\": {\n      \"description\": \"Persistent memory and context management for Claude Code sessions. Store and recall information across conversations and projects.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-memory\"]\n    }\n  }\n}",
+      "description": "Persistent memory and context management for Claude Code sessions. Store and recall information across conversations and projects."
     },
     {
       "name": "web-fetch",
       "path": "web/web-fetch.json",
       "category": "web",
       "type": "mcp",
-      "content": "{\n  \"mcpServers\": {\n    \"fetch\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-fetch\"]\n    }\n  }\n}",
-      "description": ""
+      "content": "{\n  \"mcpServers\": {\n    \"fetch\": {\n      \"description\": \"Web content fetching and data extraction capabilities. Access external APIs, scrape web content, and integrate external data sources.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-fetch\"]\n    }\n  }\n}",
+      "description": "Web content fetching and data extraction capabilities. Access external APIs, scrape web content, and integrate external data sources."
     }
   ],
   "templates": [

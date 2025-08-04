@@ -70,7 +70,7 @@ function createComponentModalHTML(component) {
                 </div>
                 <div class="modal-body">
                     <div class="component-details">
-                        ${component.type !== 'mcp' ? `<div class="component-description">${description}</div>` : ''}
+                        <div class="component-description">${component.type === 'mcp' ? (component.description || description) : description}</div>
                         
                         <div class="installation-section">
                             <h4>📦 Installation</h4>
