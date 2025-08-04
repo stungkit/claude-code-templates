@@ -409,7 +409,10 @@ class IndexPageManager {
                             <span class="component-icon">${config.icon}</span>
                         </div>
                         <h3 class="template-title">${this.formatComponentName(component.name)}</h3>
-                        ${component.type !== 'mcp' ? `<p class="template-description">${this.getComponentDescription(component)}</p>` : ''}
+                        ${component.type === 'mcp' ? 
+                            `<p class="template-description">${component.description || 'MCP integration for enhanced development workflow'}</p>` : 
+                            `<p class="template-description">${this.getComponentDescription(component)}</p>`
+                        }
                     </div>
                     <div class="card-back">
                         <div class="command-display">
