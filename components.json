@@ -908,6 +908,37 @@
       "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Vue MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vuejs/core\"\n      ]\n    }\n  }\n}"
     },
     {
+<<<<<<< HEAD
+      "name": "cicleci",
+      "path": "devtools/cicleci.json",
+      "category": "devtools",
+      "type": "mcp",
+      "content": "{\n  \"mcpServers\": {\n    \"circleci-mcp-server\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@circleci/mcp-server-circleci\"],\n      \"env\": {\n        \"CIRCLECI_TOKEN\": \"your-circleci-token\",\n        \"CIRCLECI_BASE_URL\": \"https://circleci.com\"\n      }\n    }\n  }\n}"
+    },
+    {
+      "name": "firefly-mcp",
+      "path": "devtools/firefly-mcp.json",
+      "category": "devtools",
+      "type": "mcp",
+      "content": "{\n  \"mcpServers\": {\n    \"firefly\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@fireflyai/firefly-mcp\"],\n      \"env\": {\n        \"FIREFLY_ACCESS_KEY\": \"your_access_key\",\n        \"FIREFLY_SECRET_KEY\": \"your_secret_key\"\n      }\n    }\n  }\n}"
+    },
+    {
+      "name": "ios-simulator-mcp",
+      "path": "devtools/ios-simulator-mcp.json",
+      "category": "devtools",
+      "type": "mcp",
+      "content": "{\n  \"mcpServers\": {\n    \"ios-simulator\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"ios-simulator-mcp\"]\n    }\n  }\n}"
+    },
+    {
+      "name": "just-mcp",
+      "path": "devtools/just-mcp.json",
+      "category": "devtools",
+      "type": "mcp",
+      "content": "{\n  \"mcpServers\": {\n    \"just-mcp\": {\n      \"command\": \"/path/to/just-mcp\",\n      \"args\": [\"--stdio\"]\n    }\n  }\n}"
+    },
+    {
+=======
+>>>>>>> e9b18ba38e9e9abb35381aa3ad3baaa7497ca5ac
       "name": "filesystem-access",
       "path": "filesystem/filesystem-access.json",
       "category": "filesystem",
