@@ -1041,7 +1041,7 @@
       "path": "devtools/cicleci.json",
       "category": "devtools",
       "type": "mcp",
-      "content": "{\n  \"description\": \"Integrate CircleCI build and deployment pipeline management with your Claude Code workflow. Monitor builds, trigger deployments, and access project insights.\",\n  \"mcpServers\": {\n    \"circleci-mcp-server\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@circleci/mcp-server-circleci\"],\n      \"env\": {\n        \"CIRCLECI_TOKEN\": \"your-circleci-token\",\n        \"CIRCLECI_BASE_URL\": \"https://circleci.com\"\n      }\n    }\n  }\n}",
+      "content": "{\n  \"mcpServers\": {\n    \"circleci-mcp-server\": {\n      \"description\": \"Integrate CircleCI build and deployment pipeline management with your Claude Code workflow. Monitor builds, trigger deployments, and access project insights.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@circleci/mcp-server-circleci\"],\n      \"env\": {\n        \"CIRCLECI_TOKEN\": \"your-circleci-token\",\n        \"CIRCLECI_BASE_URL\": \"https://circleci.com\"\n      }\n    }\n  }\n}",
       "description": "Integrate CircleCI build and deployment pipeline management with your Claude Code workflow. Monitor builds, trigger deployments, and access project insights."
     },
     {
@@ -1049,7 +1049,7 @@
       "path": "devtools/firefly-mcp.json",
       "category": "devtools",
       "type": "mcp",
-      "content": "{\n  \"description\": \"Connect to Firefly AI services for advanced AI-powered development assistance, code analysis, and intelligent suggestions directly in your Claude Code environment.\",\n  \"mcpServers\": {\n    \"firefly\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@fireflyai/firefly-mcp\"],\n      \"env\": {\n        \"FIREFLY_ACCESS_KEY\": \"your_access_key\",\n        \"FIREFLY_SECRET_KEY\": \"your_secret_key\"\n      }\n    }\n  }\n}",
+      "content": "{\n  \"mcpServers\": {\n    \"firefly\": {\n      \"description\": \"Connect to Firefly AI services for advanced AI-powered development assistance, code analysis, and intelligent suggestions directly in your Claude Code environment.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@fireflyai/firefly-mcp\"],\n      \"env\": {\n        \"FIREFLY_ACCESS_KEY\": \"your_access_key\",\n        \"FIREFLY_SECRET_KEY\": \"your_secret_key\"\n      }\n    }\n  }\n}",
       "description": "Connect to Firefly AI services for advanced AI-powered development assistance, code analysis, and intelligent suggestions directly in your Claude Code environment."
     },
     {
@@ -1057,7 +1057,7 @@
       "path": "devtools/ios-simulator-mcp.json",
       "category": "devtools",
       "type": "mcp",
-      "content": "{\n  \"description\": \"Control iOS Simulator directly from Claude Code. Launch apps, take screenshots, manage device states, and streamline mobile development workflows.\",\n  \"mcpServers\": {\n    \"ios-simulator\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"ios-simulator-mcp\"]\n    }\n  }\n}",
+      "content": "{\n  \"mcpServers\": {\n    \"ios-simulator\": {\n      \"description\": \"Control iOS Simulator directly from Claude Code. Launch apps, take screenshots, manage device states, and streamline mobile development workflows.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"ios-simulator-mcp\"]\n    }\n  }\n}",
       "description": "Control iOS Simulator directly from Claude Code. Launch apps, take screenshots, manage device states, and streamline mobile development workflows."
     },
     {
@@ -1065,7 +1065,7 @@
       "path": "devtools/just-mcp.json",
       "category": "devtools",
       "type": "mcp",
-      "content": "{\n  \"description\": \"Execute Just commands and task runners seamlessly from Claude Code. Manage project tasks, run build scripts, and automate development workflows with Just integration.\",\n  \"mcpServers\": {\n    \"just-mcp\": {\n      \"command\": \"/path/to/just-mcp\",\n      \"args\": [\"--stdio\"]\n    }\n  }\n}",
+      "content": "{\n  \"mcpServers\": {\n    \"just-mcp\": {\n      \"description\": \"Execute Just commands and task runners seamlessly from Claude Code. Manage project tasks, run build scripts, and automate development workflows with Just integration.\",\n      \"command\": \"/path/to/just-mcp\",\n      \"args\": [\"--stdio\"]\n    }\n  }\n}",
       "description": "Execute Just commands and task runners seamlessly from Claude Code. Manage project tasks, run build scripts, and automate development workflows with Just integration."
     },
     {
