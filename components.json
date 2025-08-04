@@ -908,7 +908,6 @@
       "content": "{\n  \"mcpServers\": {\n    \"DeepGraph Vue MCP\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-code-graph@latest\",\n        \"vuejs/core\"\n      ]\n    }\n  }\n}"
     },
     {
-<<<<<<< HEAD
       "name": "cicleci",
       "path": "devtools/cicleci.json",
       "category": "devtools",
@@ -937,8 +936,6 @@
       "content": "{\n  \"mcpServers\": {\n    \"just-mcp\": {\n      \"command\": \"/path/to/just-mcp\",\n      \"args\": [\"--stdio\"]\n    }\n  }\n}"
     },
     {
-=======
->>>>>>> e9b18ba38e9e9abb35381aa3ad3baaa7497ca5ac
       "name": "filesystem-access",
       "path": "filesystem/filesystem-access.json",
       "category": "filesystem",
