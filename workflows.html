@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Builder - Claude Code Templates</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/workflows.css">
+    <link rel="stylesheet" href="css/workflows-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script> -->
+    <script src="js/utils.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/modal-helpers.js"></script>
+    <script src="js/workflows-events.js"></script>
+</head>
+<body>
+    <header class="workflow-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-text">
+                        <h2>🔮 Workflow Builder</h2>
+                    </div>
+                </div>
+                <nav class="header-nav">
+                    <a href="index.html" class="nav-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+                        </svg>
+                        Components
+                    </a>
+                    <a href="workflows.html" class="nav-link active">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H16L12,22L8,18H4A2,2 0 0,1 2,16V4A2,2 0 0,1 4,2M4,4V16H8.83L12,19.17L15.17,16H20V4H4M6,6H18V8H6V6M6,10H16V12H6V10M6,14H14V16H6V14Z"/>
+                        </svg>
+                        Workflows
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="workflow-container">
+        <!-- Components Library Panel -->
+        <aside class="components-panel">
+            <h3>Components Library</h3>
+            
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <input type="text" id="componentSearch" placeholder="Search components...">
+            </div>
+
+            <!-- Component Categories -->
+            <div class="component-categories">
+                <div class="category-card" data-category="agents">
+                    <div class="category-card-header">
+                        <span class="category-icon">🤖</span>
+                        <span class="category-title">Agents</span>
+                        <span class="category-count" id="agents-count">0</span>
+                        <span class="category-arrow">▶</span>
+                    </div>
+                    <div class="category-content" id="agents-tree"></div>
+                </div>
+                <div class="category-card" data-category="commands">
+                    <div class="category-card-header">
+                        <span class="category-icon">⚡</span>
+                        <span class="category-title">Commands</span>
+                        <span class="category-count" id="commands-count">0</span>
+                        <span class="category-arrow">▶</span>
+                    </div>
+                    <div class="category-content" id="commands-tree"></div>
+                </div>
+                <div class="category-card" data-category="mcps">
+                    <div class="category-card-header">
+                        <span class="category-icon">🔌</span>
+                        <span class="category-title">MCPs</span>
+                        <span class="category-count" id="mcps-count">0</span>
+                        <span class="category-arrow">▶</span>
+                    </div>
+                    <div class="category-content" id="mcps-tree"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Workflow Builder Canvas -->
+        <div class="workflow-canvas">
+            <div class="canvas-header">
+                <h2>Workflow Canvas</h2>
+                <div class="canvas-actions">
+                    <button id="clearCanvas" class="btn-secondary">Clear All</button>
+                    <button id="generateWorkflow" class="btn-primary">Generate Workflow</button>
+                </div>
+            </div>
+            
+            <div class="workflow-steps" id="workflowSteps">
+                <div class="drop-zone-header">
+                    <div class="workflow-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Agents:</span>
+                            <span id="agentCount" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Commands:</span>
+                            <span id="commandCount" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">MCPs:</span>
+                            <span id="mcpCount" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Steps:</span>
+                            <span id="totalSteps" class="stat-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="drop-zone">
+                    <div class="drop-zone-content">
+                        <div class="drop-icon">📋</div>
+                        <p>Drag components here to build your workflow</p>
+                        <span class="drop-hint">Start by adding agents, commands, or MCPs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Generate Workflow Modal -->
+    <div id="generateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🚀 Workflow Generated Successfully!</h3>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="workflow-command">
+                    <label>Installation Command:</label>
+                    <div class="command-box">
+                        <code id="workflowCommand">npx claude-code-templates@latest --workflow:#abc123</code>
+                        <button id="copyCommand" class="btn-copy">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="workflow-preview">
+                    <h4>Workflow Preview:</h4>
+                    <div class="workflow-summary" id="workflowSummary">
+                        <!-- Workflow summary will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="workflow-yaml">
+                    <h4>Generated YAML:</h4>
+                    <div class="yaml-preview">
+                        <pre id="yamlContent"></pre>
+                        <button id="copyYaml" class="btn-copy">Copy YAML</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="downloadYaml" class="btn-primary">Download YAML</button>
+                <button id="shareWorkflow" class="btn-secondary">Share Workflow</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Properties Modal -->
+    <div id="propertiesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Workflow Properties</h3>
+                <span class="close" id="closePropertiesModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="property-section">
+                    <label for="workflowName">Workflow Name</label>
+                    <input type="text" id="workflowName" placeholder="My Awesome Workflow" value="">
+                </div>
+                
+                <div class="property-section">
+                    <label for="workflowDescription">Description</label>
+                    <textarea id="workflowDescription" placeholder="Describe what this workflow does..."></textarea>
+                </div>
+                
+                <div class="property-section">
+                    <label for="workflowTags">Tags</label>
+                    <input type="text" id="workflowTags" placeholder="development, automation, ai">
+                    <small>Comma-separated tags</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveWorkflowProperties" class="btn-primary">Save and Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Details Modal -->
+    <div id="componentModal" class="modal">
+        <div class="modal-content component-modal">
+            <div class="modal-header">
+                <h3 id="componentModalTitle">Component Details</h3>
+                <span class="close" id="closeComponentModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="component-detail-info">
+                    <div class="detail-item">
+                        <strong>Type:</strong>
+                        <span id="componentModalType"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Category:</strong>
+                        <span id="componentModalCategory"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Path:</strong>
+                        <span id="componentModalPath"></span>
+                    </div>
+                </div>
+                <div class="component-description">
+                    <h4>Description</h4>
+                    <div id="componentModalDescription">Loading description...</div>
+                </div>
+                <div class="component-usage">
+                    <h4>Usage</h4>
+                    <div class="usage-command">
+                        <code id="componentModalUsage"></code>
+                        <button id="copyUsageCommand" class="btn-copy">Copy</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addComponentToWorkflow" class="btn-primary">Add to Workflow</button>
+                <button id="closeComponentModalBtn" class="btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading components...</p>
+    </div>
+
+</body>
+</html>
