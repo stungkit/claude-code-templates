@@ -42,6 +42,9 @@ function createComponentModalHTML(component) {
     if (componentPath.endsWith('.md')) {
         componentPath = componentPath.replace(/\.md$/, '');
     }
+    if (componentPath.endsWith('.json')) {
+        componentPath = componentPath.replace(/\.json$/, '');
+    }
     const installCommand = `npx claude-code-templates@latest --${component.type}=${componentPath} --yes`;
     
     const description = getComponentDescription(component, 120); // Short description - 2 lines max

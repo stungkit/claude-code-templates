@@ -379,6 +379,9 @@ class IndexPageManager {
         if (componentPath.endsWith('.md')) {
             componentPath = componentPath.replace(/\.md$/, '');
         }
+        if (componentPath.endsWith('.json')) {
+            componentPath = componentPath.replace(/\.json$/, '');
+        }
         const installCommand = `npx claude-code-templates@latest --${component.type}=${componentPath} --yes`;
         
         const typeConfig = {
