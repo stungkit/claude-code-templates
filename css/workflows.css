@@ -425,6 +425,10 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    position: relative;
+    padding-left: 60px;
 }
 
 .drop-zone-header {
@@ -474,6 +478,8 @@
     border-color: var(--accent-color);
     background: rgba(234, 88, 12, 0.05);
     border-style: solid;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
 }
 
 .drop-zone-content {
@@ -1028,4 +1034,283 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+/* Hierarchical Workflow Structure */
+.workflow-agent {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Vertical step line */
+.workflow-steps::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border-color) 50%, transparent 50%);
+    background-size: 2px 8px;
+    z-index: 1;
+}
+
+/* Step number circle on the left */
+.workflow-agent::before {
+    content: attr(data-step-number);
+    position: absolute;
+    left: -45px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 2;
+    border: 3px solid var(--bg-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.workflow-agent:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.agent-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    border-radius: 6px 6px 0 0;
+}
+
+/* Remove the old step number positioning */
+.workflow-agent .step-number {
+    display: none;
+}
+
+.agent-header .step-icon {
+    font-size: 1.5rem;
+}
+
+.agent-header .step-content {
+    flex: 1;
+}
+
+.agent-header .step-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.agent-header .step-type {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.agent-content {
+    padding: 8px 12px;
+}
+
+.agent-sub-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sub-item {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    margin-left: 20px;
+    position: relative;
+}
+
+.sub-item::before {
+    content: '';
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    width: 10px;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.sub-item:hover {
+    background: var(--bg-secondary);
+    border-color: var(--accent-color);
+}
+
+.sub-item .step-number {
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.sub-item .step-icon {
+    font-size: 1.2rem;
+}
+
+.sub-item .step-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.sub-item .step-type {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.sub-item-drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 8px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.sub-item-drop-zone:hover,
+.sub-item-drop-zone.drag-over {
+    border-color: var(--accent-color);
+    background: rgba(245, 158, 11, 0.05);
+    color: var(--text-primary);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+}
+
+.sub-item-drop-zone.empty {
+    opacity: 0.6;
+}
+
+.agent-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.agent-action, .sub-item-action {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.agent-action:hover, .sub-item-action:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Add new agent indicator */
+.add-agent-indicator {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+    height: 40px;
+}
+
+.add-agent-indicator::before {
+    content: '';
+    position: absolute;
+    left: -45px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.add-agent-btn {
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--border-color);
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.add-agent-btn:hover {
+    background: var(--bg-secondary);
+    border-color: var(--accent-color);
+    color: var(--text-primary);
+    transform: scale(1.02);
+}
+
+.add-agent-btn.drag-over {
+    background: var(--bg-secondary);
+    border-color: var(--accent-color);
+    border-style: solid;
+    color: var(--text-primary);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    animation: pulse-glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+    from {
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+    to {
+        box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+        transform: scale(1.08);
+    }
+}
+
+.add-agent-btn svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
 }

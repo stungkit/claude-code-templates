@@ -155,6 +155,76 @@
     to { opacity: 1; }
 }
 
+/* YAML Syntax Highlighting */
+.yaml-syntax {
+    color: var(--text-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* YAML Comments */
+.yaml-comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+/* YAML Keys */
+.yaml-key {
+    color: #4fc1ff;
+    font-weight: 600;
+}
+
+/* YAML String Values */
+.yaml-string {
+    color: #ce9178;
+}
+
+/* YAML Numbers */
+.yaml-number {
+    color: #b5cea8;
+}
+
+/* YAML Booleans */
+.yaml-boolean {
+    color: #569cd6;
+    font-weight: 500;
+}
+
+/* YAML Arrays/Lists */
+.yaml-array {
+    color: #dcdcaa;
+}
+
+/* YAML Special Characters */
+.yaml-punctuation {
+    color: #d4d4d4;
+}
+
+/* YAML Indentation Guide */
+.yaml-indent {
+    color: #404040;
+    opacity: 0.6;
+}
+
+/* YAML Section Headers */
+.yaml-section {
+    color: #c586c0;
+    font-weight: bold;
+}
+
+/* YAML List Items */
+.yaml-list-item {
+    color: #dcdcaa;
+}
+
+/* YAML Path/File References */
+.yaml-path {
+    color: #9cdcfe;
+}
+
 /* Code editor with line numbers */
 .code-editor {
     display: flex;
@@ -165,6 +235,7 @@
     font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
     font-size: 13px;
     line-height: 1.5;
+    max-height: 300px;
 }
 
 .code-line-numbers {
@@ -186,7 +257,7 @@
 .code-content {
     flex: 1;
     padding: 16px;
-    overflow-x: auto;
+    overflow: auto;
 }
 
 .code-content pre {
@@ -291,4 +362,293 @@
     padding: 2px 4px;
     border-radius: 3px;
     font-weight: 600;
+}
+
+/* Minimal Workflow Modal Styles */
+.workflow-modal .modal-content {
+    max-width: 700px;
+    width: 90vw;
+}
+
+/* Method Tabs */
+.method-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+    flex: 1;
+    text-align: center;
+}
+
+.tab-link.active {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.tab-link:hover {
+    color: var(--text-primary);
+}
+
+/* Method Content */
+.method-content {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.method-content.active {
+    display: block;
+}
+
+.step-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.step-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.section-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.section-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+/* Command Containers */
+.command-container {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 16px;
+}
+
+/* Manual Steps */
+.manual-step {
+    margin-bottom: 20px;
+}
+
+.manual-step h5 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+}
+
+.yaml-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.command-scroll {
+    flex: 1;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.workflow-command-text {
+    color: var(--text-primary);
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    background: none;
+    border: none;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.4;
+}
+
+.btn-copy-primary {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: auto;
+    justify-content: center;
+}
+
+.btn-copy-primary:hover {
+    background: #b45309;
+    transform: translateY(-1px);
+}
+
+/* YAML Section */
+.yaml-section {
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.yaml-accordion-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.yaml-accordion-header:hover {
+    background: var(--bg-tertiary);
+}
+
+.yaml-accordion-arrow {
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+}
+
+.yaml-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.yaml-accordion-content.open {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.yaml-container {
+    padding: 20px;
+}
+
+.yaml-preview {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-primary);
+    white-space: pre;
+}
+
+.yaml-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+}
+
+.btn-copy-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: auto;
+    justify-content: center;
+}
+
+.btn-copy-secondary:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+    transform: translateY(-1px);
+}
+
+/* Button Styles */
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+    transform: translateY(-1px);
+}
+
+/* Modal Footer */
+.workflow-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .workflow-modal .modal-content {
+        width: 95vw;
+        margin: 10px;
+    }
+    
+    .method-tabs {
+        flex-direction: row;
+    }
+    
+    .tab-link {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
 }

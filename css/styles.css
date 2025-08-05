@@ -6,6 +6,7 @@
     --bg-tertiary: #21262d;
     --border-primary: #30363d;
     --border-secondary: #21262d;
+    --border-color: #30363d;
     --text-primary: #c9d1d9;
     --text-secondary: #7d8590;
     --text-accent: #d57455;
@@ -13,6 +14,7 @@
     --text-warning: #f97316;
     --text-error: #f85149;
     --text-info: #a5d6ff;
+    --accent-color: #d97706;
     --shadow-primary: rgba(0, 0, 0, 0.4);
     --shadow-secondary: rgba(1, 4, 9, 0.85);
 }
@@ -965,7 +967,9 @@ body {
     max-width: 800px;
     width: 100%;
     max-height: 80vh;
-    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     animation: slideIn 0.3s ease;
 }
 
@@ -1007,7 +1011,7 @@ body {
 
 .modal-body {
     padding: 20px;
-    max-height: 60vh;
+    flex: 1;
     overflow-y: auto;
 }
 

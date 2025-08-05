@@ -59,11 +59,11 @@ function createComponentModalHTML(component) {
 
     return `
         <div class="modal-overlay" onclick="closeComponentModal()">
-            <div class="modal-content component-modal" onclick="event.stopPropagation()">
+            <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
                     <div class="component-modal-title">
                         <span class="component-icon">${config.icon}</span>
-                        <h3>${formatComponentName(component.name)}</h3>
+                        <h3 style="color: var(--text-primary);">${formatComponentName(component.name)}</h3>
                     </div>
                     <div class="component-type-badge" style="background-color: ${config.color};">${config.badge}</div>
                     <button class="modal-close" onclick="closeComponentModal()">×</button>

@@ -1,8 +1,8 @@
 // Shared Utility Functions
 
-function copyToClipboard(text) {
+function copyToClipboard(text, message = 'Command copied to clipboard!') {
     navigator.clipboard.writeText(text).then(() => {
-        showNotification('Command copied to clipboard!', 'success');
+        showNotification(message, 'success');
     }).catch(err => {
         console.error('Failed to copy: ', err);
         showNotification('Failed to copy command', 'error');
