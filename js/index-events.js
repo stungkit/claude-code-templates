@@ -420,13 +420,27 @@ class IndexPageManager {
                     <div class="card-back">
                         <div class="command-display">
                             <h3>Installation Command</h3>
-                            <div class="command-code">${installCommand}</div>
-                            <div class="action-buttons">
+                            <div class="command-code-container">
+                                <div class="command-code">${installCommand}</div>
+                                <button class="copy-overlay-btn" onclick="copyToClipboard('${escapedCommand}'); event.stopPropagation();" title="Copy command">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                    </svg>
+                                    Copy Command
+                                </button>
+                            </div>
+                            <div class="card-actions">
                                 <button class="view-files-btn" onclick="showComponentDetails('${escapedType}', '${escapedName}', '${escapedPath}', '${escapedCategory}')">
                                     📁 View Details
                                 </button>
-                                <button class="copy-command-btn" onclick="copyToClipboard('${escapedCommand}')">
-                                    📋 Copy Command
+                                <button class="add-to-cart-btn" 
+                                        data-type="${component.type}s" 
+                                        data-path="${componentPath}"
+                                        onclick="handleAddToCart('${escapedName}', '${componentPath}', '${component.type}s', '${escapedCategory}', this)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A1,1 0 0,0 4,8A1,1 0 0,0 5,9H6V19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V9H19A1,1 0 0,0 20,8A1,1 0 0,0 19,7M8,6H16V7H8V6M16,19H8V9H16V19Z"/>
+                                    </svg>
+                                    Add to Stack
                                 </button>
                             </div>
                         </div>
@@ -1284,6 +1298,44 @@ function closeComponentModal() {
 function goToPage(page) {
     if (window.indexManager) {
         window.indexManager.goToPage(page);
+    }
+}
+
+// Handle Add to Cart button click
+function handleAddToCart(name, path, type, category, buttonElement) {
+    // Prevent event propagation to avoid card flip
+    if (window.event) {
+        window.event.stopPropagation();
+    }
+    
+    const item = {
+        name: name,
+        path: path,
+        category: category,
+        description: `${name} - ${category}`
+    };
+    
+    // Add to cart using the cart manager
+    const success = addToCart(item, type);
+    
+    if (success) {
+        // Update button state
+        buttonElement.classList.add('added');
+        buttonElement.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+            </svg>
+            Added to Stack
+        `;
+        
+        // Show a brief animation
+        buttonElement.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            buttonElement.style.transform = 'scale(1)';
+        }, 150);
+        
+        // Show notification (the cart manager already handles this, but we can add extra visual feedback)
+        console.log(`✅ ${name} added to stack successfully!`);
     }
 }
 

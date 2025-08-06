@@ -2165,6 +2165,14 @@
       "description": "Integrate CircleCI build and deployment pipeline management with your Claude Code workflow. Monitor builds, trigger deployments, and access project insights."
     },
     {
+      "name": "context7",
+      "path": "devtools/context7.json",
+      "category": "devtools",
+      "type": "mcp",
+      "content": "{\n  \"mcpServers\": {\n    \"context7\": {\n      \"description\": \"Context7 MCP pulls up-to-date, version-specific documentation and code examples straight from the source — and places them directly into your prompt.\",\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@upstash/context7-mcp\"]\n    }\n  }\n}",
+      "description": "Context7 MCP pulls up-to-date, version-specific documentation and code examples straight from the source — and places them directly into your prompt."
+    },
+    {
       "name": "firefly-mcp",
       "path": "devtools/firefly-mcp.json",
       "category": "devtools",
