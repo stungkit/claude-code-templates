@@ -2725,13 +2725,15 @@ body {
     height: 100vh;
     background: var(--bg-secondary);
     border-left: 1px solid var(--border-primary);
-    z-index: 2000;
+    z-index: 1000;
     transition: right 0.3s ease-out;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
 }
 
 .cart-sidebar.active {
     right: 0;
+    pointer-events: all;
 }
 
 /* Overlay for sidebar */
@@ -2748,11 +2750,13 @@ body {
     visibility: hidden;
     transition: all 0.3s ease;
     z-index: -1;
+    pointer-events: none;
 }
 
 .cart-sidebar.active::before {
     opacity: 1;
     visibility: visible;
+    pointer-events: all;
 }
 
 .cart-content {
@@ -3256,7 +3260,7 @@ body {
     border-radius: 8px;
     padding: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 3000;
+    z-index: 1100;
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.3s ease;
