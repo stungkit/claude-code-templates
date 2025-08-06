@@ -2741,7 +2741,7 @@ body {
     content: '';
     position: fixed;
     top: 0;
-    left: -100vw;
+    left: 0;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
@@ -2751,12 +2751,14 @@ body {
     transition: all 0.3s ease;
     z-index: -1;
     pointer-events: none;
+    display: none;
 }
 
 .cart-sidebar.active::before {
     opacity: 1;
     visibility: visible;
     pointer-events: all;
+    display: block;
 }
 
 .cart-content {
@@ -3215,6 +3217,10 @@ body {
     .cart-sidebar {
         width: 100vw;
         right: -100vw;
+    }
+    
+    .cart-sidebar::before {
+        display: none !important;
     }
     
     .cart-header {

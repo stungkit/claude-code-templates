@@ -301,14 +301,42 @@ function openCart() {
     const sidebar = document.getElementById('shoppingCart');
     sidebar.classList.add('active');
     
-    // Allow body scroll when sidebar is open (removed overflow hidden)
+    // Create overlay for desktop only
+    if (window.innerWidth > 768) {
+        const overlay = document.createElement('div');
+        overlay.id = 'cartOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(overlay);
+        
+        // Fade in overlay
+        setTimeout(() => overlay.style.opacity = '1', 10);
+        
+        // Close on overlay click
+        overlay.addEventListener('click', closeCart);
+    }
 }
 
 function closeCart() {
     const sidebar = document.getElementById('shoppingCart');
     sidebar.classList.remove('active');
     
-    // No need to restore scroll since we're not blocking it
+    // Remove dynamic overlay
+    const overlay = document.getElementById('cartOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 300);
+    }
 }
 
 function clearCart() {
@@ -348,13 +376,13 @@ function addToCart(item, type) {
     return cartManager.addToCart(item, type);
 }
 
-// Close cart when clicking on overlay
-document.addEventListener('click', (e) => {
+// Close cart when clicking on overlay (handled by dynamic overlay now)
+/* document.addEventListener('click', (e) => {
     const sidebar = document.getElementById('shoppingCart');
     if (e.target === sidebar && sidebar.classList.contains('active')) {
         closeCart();
     }
-});
+}); */
 
 // Close cart with escape key
 document.addEventListener('keydown', (e) => {
