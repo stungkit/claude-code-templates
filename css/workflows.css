@@ -1,94 +1,12 @@
 /* Workflow Builder Specific Styles */
 
-/* Header Styles */
-.workflow-header {
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-    border-bottom: 1px solid var(--border-color);
-    padding: 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+/* Workflow title section removed - using canvas header instead */
 
-.workflow-header .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.workflow-header .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    height: 80px;
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.logo-icon {
-    font-size: 36px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.logo-text h1 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-primary);
-    background: linear-gradient(45deg, var(--accent-color), #F97316);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-}
-
-.logo-text h2 {
-    margin: 0;
-    font-size: 18px;
-    color: var(--accent-color);
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.header-nav {
-    display: flex;
-    gap: 8px;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
-
-.nav-link:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-.nav-link.active {
-    background: var(--accent-color);
-    color: white;
-    border-color: var(--accent-color);
-}
-
-.nav-link svg {
-    opacity: 0.8;
-}
+/* Old workflow header styles removed - now using standard header */
 
 .workflow-container {
     display: flex;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 120px);
     gap: 20px;
     padding: 20px;
     max-width: 100%;

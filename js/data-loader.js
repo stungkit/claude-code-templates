@@ -2,20 +2,136 @@
 class DataLoader {
     constructor() {
         this.componentsData = null;
-        this.templatesData = null;
+        this.fullComponentsData = null; // Store full data for accurate counts
+        this.templatesData = null; // Deprecated - templates now in components.json
+        this.loadingStates = {
+            components: false
+        };
+        this.cache = new Map();
+        this.TIMEOUT_MS = 8000; // 8 seconds timeout
+        this.ITEMS_PER_PAGE = 50; // Lazy loading batch size
     }
 
-    // Load components from components.json
-    async loadComponents() {
+    // Load all components at once (simplified approach)
+    async loadAllComponents() {
         try {
-            const response = await fetch('components.json');
+            this.loadingStates.components = true;
+            this.showLoadingState('components', true);
+            
+            const cacheKey = 'all_components';
+            if (this.cache.has(cacheKey)) {
+                this.showLoadingState('components', false);
+                this.loadingStates.components = false;
+                return this.cache.get(cacheKey);
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.TIMEOUT_MS);
+            
+            const response = await fetch('components.json', {
+                signal: controller.signal,
+                headers: {
+                    'Cache-Control': 'max-age=300' // 5 minutes cache
+                }
+            });
+            
+            clearTimeout(timeoutId);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            this.componentsData = await response.json();
+            
+            const allData = await response.json();
+            
+            // Store both full and component data
+            this.fullComponentsData = allData;
+            this.componentsData = allData;
+            
+            this.cache.set(cacheKey, allData);
+            
+            this.showLoadingState('components', false);
+            this.loadingStates.components = false;
+            
             return this.componentsData;
         } catch (error) {
-            console.error('Error loading components:', error);
+            this.showLoadingState('components', false);
+            this.loadingStates.components = false;
+            
+            if (error.name === 'AbortError') {
+                console.error('Components loading timed out after', this.TIMEOUT_MS + 'ms');
+                this.showError('Loading timed out. Using fallback data.');
+            } else {
+                console.error('Error loading components:', error);
+                this.showError('Failed to load components. Using fallback data.');
+            }
+            
+            return this.getFallbackComponentData();
+        }
+    }
+    
+    // Load components with lazy loading and timeout (kept for backward compatibility)
+    async loadComponents(page = 1, itemsPerPage = this.ITEMS_PER_PAGE) {
+        try {
+            this.loadingStates.components = true;
+            this.showLoadingState('components', true);
+            
+            const cacheKey = `components_${page}_${itemsPerPage}`;
+            if (this.cache.has(cacheKey)) {
+                this.showLoadingState('components', false);
+                this.loadingStates.components = false;
+                return this.cache.get(cacheKey);
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.TIMEOUT_MS);
+            
+            const response = await fetch('components.json', {
+                signal: controller.signal,
+                headers: {
+                    'Cache-Control': 'max-age=300' // 5 minutes cache
+                }
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const fullData = await response.json();
+            
+            // Store full data for accurate counts (only on first load)
+            if (page === 1) {
+                this.fullComponentsData = fullData;
+            }
+            
+            // Apply pagination to reduce memory usage
+            const paginatedData = this.paginateComponents(fullData, page, itemsPerPage);
+            
+            // Store full data for templates if it exists
+            if (fullData.templates && page === 1) {
+                paginatedData.templates = fullData.templates; // Templates don't need pagination
+            }
+            
+            this.cache.set(cacheKey, paginatedData);
+            this.componentsData = paginatedData;
+            
+            this.showLoadingState('components', false);
+            this.loadingStates.components = false;
+            
+            return this.componentsData;
+        } catch (error) {
+            this.showLoadingState('components', false);
+            this.loadingStates.components = false;
+            
+            if (error.name === 'AbortError') {
+                console.error('Components loading timed out after', this.TIMEOUT_MS + 'ms');
+                this.showError('Loading timed out. Using fallback data.');
+            } else {
+                console.error('Error loading components:', error);
+                this.showError('Failed to load components. Using fallback data.');
+            }
+            
             return this.getFallbackComponentData();
         }
     }
@@ -47,29 +163,33 @@ class DataLoader {
         };
     }
 
-    // Load templates data for the main index page
+    // Load templates - now using components.json data (templates deprecated)
     async loadTemplates() {
         try {
-            const GITHUB_CONFIG = {
-                owner: 'davila7',
-                repo: 'claude-code-templates',
-                branch: 'main',
-                templatesPath: 'cli-tool/src/templates.js'
-            };
-
-            const url = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.templatesPath}?t=${Date.now()}`;
-            const response = await fetch(url);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Templates are now included in components.json as 'templates' section
+            // This method is kept for backward compatibility
+            if (this.componentsData && this.componentsData.templates) {
+                this.templatesData = { templates: this.componentsData.templates };
+                return this.templatesData;
             }
             
-            const templateFileContent = await response.text();
-            this.templatesData = this.parseTemplatesConfig(templateFileContent);
+            // If components aren't loaded yet, try to load them
+            if (!this.componentsData) {
+                await this.loadComponents();
+                if (this.componentsData && this.componentsData.templates) {
+                    this.templatesData = { templates: this.componentsData.templates };
+                    return this.templatesData;
+                }
+            }
+            
+            // Return empty if no templates in components.json
+            console.warn('No templates found in components.json');
+            this.templatesData = {};
             return this.templatesData;
         } catch (error) {
-            console.error('Error loading templates:', error);
-            throw error;
+            console.error('Error loading templates from components:', error);
+            this.templatesData = {};
+            return this.templatesData;
         }
     }
 
@@ -145,6 +265,108 @@ class DataLoader {
         
         const typeKey = type + 's';
         return this.componentsData[typeKey] || [];
+    }
+    
+    // Paginate components data to reduce memory usage
+    paginateComponents(fullData, page, itemsPerPage) {
+        const paginatedData = {
+            agents: [],
+            commands: [],
+            mcps: [],
+            templates: [] // Include templates in pagination structure
+        };
+        
+        ['agents', 'commands', 'mcps'].forEach(type => {
+            if (fullData[type]) {
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                paginatedData[type] = fullData[type].slice(startIndex, endIndex);
+            }
+        });
+        
+        // Templates don't need pagination - include all if available
+        if (fullData.templates) {
+            paginatedData.templates = fullData.templates;
+        }
+        
+        return paginatedData;
+    }
+    
+    // Show loading states
+    showLoadingState(type, isLoading) {
+        const loadingElement = document.getElementById(`${type}-loading`);
+        const contentElement = document.getElementById(`${type}-content`);
+        
+        if (loadingElement && contentElement) {
+            if (isLoading) {
+                loadingElement.style.display = 'flex';
+                contentElement.style.opacity = '0.5';
+            } else {
+                loadingElement.style.display = 'none';
+                contentElement.style.opacity = '1';
+            }
+        }
+        
+        // Also update any loading spinners in the UI
+        const spinners = document.querySelectorAll('.loading-spinner');
+        spinners.forEach(spinner => {
+            spinner.style.display = isLoading ? 'block' : 'none';
+        });
+    }
+    
+    // Show error messages
+    showError(message) {
+        // Try to use existing notification system
+        if (window.showNotification) {
+            window.showNotification(message, 'error', 5000);
+        } else {
+            console.warn(message);
+            // Create simple toast notification
+            const toast = document.createElement('div');
+            toast.className = 'error-toast';
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f85149;
+                color: white;
+                padding: 12px 16px;
+                border-radius: 6px;
+                z-index: 1000;
+                font-size: 14px;
+                max-width: 300px;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+    }
+    
+    // Load more components (no longer needed but kept for compatibility)
+    async loadMoreComponents(page) {
+        // All components are now loaded at once, so this method returns null
+        console.log('loadMoreComponents called but not needed - all data loaded initially');
+        return null;
+    }
+    
+    // Get the total counts from full data for accurate filter counts
+    getTotalCounts() {
+        if (this.fullComponentsData) {
+            return {
+                agents: this.fullComponentsData.agents ? this.fullComponentsData.agents.length : 0,
+                commands: this.fullComponentsData.commands ? this.fullComponentsData.commands.length : 0,
+                mcps: this.fullComponentsData.mcps ? this.fullComponentsData.mcps.length : 0,
+                templates: this.fullComponentsData.templates ? this.fullComponentsData.templates.length : 0
+            };
+        }
+        
+        // Fallback to current loaded data
+        return {
+            agents: this.componentsData?.agents?.length || 0,
+            commands: this.componentsData?.commands?.length || 0,
+            mcps: this.componentsData?.mcps?.length || 0,
+            templates: this.componentsData?.templates?.length || 0
+        };
     }
 }
 

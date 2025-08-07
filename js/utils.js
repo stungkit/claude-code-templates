@@ -10,6 +10,14 @@ function copyToClipboard(text, message = 'Command copied to clipboard!') {
 }
 
 function showNotification(message, type = 'info') {
+    // Remove any existing notifications first
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notif => {
+        if (notif.parentNode) {
+            notif.parentNode.removeChild(notif);
+        }
+    });
+
     const notification = document.createElement('div');
     notification.textContent = message;
     notification.className = `notification notification-${type}`;

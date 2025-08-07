@@ -8,7 +8,8 @@ class WorkflowManager {
             properties: {
                 name: '',
                 description: '',
-                tags: []
+                tags: [],
+                prompt: ''
             },
             components: {
                 agents: [],
@@ -256,6 +257,11 @@ class WorkflowManager {
     }
 
     addWorkflowStep(componentData, targetAgentId = null) {
+        // Ensure agents array is initialized
+        if (!this.workflowState.agents) {
+            this.workflowState.agents = [];
+        }
+        
         const step = {
             id: `step_${Date.now()}`,
             type: componentData.componentType,
@@ -316,10 +322,11 @@ class WorkflowManager {
         existingSteps.forEach(step => step.remove());
         existingIndicators.forEach(indicator => indicator.remove());
 
-        if (this.workflowState.agents.length > 0) {
+        const agents = this.workflowState.agents || [];
+        if (agents.length > 0) {
             if (dropZone) dropZone.style.display = 'none';
             
-            this.workflowState.agents.forEach((agentData, index) => {
+            agents.forEach((agentData, index) => {
                 const mainStepNumber = index + 1;
                 const agentElement = document.createElement('div');
                 agentElement.className = 'workflow-agent';
@@ -415,7 +422,8 @@ class WorkflowManager {
         let totalStepsCount = 0;
         
         // Count from hierarchical structure
-        this.workflowState.agents.forEach(agentData => {
+        const agents = this.workflowState.agents || [];
+        agents.forEach(agentData => {
             const agentType = agentData.agent.type;
             if (agentType === 'agent') {
                 stats.agents++;
@@ -470,7 +478,8 @@ class WorkflowManager {
     }
 
     openPropertiesModal() {
-        if (this.workflowState.agents.length === 0) {
+        const agents = this.workflowState.agents || [];
+        if (agents.length === 0) {
             this.showError('Add at least one agent to the workflow.');
             return;
         }
@@ -487,12 +496,14 @@ class WorkflowManager {
         const nameInput = document.getElementById('workflowName');
         const descInput = document.getElementById('workflowDescription');
         const tagsInput = document.getElementById('workflowTags');
+        const promptInput = document.getElementById('workflowPrompt');
 
         if (nameInput) this.workflowState.properties.name = nameInput.value;
         if (descInput) this.workflowState.properties.description = descInput.value;
         if (tagsInput) {
             this.workflowState.properties.tags = tagsInput.value.split(',').map(t => t.trim());
         }
+        if (promptInput) this.workflowState.properties.prompt = promptInput.value.trim();
         
         if (!this.workflowState.properties.name) {
             this.showError('Workflow name is required.');
@@ -539,12 +550,19 @@ class WorkflowManager {
             commandParts.push(`--mcp ${mcps.join(',')}`);
         }
         
+        // Add prompt parameter if provided
+        if (this.workflowState.properties.prompt) {
+            commandParts.push(`--prompt "${this.workflowState.properties.prompt}"`);
+        }
+        
         // Method 1: Full command with embedded YAML
         const fullCommand = `npx claude-code-templates@latest ${commandParts.join(' ')} --workflow ${encodedYaml}`;
         
-        // Method 2: Components only command (without embedded YAML)
-        const componentsOnlyCommand = commandParts.length > 0 ? 
-            `npx claude-code-templates@latest ${commandParts.join(' ')}` : 
+        // Method 2: Components only command (without embedded YAML) 
+        // Remove prompt from components-only command since YAML isn't included
+        const componentsParts = commandParts.filter(part => !part.startsWith('--prompt'));
+        const componentsOnlyCommand = componentsParts.length > 0 ? 
+            `npx claude-code-templates@latest ${componentsParts.join(' ')}` : 
             '# No components to install';
         
         // Create a short hash for reference
@@ -632,32 +650,38 @@ class WorkflowManager {
     }
 
     generateWorkflowYAML() {
-        const totalSteps = this.workflowState.agents.reduce((total, agent) => total + 1 + agent.subItems.length, 0);
+        // Ensure agents array exists and has valid structure
+        const agents = this.workflowState.agents || [];
+        const totalSteps = agents.reduce((total, agent) => total + 1 + (agent.subItems ? agent.subItems.length : 0), 0);
         
+        const promptComment = this.workflowState.properties.prompt 
+            ? `# Initial Prompt: ${this.workflowState.properties.prompt}\n`
+            : '';
+            
         return `# Workflow: ${this.workflowState.properties.name}
 # Description: ${this.workflowState.properties.description}
-# Generated: ${new Date().toISOString()}
-# Agents: ${this.workflowState.agents.length} total
+${promptComment}# Generated: ${new Date().toISOString()}
+# Agents: ${agents.length} total
 # Components: ${totalSteps} total
 
 name: "${this.workflowState.properties.name}"
 description: "${this.workflowState.properties.description}"
 tags: [${this.workflowState.properties.tags.map(tag => `"${tag}"`).join(', ')}]
-version: "2.0.0"
+version: "2.0.0"${this.workflowState.properties.prompt ? '\nprompt: "' + this.workflowState.properties.prompt + '"' : ''}
 
 # Hierarchical workflow structure: Agents → Commands/MCPs
 agents:
-${this.workflowState.agents.map((agentData, i) => `  - agent: ${i + 1}
+${agents.map((agentData, i) => `  - agent: ${i + 1}
     type: ${agentData.agent.type}
     name: "${agentData.agent.name}"
-    path: "${agentData.agent.path}"
+    path: "${agentData.agent.type === 'mcp' ? `.mcp.json#${agentData.agent.name}` : `.claude/${agentData.agent.type}s/${agentData.agent.path}`}"
     category: "${agentData.agent.category}"
     description: "${agentData.agent.description}"
-    tasks:${agentData.subItems.length > 0 ? agentData.subItems.map((subItem, j) => `
+    tasks:${(agentData.subItems && agentData.subItems.length > 0) ? agentData.subItems.map((subItem, j) => `
       - task: ${j + 1}
         type: ${subItem.type}
         name: "${subItem.name}"
-        path: "${subItem.path}"
+        path: "${subItem.type === 'mcp' ? `.mcp.json#${subItem.name}` : `.claude/${subItem.type}s/${subItem.path}`}"
         category: "${subItem.category}"
         description: "${subItem.description}"`).join('') : `
       - task: 1
@@ -671,12 +695,12 @@ execution:
   sequence: "agent-by-agent"
   
 components:
-  agents: [${this.workflowState.agents.map(a => `"${a.agent.path}"`).join(', ')}]
-  commands: [${this.workflowState.agents.flatMap(a => a.subItems.filter(s => s.type === 'command').map(s => `"${s.path}"`)).join(', ')}]
-  mcps: [${this.workflowState.agents.flatMap(a => a.subItems.filter(s => s.type === 'mcp').map(s => `"${s.path}"`)).join(', ')}]
+  agents: [${agents.filter(a => a.agent.type === 'agent').map(a => `".claude/agents/${a.agent.path}"`).join(', ')}]
+  commands: [${[...agents.filter(a => a.agent.type === 'command').map(a => `".claude/commands/${a.agent.path}"`), ...agents.flatMap(a => (a.subItems || []).filter(s => s.type === 'command').map(s => `".claude/commands/${s.path}`))].join(', ')}]
+  mcps: [${[...agents.filter(a => a.agent.type === 'mcp').map(a => `".mcp.json#${a.agent.name}"`), ...agents.flatMap(a => (a.subItems || []).filter(s => s.type === 'mcp').map(s => `".mcp.json#${s.name}`))].join(', ')}]
 
 # Instructions for Claude Code:
-# This hierarchical workflow contains ${this.workflowState.agents.length} agents with their assigned tasks.
+# This hierarchical workflow contains ${agents.length} agents with their assigned tasks.
 # Each agent should be loaded first, then its associated commands and MCPs should be executed in sequence.`;
     }
 
@@ -686,12 +710,46 @@ components:
         const fullCommandEl = document.getElementById('fullCommand');
         const componentsOnlyCommandEl = document.getElementById('componentsOnlyCommand');
         const yamlEl = document.getElementById('yamlContent');
+        const workflowFileNameEl = document.getElementById('workflowFileName');
         const modal = document.getElementById('generateModal');
 
         if (fullCommandEl) fullCommandEl.textContent = fullCommand;
         if (componentsOnlyCommandEl) componentsOnlyCommandEl.textContent = componentsCommand;
         if (yamlEl) yamlEl.textContent = yaml;
+        
+        // Update workflow file name dynamically
+        if (workflowFileNameEl) {
+            const workflowName = this.workflowState.properties.name || 'workflow';
+            const fileName = `${workflowName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.yaml`;
+            workflowFileNameEl.textContent = fileName;
+        }
+        
+        // Show prompt indicator if prompt is provided
+        const promptIndicator = document.getElementById('promptIndicator');
+        const promptText = document.getElementById('promptText');
+        if (promptIndicator && promptText) {
+            if (this.workflowState.properties.prompt) {
+                promptText.textContent = `"${this.workflowState.properties.prompt}"`;
+                promptIndicator.style.display = 'flex';
+            } else {
+                promptIndicator.style.display = 'none';
+            }
+        }
+        
         if (modal) modal.style.display = 'block';
+
+        // Setup close modal functionality
+        const closeModalBtn = document.getElementById('closeModal');
+        if (closeModalBtn) {
+            closeModalBtn.onclick = () => modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
 
         // Add copy functionality to the buttons in the modal
         const copyFullCommandBtn = document.getElementById('copyFullCommand');
@@ -765,7 +823,8 @@ components:
     }
 
     previewWorkflow() {
-        if (this.workflowState.agents.length === 0) {
+        const agents = this.workflowState.agents || [];
+        if (agents.length === 0) {
             this.showError('Add at least one component to preview the workflow.');
             return;
         }
