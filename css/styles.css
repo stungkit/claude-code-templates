@@ -2243,6 +2243,12 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* Share Dropdown Container */
+.share-dropdown {
+    position: relative;
+    flex: 1;
+}
+
 /* Share Stack Button */
 .share-stack-btn {
     background: var(--bg-tertiary);
@@ -2257,7 +2263,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex: 1;
+    width: 100%;
     justify-content: center;
 }
 
@@ -2267,57 +2273,80 @@ body {
     transform: translateY(-1px);
 }
 
+.dropdown-arrow {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+
+.share-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
 /* Share Options */
 .share-options {
-    display: flex;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: 6px;
+    box-shadow: 0 -4px 16px var(--shadow-primary);
+    display: none;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border-primary);
+    gap: 0;
+    margin-bottom: 8px;
+    z-index: 1000;
+}
+
+.share-dropdown.open .share-options {
+    display: flex;
 }
 
 .share-option-btn {
     background: var(--bg-tertiary);
     color: var(--text-primary);
-    border: 1px solid var(--border-primary);
-    padding: 0.6rem 1rem;
-    border-radius: 6px;
+    border: none;
+    border-bottom: 1px solid var(--border-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 0;
     cursor: pointer;
     font-size: 0.85rem;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .share-option-btn:hover {
     background: var(--bg-primary);
-    border-color: var(--text-accent);
-    transform: translateY(-1px);
+    color: var(--text-accent);
 }
 
 .share-option-btn:first-child {
-    background: #000;
-    color: white;
-    border-color: #000;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
 }
 
 .share-option-btn:first-child:hover {
-    background: #333;
-    border-color: #333;
+    background: var(--bg-primary);
+    color: var(--text-accent);
 }
 
 .share-option-btn:last-child {
-    background: #000;
-    color: white;
-    border-color: #000;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom: none;
 }
 
 .share-option-btn:last-child:hover {
-    background: #333;
-    border-color: #333;
+    background: var(--bg-primary);
+    color: var(--text-accent);
 }
 
         flex-direction: column;

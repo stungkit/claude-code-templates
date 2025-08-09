@@ -419,8 +419,7 @@ function clearCart() {
 
 function copyCartCommand() {
     const command = document.getElementById('generatedCommand').textContent;
-    copyToClipboard(command);
-    cartManager.showNotification('Command copied to clipboard!', 'success');
+    copyToClipboard(command, 'Command copied to clipboard!');
 }
 
 function downloadStack() {
@@ -465,11 +464,10 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Share functionality
-function showShareOptions() {
-    const shareOptions = document.getElementById('shareOptions');
-    const isVisible = shareOptions.style.display !== 'none';
-    shareOptions.style.display = isVisible ? 'none' : 'flex';
+// Share functionality - Dropdown style
+function toggleShareDropdown() {
+    const shareDropdown = document.getElementById('shareDropdown');
+    shareDropdown.classList.toggle('open');
 }
 
 function shareOnTwitter() {
@@ -483,8 +481,8 @@ Create yours at https://aitmpl.com`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
     window.open(twitterUrl, '_blank');
     
-    // Hide share options after sharing
-    document.getElementById('shareOptions').style.display = 'none';
+    // Close dropdown after sharing
+    document.getElementById('shareDropdown').classList.remove('open');
 }
 
 function shareOnThreads() {
@@ -498,6 +496,14 @@ Create yours at https://aitmpl.com`;
     const threadsUrl = `https://threads.net/intent/post?text=${encodeURIComponent(message)}`;
     window.open(threadsUrl, '_blank');
     
-    // Hide share options after sharing
-    document.getElementById('shareOptions').style.display = 'none';
+    // Close dropdown after sharing
+    document.getElementById('shareDropdown').classList.remove('open');
 }
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const shareDropdown = document.getElementById('shareDropdown');
+    if (shareDropdown && !shareDropdown.contains(e.target)) {
+        shareDropdown.classList.remove('open');
+    }
+});
