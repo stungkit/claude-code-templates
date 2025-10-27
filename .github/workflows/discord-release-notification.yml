@@ -23,14 +23,16 @@ jobs:
           REPO_NAME="${{ github.repository }}"
 
           # Truncate body if too long (Discord limit is 4096 characters for description)
-          TRUNCATED_BODY=$(echo "$RELEASE_BODY" | head -c 2000)
-          if [ ${#RELEASE_BODY} -gt 2000 ]; then
+          # Use printf to safely handle the content without executing it
+          TRUNCATED_BODY=$(printf '%s' "$RELEASE_BODY" | head -c 2000)
+          BODY_LENGTH=$(printf '%s' "$RELEASE_BODY" | wc -c | tr -d ' ')
+          if [ "$BODY_LENGTH" -gt 2000 ]; then
             TRUNCATED_BODY="${TRUNCATED_BODY}...\n\n[Read more]($RELEASE_URL)"
           fi
 
-          # Escape special characters for JSON
-          TRUNCATED_BODY=$(echo "$TRUNCATED_BODY" | jq -Rs .)
-          RELEASE_NAME=$(echo "$RELEASE_NAME" | jq -Rs .)
+          # Escape special characters for JSON using jq
+          TRUNCATED_BODY=$(printf '%s' "$TRUNCATED_BODY" | jq -Rs .)
+          RELEASE_NAME=$(printf '%s' "$RELEASE_NAME" | jq -Rs .)
 
           # Create Discord webhook payload
           PAYLOAD=$(cat <<EOF
