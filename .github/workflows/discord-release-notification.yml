@@ -11,19 +11,20 @@ jobs:
 
     steps:
       - name: Send Discord Webhook
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           # Prepare the Discord embed
           RELEASE_NAME="${{ github.event.release.name }}"
           RELEASE_TAG="${{ github.event.release.tag_name }}"
           RELEASE_URL="${{ github.event.release.html_url }}"
-          RELEASE_BODY="${{ github.event.release.body }}"
           RELEASE_AUTHOR="${{ github.event.release.author.login }}"
           RELEASE_AVATAR="${{ github.event.release.author.avatar_url }}"
           RELEASE_DATE="${{ github.event.release.published_at }}"
           REPO_NAME="${{ github.repository }}"
 
           # Truncate body if too long (Discord limit is 4096 characters for description)
-          # Use printf to safely handle the content without executing it
+          # Read from environment variable to prevent command execution
           TRUNCATED_BODY=$(printf '%s' "$RELEASE_BODY" | head -c 2000)
           BODY_LENGTH=$(printf '%s' "$RELEASE_BODY" | wc -c | tr -d ' ')
           if [ "$BODY_LENGTH" -gt 2000 ]; then
