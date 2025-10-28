@@ -62,7 +62,10 @@ function createEmbed(component, type = 'info') {
       description: 'Copy and paste this command in your terminal:',
       color: 0x00D9FF,
       url: url,
-      fields: [{ name: 'Installation Command', value: `\`\`\`bash\\n${installCommand}\\n\`\`\``, inline: false }],
+      fields: [
+        { name: 'Installation Command', value: `\`\`\`bash\n${installCommand}\n\`\`\``, inline: false },
+        { name: 'Component Page', value: `[View on aitmpl.com](${url})`, inline: false }
+      ],
       timestamp: new Date().toISOString(),
     };
   }
@@ -76,6 +79,7 @@ function createEmbed(component, type = 'info') {
       { name: 'Type', value: `\`${component.type}\``, inline: true },
       { name: 'Category', value: component.category || 'N/A', inline: true },
       { name: 'Downloads', value: `${component.downloads || 0}`, inline: true },
+      { name: 'Component Page', value: `[View on aitmpl.com](${url})`, inline: false }
     ],
     timestamp: new Date().toISOString(),
   };
