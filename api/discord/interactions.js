@@ -128,8 +128,8 @@ export default async function handler(req, res) {
                 const typeLabel = c.type === 'agents' ? 'agent' : c.type === 'commands' ? 'command' : c.type === 'mcps' ? 'mcp' : c.type === 'settings' ? 'setting' : c.type === 'hooks' ? 'hook' : c.type;
                 const url = `https://www.aitmpl.com/component/${typeLabel}/${c.name}`;
                 return {
-                  name: `${i + 1}. ${componentTypes[c.type].icon} [${c.name}](${url})`,
-                  value: `**Type:** ${c.type} | **Downloads:** ${c.downloads || 0}`,
+                  name: `${i + 1}. ${componentTypes[c.type].icon} ${c.name}`,
+                  value: `**Type:** ${c.type} | **Downloads:** ${c.downloads || 0}\n[View on aitmpl.com](${url})`,
                   inline: false
                 };
               }),
