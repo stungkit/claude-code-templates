@@ -1,11 +1,6 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+import { verifyKey, InteractionType, InteractionResponseType } from 'discord-interactions';
+import axios from 'axios';
 
-const { verifyKey } = require('discord-interactions');
-const { InteractionType, InteractionResponseType } = require('discord-interactions');
-const axios = require('axios');
-
-// Component types configuration
 const componentTypes = {
   agents: { icon: '🤖', color: 0xFF6B6B },
   commands: { icon: '⚡', color: 0x4ECDC4 },
@@ -16,7 +11,6 @@ const componentTypes = {
   plugins: { icon: '🧩', color: 0xFFD93D },
 };
 
-// Cache
 let cachedComponents = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000;
@@ -26,7 +20,6 @@ async function getComponents() {
   if (cachedComponents && cacheTimestamp && (now - cacheTimestamp) < CACHE_DURATION) {
     return cachedComponents;
   }
-
   const response = await axios.get('https://aitmpl.com/components.json', { timeout: 10000 });
   cachedComponents = response.data;
   cacheTimestamp = now;
@@ -41,18 +34,15 @@ function searchComponents(components, query, type = null) {
   for (const componentType of typesToSearch) {
     const componentList = components[componentType] || [];
     for (const component of componentList) {
-      if (component.name.toLowerCase().includes(lowerQuery) ||
-          component.category?.toLowerCase().includes(lowerQuery)) {
+      if (component.name.toLowerCase().includes(lowerQuery) || component.category?.toLowerCase().includes(lowerQuery)) {
         results.push({
           ...component,
           type: componentType,
-          score: component.name.toLowerCase() === lowerQuery ? 100 :
-                 component.name.toLowerCase().startsWith(lowerQuery) ? 50 : 20
+          score: component.name.toLowerCase() === lowerQuery ? 100 : component.name.toLowerCase().startsWith(lowerQuery) ? 50 : 20
         });
       }
     }
   }
-
   return results.sort((a, b) => b.score - a.score).slice(0, 10);
 }
 
@@ -64,7 +54,6 @@ function createEmbed(component, type = 'info') {
   if (type === 'install') {
     const flagName = component.type === 'templates' ? 'template' : component.type;
     const installCommand = `npx claude-code-templates@latest --${flagName} ${component.name}`;
-
     return {
       title: `${icon} Install ${component.name}`,
       description: 'Copy and paste this command in your terminal:',
@@ -117,14 +106,12 @@ export default async function handler(req, res) {
       const components = await getComponents();
       const commandName = interaction.data.name;
       const options = interaction.data.options || [];
-
       let response;
 
       if (commandName === 'search') {
         const query = options.find(o => o.name === 'query')?.value;
         const type = options.find(o => o.name === 'type')?.value;
         const results = searchComponents(components, query, type);
-
         response = {
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
@@ -144,10 +131,8 @@ export default async function handler(req, res) {
       } else if (commandName === 'info' || commandName === 'install') {
         const name = options.find(o => o.name === 'name')?.value;
         const type = options.find(o => o.name === 'type')?.value;
-
         let component = null;
         const types = type ? [type] : Object.keys(componentTypes);
-
         for (const t of types) {
           const found = components[t]?.find(c => c.name === name);
           if (found) {
@@ -155,14 +140,10 @@ export default async function handler(req, res) {
             break;
           }
         }
-
         if (!component) {
           response = {
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-              content: `Component "${name}" not found. Use \`/search\` to find components.`,
-              flags: 64
-            }
+            data: { content: `Component "${name}" not found. Use \`/search\` to find components.`, flags: 64 }
           };
         } else {
           response = {
@@ -173,7 +154,6 @@ export default async function handler(req, res) {
       } else if (commandName === 'popular' || commandName === 'random') {
         const type = options.find(o => o.name === 'type')?.value;
         const componentList = components[type] || [];
-
         let component;
         if (commandName === 'popular') {
           const sorted = [...componentList].sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
@@ -181,7 +161,6 @@ export default async function handler(req, res) {
         } else {
           component = componentList[Math.floor(Math.random() * componentList.length)];
         }
-
         if (component) {
           response = {
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
