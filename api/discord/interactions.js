@@ -51,6 +51,9 @@ function createEmbed(component, type = 'info') {
   const icon = typeConfig?.icon || '📦';
   const color = typeConfig?.color || 0x00D9FF;
 
+  const typeLabel = component.type === 'agents' ? 'agent' : component.type === 'commands' ? 'command' : component.type === 'mcps' ? 'mcp' : component.type === 'settings' ? 'setting' : component.type === 'hooks' ? 'hook' : component.type;
+  const url = `https://www.aitmpl.com/component/${typeLabel}/${component.name}`;
+
   if (type === 'install') {
     const flagName = component.type === 'templates' ? 'template' : component.type;
     const installCommand = `npx claude-code-templates@latest --${flagName} ${component.name}`;
@@ -58,6 +61,7 @@ function createEmbed(component, type = 'info') {
       title: `${icon} Install ${component.name}`,
       description: 'Copy and paste this command in your terminal:',
       color: 0x00D9FF,
+      url: url,
       fields: [{ name: 'Installation Command', value: `\`\`\`bash\\n${installCommand}\\n\`\`\``, inline: false }],
       timestamp: new Date().toISOString(),
     };
@@ -65,6 +69,7 @@ function createEmbed(component, type = 'info') {
 
   return {
     title: `${icon} ${component.name}`,
+    url: url,
     description: component.description || component.content?.substring(0, 200) || 'No description',
     color: color,
     fields: [
@@ -119,11 +124,15 @@ export default async function handler(req, res) {
               title: `🔍 Search Results for "${query}"`,
               description: `Found ${results.length} result(s)`,
               color: 0x00D9FF,
-              fields: results.map((c, i) => ({
-                name: `${i + 1}. ${componentTypes[c.type].icon} ${c.name}`,
-                value: `**Type:** ${c.type} | **Downloads:** ${c.downloads || 0}`,
-                inline: false
-              })),
+              fields: results.map((c, i) => {
+                const typeLabel = c.type === 'agents' ? 'agent' : c.type === 'commands' ? 'command' : c.type === 'mcps' ? 'mcp' : c.type === 'settings' ? 'setting' : c.type === 'hooks' ? 'hook' : c.type;
+                const url = `https://www.aitmpl.com/component/${typeLabel}/${c.name}`;
+                return {
+                  name: `${i + 1}. ${componentTypes[c.type].icon} [${c.name}](${url})`,
+                  value: `**Type:** ${c.type} | **Downloads:** ${c.downloads || 0}`,
+                  inline: false
+                };
+              }),
               timestamp: new Date().toISOString()
             }]
           }
