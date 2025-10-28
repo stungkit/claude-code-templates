@@ -52,7 +52,8 @@ function createEmbed(component, type = 'info') {
   const color = typeConfig?.color || 0x00D9FF;
 
   const typeLabel = component.type === 'agents' ? 'agent' : component.type === 'commands' ? 'command' : component.type === 'mcps' ? 'mcp' : component.type === 'settings' ? 'setting' : component.type === 'hooks' ? 'hook' : component.type;
-  const url = `https://www.aitmpl.com/component/${typeLabel}/${component.name}`;
+  const category = component.category || 'general';
+  const url = `https://www.aitmpl.com/component/${typeLabel}/${category}/${component.name}`;
 
   if (type === 'install') {
     const flagName = component.type === 'templates' ? 'template' : component.type;
@@ -130,7 +131,8 @@ export default async function handler(req, res) {
               color: 0x00D9FF,
               fields: results.map((c, i) => {
                 const typeLabel = c.type === 'agents' ? 'agent' : c.type === 'commands' ? 'command' : c.type === 'mcps' ? 'mcp' : c.type === 'settings' ? 'setting' : c.type === 'hooks' ? 'hook' : c.type;
-                const url = `https://www.aitmpl.com/component/${typeLabel}/${c.name}`;
+                const category = c.category || 'general';
+                const url = `https://www.aitmpl.com/component/${typeLabel}/${category}/${c.name}`;
                 return {
                   name: `${i + 1}. ${componentTypes[c.type].icon} ${c.name}`,
                   value: `**Type:** ${c.type} | **Downloads:** ${c.downloads || 0}\n[View on aitmpl.com](${url})`,
