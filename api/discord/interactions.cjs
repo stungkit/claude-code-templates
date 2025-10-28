@@ -2,11 +2,11 @@ const { verifyKey } = require('discord-interactions');
 const { InteractionType, InteractionResponseType } = require('discord-interactions');
 
 // Import command handlers
-const searchHandler = require('./handlers/search');
-const infoHandler = require('./handlers/info');
-const installHandler = require('./handlers/install');
-const popularHandler = require('./handlers/popular');
-const randomHandler = require('./handlers/random');
+const searchHandler = require('./handlers/search.cjs');
+const infoHandler = require('./handlers/info.cjs');
+const installHandler = require('./handlers/install.cjs');
+const popularHandler = require('./handlers/popular.cjs');
+const randomHandler = require('./handlers/random.cjs');
 
 // Command handlers mapping
 const commandHandlers = {

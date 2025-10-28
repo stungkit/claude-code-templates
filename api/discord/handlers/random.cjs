@@ -1,6 +1,6 @@
 const { InteractionResponseType } = require('discord-interactions');
-const { getComponents, getRandomComponent } = require('../utils/componentsLoader');
-const { createComponentEmbed, createErrorEmbed } = require('../utils/embedBuilder');
+const { getComponents, getRandomComponent } = require('../utils/componentsLoader.cjs');
+const { createComponentEmbed, createErrorEmbed } = require('../utils/embedBuilder.cjs');
 
 module.exports = async (interaction) => {
   try {

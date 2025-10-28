@@ -1,6 +1,6 @@
 const { InteractionResponseType } = require('discord-interactions');
-const { getComponents, getComponentByName, searchComponents } = require('../utils/componentsLoader');
-const { createInstallEmbed, createErrorEmbed } = require('../utils/embedBuilder');
+const { getComponents, getComponentByName, searchComponents } = require('../utils/componentsLoader.cjs');
+const { createComponentEmbed, createErrorEmbed } = require('../utils/embedBuilder.cjs');
 
 module.exports = async (interaction) => {
   try {
@@ -46,7 +46,7 @@ module.exports = async (interaction) => {
           data: {
             embeds: [
               createErrorEmbed(
-                `Component "${name}" not found. Did you mean:\n${suggestions}\n\nUse \`/install <exact-name>\` to get the installation command.`
+                `Component "${name}" not found. Did you mean:\n${suggestions}`
               ),
             ],
             flags: 64,
@@ -67,7 +67,7 @@ module.exports = async (interaction) => {
       };
     }
 
-    const embed = createInstallEmbed(component);
+    const embed = createComponentEmbed(component);
 
     return {
       type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -76,12 +76,12 @@ module.exports = async (interaction) => {
       },
     };
   } catch (error) {
-    console.error('Error in install handler:', error);
+    console.error('Error in info handler:', error);
 
     return {
       type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
       data: {
-        embeds: [createErrorEmbed('Failed to generate installation command.')],
+        embeds: [createErrorEmbed('Failed to fetch component information.')],
         flags: 64,
       },
     };
