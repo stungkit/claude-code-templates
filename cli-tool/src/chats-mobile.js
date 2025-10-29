@@ -478,8 +478,8 @@ class ChatsMobile {
       }
     });
 
-    // API to share a conversation session
-    this.app.post('/api/conversations/:id/share', async (req, res) => {
+    // API to download a conversation session as markdown
+    this.app.post('/api/conversations/:id/download', async (req, res) => {
       try {
         const conversationId = req.params.id;
         const conversation = this.data.conversations.find(conv => conv.id === conversationId);
@@ -488,24 +488,25 @@ class ChatsMobile {
           return res.status(404).json({ error: 'Conversation not found' });
         }
 
-        console.log(chalk.cyan(`📤 Sharing conversation ${conversationId}...`));
+        console.log(chalk.cyan(`📥 Exporting conversation ${conversationId} as markdown...`));
 
-        // Share the session using SessionSharing module
-        const shareResult = await this.sessionSharing.shareSession(conversationId, conversation);
+        // Export the session as markdown using SessionSharing module
+        const exportResult = await this.sessionSharing.exportSessionAsMarkdown(conversationId, conversation);
 
         res.json({
           success: true,
           conversationId: conversationId,
-          uploadUrl: shareResult.uploadUrl,
-          shareCommand: shareResult.shareCommand,
-          expiresIn: shareResult.expiresIn,
-          qrCode: shareResult.qrCode,
+          markdown: exportResult.markdown,
+          filename: exportResult.filename,
+          messageCount: exportResult.messageCount,
+          totalMessageCount: exportResult.totalMessageCount,
+          wasLimited: exportResult.wasLimited,
           timestamp: new Date().toISOString()
         });
       } catch (error) {
-        console.error('Error sharing conversation:', error);
+        console.error('Error exporting conversation:', error);
         res.status(500).json({
-          error: 'Failed to share session',
+          error: 'Failed to export session',
           message: error.message
         });
       }

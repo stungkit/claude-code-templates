@@ -116,15 +116,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **💬 Community**: [GitHub Discussions](https://github.com/davila7/claude-code-templates/discussions)
 - **🐛 Issues**: [GitHub Issues](https://github.com/davila7/claude-code-templates/issues)
 
-## ⭐ Star History
-
-<a href="https://star-history.com/#davila7/claude-code-templates&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=davila7/claude-code-templates&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=davila7/claude-code-templates&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=davila7/claude-code-templates&type=Date" />
-  </picture>
-</a>
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/davila7/claude-code-templates.svg?variant=adaptive)](https://starchart.cc/davila7/claude-code-templates)
 
 ---
 

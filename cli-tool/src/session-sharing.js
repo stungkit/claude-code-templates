@@ -8,60 +8,134 @@ const execAsync = promisify(exec);
 const QRCode = require('qrcode');
 
 /**
- * SessionSharing - Handles exporting and importing Claude Code sessions
- * Uses x0.at - a simple, reliable file hosting service
+ * SessionSharing - Handles exporting Claude Code sessions as downloadable context
  */
 class SessionSharing {
   constructor(conversationAnalyzer) {
     this.conversationAnalyzer = conversationAnalyzer;
-    this.uploadService = 'x0.at';
-    this.uploadUrl = 'https://x0.at';
   }
 
   /**
-   * Export and share a conversation session
-   * @param {string} conversationId - Conversation ID to share
+   * Export conversation session as downloadable markdown file
+   * @param {string} conversationId - Conversation ID to export
    * @param {Object} conversationData - Full conversation data object
-   * @param {Object} options - Share options (messageLimit, etc.)
-   * @returns {Promise<Object>} Share result with URL, command, and QR code
+   * @param {Object} options - Export options (messageLimit, etc.)
+   * @returns {Promise<Object>} Export result with markdown content and filename
    */
-  async shareSession(conversationId, conversationData, options = {}) {
-    console.log(chalk.blue(`📤 Preparing session ${conversationId} for sharing...`));
+  async exportSessionAsMarkdown(conversationId, conversationData, options = {}) {
+    console.log(chalk.blue(`📥 Preparing session ${conversationId} for download...`));
 
     try {
-      // 1. Export session to structured JSON format
-      const sessionExport = await this.exportSessionData(conversationId, conversationData, options);
+      // 1. Get conversation messages
+      const allMessages = await this.conversationAnalyzer.getParsedConversation(conversationData.filePath);
 
-      // 2. Upload to x0.at
-      const uploadUrl = await this.uploadToX0(sessionExport, conversationId);
+      // Limit messages to avoid large file sizes (default: last 100 messages)
+      const messageLimit = options.messageLimit || 100;
+      const messages = allMessages.slice(-messageLimit);
 
-      // 3. Generate share command
-      const shareCommand = `npx claude-code-templates@latest --clone-session "${uploadUrl}"`;
+      // 2. Convert to markdown format
+      const markdown = this.convertToMarkdown(messages, conversationData, {
+        messageCount: messages.length,
+        totalMessageCount: allMessages.length,
+        wasLimited: allMessages.length > messageLimit
+      });
 
-      // 4. Generate QR code
-      const qrCode = await this.generateQRCode(shareCommand);
+      // 3. Generate filename
+      const projectName = (conversationData.project || 'session').replace(/[^a-zA-Z0-9-_]/g, '-');
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `claude-context-${projectName}-${date}.md`;
 
-      console.log(chalk.green(`✅ Session shared successfully!`));
-      console.log(chalk.cyan(`📋 Share command: ${shareCommand}`));
-      console.log(chalk.gray(`🔗 Direct URL: ${uploadUrl}`));
-      console.log(chalk.yellow(`⚠️  Files kept for 3-100 days (based on size)`));
-      console.log(chalk.gray(`🔓 Note: Files are not encrypted by default`));
+      console.log(chalk.green(`✅ Session exported successfully!`));
+      console.log(chalk.gray(`📊 Exported ${messages.length} messages`));
 
       return {
         success: true,
-        uploadUrl,
-        shareCommand,
-        expiresIn: 'After first download',
-        conversationId,
-        qrCode,
-        messageCount: sessionExport.conversation.messageCount,
-        totalMessageCount: sessionExport.conversation.totalMessageCount,
-        wasLimited: sessionExport.conversation.wasLimited
+        markdown,
+        filename,
+        messageCount: messages.length,
+        totalMessageCount: allMessages.length,
+        wasLimited: allMessages.length > messageLimit
       };
     } catch (error) {
-      console.error(chalk.red('❌ Failed to share session:'), error.message);
+      console.error(chalk.red('❌ Failed to export session:'), error.message);
       throw error;
     }
+  }
+
+  /**
+   * Convert conversation messages to markdown format optimized for Claude Code
+   * @param {Array} messages - Parsed conversation messages
+   * @param {Object} conversationData - Conversation metadata
+   * @param {Object} stats - Export statistics
+   * @returns {string} Markdown formatted content
+   */
+  convertToMarkdown(messages, conversationData, stats) {
+    const lines = [];
+
+    // Header
+    lines.push('# Claude Code Conversation Context\n');
+    lines.push(`**Project:** ${conversationData.project || 'Unknown'}`);
+    lines.push(`**Exported:** ${new Date().toISOString().split('T')[0]}`);
+    lines.push(`**Messages:** ${stats.messageCount}${stats.wasLimited ? ` (of ${stats.totalMessageCount} total)` : ''}`);
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+
+    // Instructions for Claude
+    lines.push('## 📖 How to Use This Context\n');
+    lines.push('This file contains the conversation history from a previous Claude Code session.');
+    lines.push('To continue this conversation with full context:');
+    lines.push('');
+    lines.push('1. Add this file to your project repository');
+    lines.push('2. In Claude Code, reference it using `@filename`');
+    lines.push('3. Ask Claude to read and understand the context');
+    lines.push('');
+    lines.push('**Example:** "Read @claude-context file and continue helping me with the task"');
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+
+    // Conversation
+    lines.push('## 💬 Conversation History\n');
+
+    messages.forEach((msg, index) => {
+      const role = msg.role === 'user' ? '👤 User' : '🤖 Assistant';
+      const timestamp = new Date(msg.timestamp).toLocaleString();
+
+      lines.push(`### Message ${index + 1}: ${role}`);
+      lines.push(`*${timestamp}*\n`);
+
+      // Extract text content from message
+      if (Array.isArray(msg.content)) {
+        msg.content.forEach(block => {
+          if (block.type === 'text') {
+            lines.push(block.text);
+          } else if (block.type === 'tool_use') {
+            lines.push(`\`\`\`${block.name || 'tool'}`);
+            lines.push(JSON.stringify(block.input || {}, null, 2));
+            lines.push('```');
+          } else if (block.type === 'tool_result') {
+            lines.push('**Tool Result:**');
+            lines.push('```');
+            lines.push(typeof block.content === 'string' ? block.content : JSON.stringify(block.content, null, 2));
+            lines.push('```');
+          }
+        });
+      } else if (typeof msg.content === 'string') {
+        lines.push(msg.content);
+      }
+
+      lines.push('');
+      lines.push('---');
+      lines.push('');
+    });
+
+    // Footer
+    lines.push('\n---');
+    lines.push('');
+    lines.push('*Generated by Claude Code Templates - [aitmpl.com](https://aitmpl.com)*');
+
+    return lines.join('\n');
   }
 
   /**
