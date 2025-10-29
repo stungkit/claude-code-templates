@@ -72,25 +72,12 @@ class SessionSharing {
   convertToMarkdown(messages, conversationData, stats) {
     const lines = [];
 
-    // Header
-    lines.push('# Claude Code Conversation Context\n');
+    // Header for Claude Code
+    lines.push('# Previous Conversation Context\n');
+    lines.push('> **Note to Claude Code**: This file contains the complete conversation history from a previous session. Read and understand this context to continue helping the user with their task.\n');
     lines.push(`**Project:** ${conversationData.project || 'Unknown'}`);
-    lines.push(`**Exported:** ${new Date().toISOString().split('T')[0]}`);
-    lines.push(`**Messages:** ${stats.messageCount}${stats.wasLimited ? ` (of ${stats.totalMessageCount} total)` : ''}`);
-    lines.push('');
-    lines.push('---');
-    lines.push('');
-
-    // Instructions for Claude
-    lines.push('## 📖 How to Use This Context\n');
-    lines.push('This file contains the conversation history from a previous Claude Code session.');
-    lines.push('To continue this conversation with full context:');
-    lines.push('');
-    lines.push('1. Add this file to your project repository');
-    lines.push('2. In Claude Code, reference it using `@filename`');
-    lines.push('3. Ask Claude to read and understand the context');
-    lines.push('');
-    lines.push('**Example:** "Read @claude-context file and continue helping me with the task"');
+    lines.push(`**Date:** ${new Date().toISOString().split('T')[0]}`);
+    lines.push(`**Messages in this export:** ${stats.messageCount}${stats.wasLimited ? ` (most recent from a total of ${stats.totalMessageCount})` : ''}`);
     lines.push('');
     lines.push('---');
     lines.push('');

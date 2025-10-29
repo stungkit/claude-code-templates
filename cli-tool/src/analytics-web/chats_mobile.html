@@ -2152,29 +2152,29 @@
             </div>
             <div style="padding: 20px;">
                 <p class="modal-description" style="margin-bottom: 16px; line-height: 1.5;">
-                    Download this conversation as a <strong>Markdown file</strong> to continue working on it later or share the context with Claude Code.
+                    Download this conversation as a <strong>Markdown context file</strong> that Claude Code can read to continue your work.
                 </p>
 
                 <div style="background: rgba(59, 130, 246, 0.08); border-left: 3px solid #3b82f6; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
                     <h4 style="color: #3b82f6; margin: 0 0 8px 0; font-size: 14px;">📋 What's included</h4>
                     <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
-                        Last <strong>100 messages</strong> from this conversation (or all messages if less than 100)
+                        Full conversation history (last <strong>100 messages</strong>) formatted for Claude Code to understand
                     </p>
                 </div>
 
                 <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
                     <h4 style="color: #10b981; margin: 0 0 8px 0; font-size: 14px;">💡 How to use</h4>
                     <ol style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                        <li style="margin-bottom: 6px;">Download the markdown file</li>
-                        <li style="margin-bottom: 6px;">Add it to your project repository</li>
-                        <li style="margin-bottom: 6px;">In Claude Code, reference it using <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px;">@filename</code></li>
-                        <li style="margin-bottom: 6px;">Ask Claude to read and continue the conversation</li>
+                        <li style="margin-bottom: 6px;">Download the context file</li>
+                        <li style="margin-bottom: 6px;">Save it in your project repository</li>
+                        <li style="margin-bottom: 6px;">In Claude Code, use <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px;">@filename</code> to reference it</li>
+                        <li style="margin-bottom: 6px;">Claude will read and understand the previous conversation</li>
                     </ol>
                 </div>
 
                 <div style="background: rgba(100, 116, 139, 0.08); border-left: 3px solid #64748b; padding: 12px; border-radius: 6px;">
                     <p style="margin: 0; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
-                        <strong>Example:</strong> "Read <code style="background: var(--bg-tertiary); padding: 2px 4px; border-radius: 3px;">@claude-context-myproject.md</code> and continue helping me with the task"
+                        <strong>Example:</strong> Type <code style="background: var(--bg-tertiary); padding: 2px 4px; border-radius: 3px;">@claude-context-myproject.md</code> in Claude Code and Claude will automatically load the previous conversation context
                     </p>
                 </div>
             </div>
