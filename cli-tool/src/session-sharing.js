@@ -117,14 +117,14 @@ class SessionSharing {
       exported_at: new Date().toISOString(),
       conversation: {
         id: conversationId,
-        project: conversationData.project || 'Unknown',
+        project: conversationData.project || 'shared-session',
         created: conversationData.created,
         lastModified: conversationData.lastModified,
         messageCount: messages.length,
         totalMessageCount: allMessages.length,
         wasLimited: allMessages.length > messageLimit,
         tokens: conversationData.tokens,
-        model: conversationData.modelInfo?.primaryModel || 'Unknown'
+        model: conversationData.modelInfo?.primaryModel || 'claude-sonnet-4-5-20250929'
       },
       messages: jsonlMessages,
       metadata: {
@@ -223,8 +223,8 @@ class SessionSharing {
       console.log(chalk.green(`\n✅ Session installed successfully!`));
       console.log(chalk.cyan(`📂 Location: ${installResult.sessionPath}`));
 
-      // Show resume command
-      const resumeCommand = `claude --resume ${installResult.projectPath} ${installResult.conversationId}`;
+      // Show resume command (only conversation ID needed)
+      const resumeCommand = `claude --resume ${installResult.conversationId}`;
       console.log(chalk.yellow(`\n💡 To continue this conversation, run:`));
       console.log(chalk.white(`\n   ${resumeCommand}\n`));
       console.log(chalk.gray(`   Or open Claude Code to see it in your sessions list`));
