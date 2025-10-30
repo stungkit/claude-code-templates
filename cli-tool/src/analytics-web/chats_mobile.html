@@ -2163,18 +2163,25 @@
                 </div>
 
                 <div style="background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                    <h4 style="color: #10b981; margin: 0 0 8px 0; font-size: 14px;">💡 How to use</h4>
-                    <ol style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                        <li style="margin-bottom: 6px;">Download the context file</li>
-                        <li style="margin-bottom: 6px;">Save it in your project repository</li>
-                        <li style="margin-bottom: 6px;">In Claude Code, use <code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 3px;">@filename</code> to reference it</li>
-                        <li style="margin-bottom: 6px;">Claude will read and understand the previous conversation</li>
-                    </ol>
+                    <h4 style="color: #10b981; margin: 0 0 8px 0; font-size: 14px;">💡 How to continue the conversation</h4>
+                    <p style="margin: 0 0 12px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                        After downloading, use one of these commands to load the context:
+                    </p>
+
+                    <div style="margin-bottom: 10px;">
+                        <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #10b981;">Option 1: Direct reference</p>
+                        <code style="display: block; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-size: 12px; color: #e5e7eb; overflow-x: auto; white-space: nowrap;">claude "read @context-file.md and continue"</code>
+                    </div>
+
+                    <div>
+                        <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #10b981;">Option 2: Using cat (pipe)</p>
+                        <code style="display: block; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px; font-size: 12px; color: #e5e7eb; overflow-x: auto; white-space: nowrap;">cat context-file.md | claude</code>
+                    </div>
                 </div>
 
                 <div style="background: rgba(100, 116, 139, 0.08); border-left: 3px solid #64748b; padding: 12px; border-radius: 6px;">
                     <p style="margin: 0; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
-                        <strong>Example:</strong> Type <code style="background: var(--bg-tertiary); padding: 2px 4px; border-radius: 3px;">@claude-context-myproject.md</code> in Claude Code and Claude will automatically load the previous conversation context
+                        💾 <strong>Tip:</strong> Save the downloaded file in your project directory for easy access
                     </p>
                 </div>
             </div>
