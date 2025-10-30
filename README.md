@@ -25,17 +25,17 @@
 
 ```bash
 # Install a complete development stack
-npx claude-code-templates@latest --agent development-team/frontend-developer --command testing/generate-tests --mcp development/github-integration
+npx claude-code-templates@latest --agent development-team/frontend-developer --command testing/generate-tests --mcp development/github-integration --yes
 
 # Browse and install interactively
 npx claude-code-templates@latest
 
 # Install specific components
-npx claude-code-templates@latest --agent business-marketing/security-auditor
-npx claude-code-templates@latest --command performance/optimize-bundle
-npx claude-code-templates@latest --setting performance/mcp-timeouts
-npx claude-code-templates@latest --hook git/pre-commit-validation
-npx claude-code-templates@latest --mcp database/postgresql-integration
+npx claude-code-templates@latest --agent development-tools/code-reviewer --yes
+npx claude-code-templates@latest --command performance/optimize-bundle --yes
+npx claude-code-templates@latest --setting performance/mcp-timeouts --yes
+npx claude-code-templates@latest --hook git/pre-commit-validation --yes
+npx claude-code-templates@latest --mcp database/postgresql-integration --yes
 ```
 
 ## What You Get
@@ -47,7 +47,7 @@ npx claude-code-templates@latest --mcp database/postgresql-integration
 | **🔌 MCPs** | External service integrations | GitHub, PostgreSQL, Stripe, AWS, OpenAI |
 | **⚙️ Settings** | Claude Code configurations | Timeouts, memory settings, output styles |
 | **🪝 Hooks** | Automation triggers | Pre-commit validation, post-completion actions |
-| **📦 Templates** | Complete project configurations with CLAUDE.md, .claude/* files and .mcp.json | Framework-specific setups, project best practices |
+| **🎨 Skills** | Reusable capabilities with progressive disclosure | PDF processing, Excel automation, custom workflows |
 
 ## 🛠️ Additional Tools
 
