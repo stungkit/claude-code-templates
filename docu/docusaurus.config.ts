@@ -70,6 +70,10 @@ const config: Config = {
         theme: {
           customCss: './src/css/custom.css',
         },
+        gtag: {
+          trackingID: 'G-YWW6FV2SGN',
+          anonymizeIP: true,
+        },
       } satisfies Preset.Options,
     ],
   ],
@@ -162,10 +166,6 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-    },
-    gtag: {
-      trackingID: 'G-YWW6FV2SGN',
-      anonymizeIP: true,
     },
   } satisfies Preset.ThemeConfig,
 };
