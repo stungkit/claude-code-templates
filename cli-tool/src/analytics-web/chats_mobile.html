@@ -782,6 +782,15 @@
             stroke: rgba(251, 146, 60, 1);
         }
 
+        .action-btn.analytics-btn:hover {
+            background: rgba(139, 92, 246, 0.15);
+            color: rgba(139, 92, 246, 1);
+        }
+
+        .action-btn.analytics-btn:hover svg {
+            stroke: rgba(139, 92, 246, 1);
+        }
+
         /* Conversations list */
         .conversations-list {
             flex: 1;
@@ -2067,6 +2076,14 @@
                             </svg>
                             <span>Search</span>
                         </button>
+                        <button class="action-btn analytics-btn" id="showAnalytics" onclick="showAnalyticsModal()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                            <span>Analytics</span>
+                        </button>
                     </div>
                 </div>
                 <div class="header-right">
@@ -2192,6 +2209,176 @@
                 <button class="modal-btn primary" onclick="proceedWithDownload()" style="background: #3b82f6;">
                     Download Context File
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div class="modal-overlay" id="analyticsModal">
+        <div class="modal" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">Session Analytics (Beta)</h3>
+            </div>
+            <div style="padding: 20px;">
+                <!-- Loading State -->
+                <div id="analyticsLoading" style="text-align: center; padding: 40px;">
+                    <p style="color: var(--text-secondary);">Loading analytics data...</p>
+                </div>
+
+                <!-- Analytics Content (hidden initially) -->
+                <div id="analyticsContent" style="display: none;">
+                    <!-- Overview Stats - 3 columns -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                        <div style="background: rgba(139, 92, 246, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #8b5cf6;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Total Messages</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #8b5cf6;" id="analyticsMessageCount">-</div>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #3b82f6;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Total Tokens</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #3b82f6;" id="analyticsTotalTokens">-</div>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #10b981;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Tool Calls</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #10b981;" id="analyticsToolCalls">-</div>
+                        </div>
+                        <div style="background: rgba(234, 88, 12, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #ea580c;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Tools Used</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #ea580c;" id="analyticsUniqueTools">-</div>
+                        </div>
+                        <div style="background: rgba(251, 146, 60, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #fb923c;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Models Used</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #fb923c;" id="analyticsUniqueModels">-</div>
+                        </div>
+                        <div style="background: rgba(168, 85, 247, 0.1); border-radius: 8px; padding: 12px; border-left: 3px solid #a855f7;">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Cache Efficiency</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #a855f7;" id="analyticsCacheEfficiency">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Token Usage Breakdown -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Token Usage Breakdown
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Input Tokens</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #3b82f6;" id="analyticsInputTokens">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Output Tokens</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #8b5cf6;" id="analyticsOutputTokens">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Cache Creation</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #fb923c;" id="analyticsCacheCreation">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Cache Reads</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #10b981;" id="analyticsCacheReads">-</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">Cost Estimate (USD)</div>
+                            <div style="font-size: 16px; font-weight: 600; color: #10b981;" id="analyticsCostEstimate">$0.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Session Timeline -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Session Timeline
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Started</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="analyticsStartTime">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Last Activity</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="analyticsLastActivity">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Duration</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="analyticsDuration">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Status</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="analyticsStatus">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Breakdown -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Time Breakdown
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Claude Executing</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #3b82f6;" id="analyticsWaitTime">-</div>
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;" id="analyticsWaitPercent">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">User Conversing</div>
+                                <div style="font-size: 18px; font-weight: 600; color: #10b981;" id="analyticsUserTime">-</div>
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;" id="analyticsUserPercent">-</div>
+                            </div>
+                        </div>
+                        <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; display: flex;">
+                            <div id="analyticsWaitBar" style="background: linear-gradient(90deg, #3b82f6, #2563eb); transition: width 0.3s ease;"></div>
+                            <div id="analyticsUserBar" style="background: linear-gradient(90deg, #10b981, #059669); transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Model Information -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Model Information
+                        </h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Primary Model</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); font-family: monospace;" id="analyticsPrimaryModel">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Service Tier</div>
+                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="analyticsServiceTier">-</div>
+                            </div>
+                        </div>
+                        <div id="analyticsAllModels" style="display: none; margin-top: 12px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">All Models Used</div>
+                            <div id="analyticsModelsList" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                <!-- Models will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tool Usage -->
+                    <div style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Tool Usage
+                        </h4>
+                        <div id="analyticsToolsList" style="max-height: 200px; overflow-y: auto;">
+                            <!-- Tool usage will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Components Used -->
+                    <div id="analyticsComponentsSection" style="background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 16px; margin-bottom: 16px; display: none;">
+                        <h4 style="margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px;">
+                            Components Used
+                        </h4>
+                        <div id="analyticsComponentsContent">
+                            <!-- Components will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn secondary" onclick="closeAnalyticsModal()">Close</button>
             </div>
         </div>
     </div>
@@ -2601,8 +2788,10 @@
 
                 const resumeBtn = document.getElementById('resumeConversation');
                 const downloadBtn = document.getElementById('downloadConversation');
+                const analyticsBtn = document.getElementById('showAnalytics');
                 resumeBtn.setAttribute('data-conversation-id', conversationId);
                 downloadBtn.setAttribute('data-conversation-id', conversationId);
+                analyticsBtn.setAttribute('data-conversation-id', conversationId);
 
                 // Load messages (placeholder for now)
                 this.loadChatMessages(conversationId);
@@ -4759,6 +4948,288 @@
             } catch (error) {
                 console.error('❌ Failed to download context:', error);
                 alert(`Failed to download context: ${error.message}`);
+            }
+        }
+
+        // Analytics Modal Functions
+        async function showAnalyticsModal() {
+            const analyticsBtn = document.getElementById('showAnalytics');
+            const conversationId = analyticsBtn.getAttribute('data-conversation-id');
+
+            if (!conversationId) {
+                console.error('No conversation ID found');
+                return;
+            }
+
+            console.log('📊 Opening analytics modal for conversation:', conversationId);
+
+            // Show analytics modal
+            const analyticsModal = document.getElementById('analyticsModal');
+            analyticsModal.classList.add('show');
+
+            // Reset to loading state
+            document.getElementById('analyticsLoading').style.display = 'block';
+            document.getElementById('analyticsContent').style.display = 'none';
+
+            // Close modal when clicking outside
+            analyticsModal.addEventListener('click', (e) => {
+                if (e.target === analyticsModal) {
+                    closeAnalyticsModal();
+                }
+            });
+
+            // Fetch analytics data
+            try {
+                const response = await fetch(`/api/conversations/${conversationId}/analytics`);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch analytics: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Analytics fetched:', data);
+
+                // Populate modal with analytics data
+                populateAnalyticsModal(data.analytics);
+
+                // Hide loading, show content
+                document.getElementById('analyticsLoading').style.display = 'none';
+                document.getElementById('analyticsContent').style.display = 'block';
+
+            } catch (error) {
+                console.error('❌ Failed to fetch analytics:', error);
+                document.getElementById('analyticsLoading').innerHTML =
+                    `<p style="color: #ef4444;">Failed to load analytics: ${error.message}</p>`;
+            }
+        }
+
+        function closeAnalyticsModal() {
+            const analyticsModal = document.getElementById('analyticsModal');
+            analyticsModal.classList.remove('show');
+        }
+
+        function populateAnalyticsModal(analytics) {
+            console.log('📊 Populating analytics modal with data:', analytics);
+
+            // Overview stats - with safe fallbacks
+            document.getElementById('analyticsMessageCount').textContent = (analytics.messageCount || 0).toLocaleString();
+            document.getElementById('analyticsTotalTokens').textContent = (analytics.totalTokens || 0).toLocaleString();
+            document.getElementById('analyticsToolCalls').textContent = (analytics.toolCalls || 0).toLocaleString();
+            document.getElementById('analyticsCacheEfficiency').textContent = analytics.cacheEfficiency || '0%';
+
+            // New stats: unique tools and models
+            const uniqueTools = analytics.toolUsage?.uniqueTools || 0;
+            const uniqueModels = (analytics.modelInfo?.modelUsage && Array.isArray(analytics.modelInfo.modelUsage))
+                ? analytics.modelInfo.modelUsage.length
+                : 0;
+
+            console.log('📊 Unique tools:', uniqueTools, 'Unique models:', uniqueModels);
+            document.getElementById('analyticsUniqueTools').textContent = uniqueTools;
+            document.getElementById('analyticsUniqueModels').textContent = uniqueModels;
+
+            // Token breakdown
+            document.getElementById('analyticsInputTokens').textContent = analytics.tokenUsage.inputTokens.toLocaleString();
+            document.getElementById('analyticsOutputTokens').textContent = analytics.tokenUsage.outputTokens.toLocaleString();
+            document.getElementById('analyticsCacheCreation').textContent = analytics.tokenUsage.cacheCreationTokens.toLocaleString();
+            document.getElementById('analyticsCacheReads').textContent = analytics.tokenUsage.cacheReadTokens.toLocaleString();
+
+            // Cost estimate
+            document.getElementById('analyticsCostEstimate').textContent = `$${analytics.costEstimate.total}`;
+
+            // Model info
+            document.getElementById('analyticsPrimaryModel').textContent = analytics.modelInfo.primaryModel;
+            document.getElementById('analyticsServiceTier').textContent = analytics.modelInfo.serviceTier;
+
+            // Show all models if multiple were used with usage percentages
+            const allModelsSection = document.getElementById('analyticsAllModels');
+            if (analytics.modelInfo.hasMultipleModels && analytics.modelInfo.modelUsage && analytics.modelInfo.modelUsage.length > 1) {
+                const modelsListHTML = analytics.modelInfo.modelUsage
+                    .map(usage => `
+                        <span style="
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 6px;
+                            padding: 4px 10px;
+                            background: rgba(139, 92, 246, 0.15);
+                            border: 1px solid rgba(139, 92, 246, 0.3);
+                            border-radius: 4px;
+                            font-size: 12px;
+                            font-family: monospace;
+                            color: var(--text-primary);
+                        ">
+                            <span>${usage.model}</span>
+                            <span style="
+                                padding: 2px 6px;
+                                background: rgba(139, 92, 246, 0.3);
+                                border-radius: 3px;
+                                font-size: 10px;
+                                font-weight: 600;
+                                color: #e9d5ff;
+                            ">${usage.count} msgs (${usage.percentage}%)</span>
+                        </span>
+                    `)
+                    .join('');
+                document.getElementById('analyticsModelsList').innerHTML = modelsListHTML;
+                allModelsSection.style.display = 'block';
+            } else {
+                allModelsSection.style.display = 'none';
+            }
+
+            // Tool usage breakdown
+            const toolsList = document.getElementById('analyticsToolsList');
+            if (Object.keys(analytics.toolUsage.breakdown).length > 0) {
+                const toolsHTML = Object.entries(analytics.toolUsage.breakdown)
+                    .sort((a, b) => b[1] - a[1]) // Sort by usage count
+                    .map(([tool, count]) => {
+                        const percentage = Math.round((count / analytics.toolUsage.totalCalls) * 100);
+                        return `
+                            <div style="margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                    <span style="font-size: 13px; font-weight: 600; color: var(--text-primary);">${tool}</span>
+                                    <span style="font-size: 12px; color: var(--text-secondary);">${count} calls (${percentage}%)</span>
+                                </div>
+                                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                                    <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #10b981, #059669); transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('');
+                toolsList.innerHTML = toolsHTML;
+            } else {
+                toolsList.innerHTML = '<p style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">No tool usage detected in this session</p>';
+            }
+
+            // Timeline
+            const formatDate = (isoString) => {
+                if (!isoString) return 'N/A';
+                const date = new Date(isoString);
+                return date.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            document.getElementById('analyticsStartTime').textContent = formatDate(analytics.timeline.startTime);
+            document.getElementById('analyticsLastActivity').textContent = formatDate(analytics.timeline.endTime);
+            document.getElementById('analyticsDuration').textContent = analytics.timeline.duration;
+            document.getElementById('analyticsStatus').textContent = analytics.timeline.status.charAt(0).toUpperCase() + analytics.timeline.status.slice(1);
+
+            // Time breakdown
+            if (analytics.timeBreakdown && analytics.timeBreakdown.totalWaitTime) {
+                document.getElementById('analyticsWaitTime').textContent = analytics.timeBreakdown.totalWaitTime || '0s';
+                document.getElementById('analyticsUserTime').textContent = analytics.timeBreakdown.totalUserTime || '0s';
+                document.getElementById('analyticsWaitPercent').textContent = `${analytics.timeBreakdown.waitTimePercent || 0}% of iteration time`;
+                document.getElementById('analyticsUserPercent').textContent = `${analytics.timeBreakdown.userTimePercent || 0}% of iteration time`;
+
+                // Update progress bars
+                document.getElementById('analyticsWaitBar').style.width = `${analytics.timeBreakdown.waitTimePercent || 0}%`;
+                document.getElementById('analyticsUserBar').style.width = `${analytics.timeBreakdown.userTimePercent || 0}%`;
+            } else {
+                // No timing data available
+                document.getElementById('analyticsWaitTime').textContent = 'N/A';
+                document.getElementById('analyticsUserTime').textContent = 'N/A';
+                document.getElementById('analyticsWaitPercent').textContent = 'No data';
+                document.getElementById('analyticsUserPercent').textContent = 'No data';
+                document.getElementById('analyticsWaitBar').style.width = '0%';
+                document.getElementById('analyticsUserBar').style.width = '0%';
+            }
+
+            // Components used (agents, commands, skills)
+            if (analytics.componentsUsed) {
+                const hasComponents = analytics.componentsUsed.totalAgents > 0 ||
+                                    analytics.componentsUsed.totalCommands > 0 ||
+                                    analytics.componentsUsed.totalSkills > 0;
+
+                if (hasComponents) {
+                    let componentsHTML = '';
+
+                    // Agents
+                    if (analytics.componentsUsed.agents.length > 0) {
+                        componentsHTML += '<div style="margin-bottom: 12px;">';
+                        componentsHTML += '<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Agents</div>';
+                        componentsHTML += '<div style="display: flex; flex-wrap: wrap; gap: 6px;">';
+                        analytics.componentsUsed.agents.forEach(agent => {
+                            componentsHTML += `
+                                <span style="
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 4px;
+                                    padding: 4px 10px;
+                                    background: rgba(139, 92, 246, 0.15);
+                                    border: 1px solid rgba(139, 92, 246, 0.3);
+                                    border-radius: 4px;
+                                    font-size: 12px;
+                                    color: var(--text-primary);
+                                ">
+                                    <span>${agent.type}</span>
+                                    <span style="color: var(--text-secondary); font-size: 11px;">×${agent.count}</span>
+                                </span>
+                            `;
+                        });
+                        componentsHTML += '</div></div>';
+                    }
+
+                    // Slash Commands
+                    if (analytics.componentsUsed.slashCommands.length > 0) {
+                        componentsHTML += '<div style="margin-bottom: 12px;">';
+                        componentsHTML += '<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Slash Commands</div>';
+                        componentsHTML += '<div style="display: flex; flex-wrap: wrap; gap: 6px;">';
+                        analytics.componentsUsed.slashCommands.forEach(cmd => {
+                            componentsHTML += `
+                                <span style="
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 4px;
+                                    padding: 4px 10px;
+                                    background: rgba(59, 130, 246, 0.15);
+                                    border: 1px solid rgba(59, 130, 246, 0.3);
+                                    border-radius: 4px;
+                                    font-size: 12px;
+                                    font-family: monospace;
+                                    color: var(--text-primary);
+                                ">
+                                    <span>${cmd.name}</span>
+                                    <span style="color: var(--text-secondary); font-size: 11px;">×${cmd.count}</span>
+                                </span>
+                            `;
+                        });
+                        componentsHTML += '</div></div>';
+                    }
+
+                    // Skills
+                    if (analytics.componentsUsed.skills.length > 0) {
+                        componentsHTML += '<div>';
+                        componentsHTML += '<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Skills</div>';
+                        componentsHTML += '<div style="display: flex; flex-wrap: wrap; gap: 6px;">';
+                        analytics.componentsUsed.skills.forEach(skill => {
+                            componentsHTML += `
+                                <span style="
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 4px;
+                                    padding: 4px 10px;
+                                    background: rgba(16, 185, 129, 0.15);
+                                    border: 1px solid rgba(16, 185, 129, 0.3);
+                                    border-radius: 4px;
+                                    font-size: 12px;
+                                    color: var(--text-primary);
+                                ">
+                                    <span>${skill.name}</span>
+                                    <span style="color: var(--text-secondary); font-size: 11px;">×${skill.count}</span>
+                                </span>
+                            `;
+                        });
+                        componentsHTML += '</div></div>';
+                    }
+
+                    document.getElementById('analyticsComponentsContent').innerHTML = componentsHTML;
+                    document.getElementById('analyticsComponentsSection').style.display = 'block';
+                } else {
+                    document.getElementById('analyticsComponentsSection').style.display = 'none';
+                }
             }
         }
 

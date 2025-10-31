@@ -9,6 +9,7 @@ const ConversationAnalyzer = require('./analytics/core/ConversationAnalyzer');
 const StateCalculator = require('./analytics/core/StateCalculator');
 const FileWatcher = require('./analytics/core/FileWatcher');
 const DataCache = require('./analytics/data/DataCache');
+const AgentAnalyzer = require('./analytics/core/AgentAnalyzer');
 const WebSocketServer = require('./analytics/notifications/WebSocketServer');
 const SessionSharing = require('./session-sharing');
 
@@ -507,6 +508,289 @@ class ChatsMobile {
         console.error('Error exporting conversation:', error);
         res.status(500).json({
           error: 'Failed to export session',
+          message: error.message
+        });
+      }
+    });
+
+    // API to get detailed analytics for a conversation
+    this.app.get('/api/conversations/:id/analytics', async (req, res) => {
+      try {
+        const conversationId = req.params.id;
+        const conversation = this.data.conversations.find(conv => conv.id === conversationId);
+
+        if (!conversation) {
+          return res.status(404).json({ error: 'Conversation not found' });
+        }
+
+        console.log(chalk.cyan(`📊 Fetching analytics for conversation ${conversationId}...`));
+
+        // Get parsed messages for this conversation
+        const messages = await this.conversationAnalyzer.getParsedConversation(conversation.filePath);
+
+        // Calculate session duration and timing breakdown
+        const startTime = messages.length > 0 ? new Date(messages[0].timestamp) : null;
+        const endTime = messages.length > 0 ? new Date(messages[messages.length - 1].timestamp) : null;
+        const durationMs = startTime && endTime ? endTime - startTime : 0;
+        const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
+        const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        // Calculate time conversing vs executing (time between messages)
+        let totalWaitTime = 0; // Time waiting for Claude (thinking + executing)
+        let totalUserTime = 0; // Time user takes to respond
+
+        // Find user and assistant messages only (ignore tool results and other message types)
+        const conversationMessages = messages.filter(msg => msg.role === 'user' || msg.role === 'assistant');
+
+        let lastUserTime = null;
+        let lastAssistantTime = null;
+
+        conversationMessages.forEach(msg => {
+          if (msg.role === 'user') {
+            // If there was a previous assistant message, calculate user thinking time
+            if (lastAssistantTime) {
+              const thinkingTime = new Date(msg.timestamp) - lastAssistantTime;
+              // Only count gaps less than 1 hour to avoid counting long breaks
+              if (thinkingTime > 0 && thinkingTime < 60 * 60 * 1000) {
+                totalUserTime += thinkingTime;
+              }
+            }
+            lastUserTime = new Date(msg.timestamp);
+          } else if (msg.role === 'assistant') {
+            // If there was a previous user message, calculate Claude execution time
+            if (lastUserTime) {
+              const executionTime = new Date(msg.timestamp) - lastUserTime;
+              // Only count gaps less than 10 minutes (typical execution time)
+              if (executionTime > 0 && executionTime < 10 * 60 * 1000) {
+                totalWaitTime += executionTime;
+              }
+            }
+            lastAssistantTime = new Date(msg.timestamp);
+          }
+        });
+
+        const totalIterationTime = totalWaitTime + totalUserTime;
+        const waitTimePercent = totalIterationTime > 0 ? Math.round((totalWaitTime / totalIterationTime) * 100) : 0;
+        const userTimePercent = totalIterationTime > 0 ? Math.round((totalUserTime / totalIterationTime) * 100) : 0;
+
+        // Calculate cache efficiency
+        const cacheTotal = (conversation.tokenUsage?.cacheCreationTokens || 0) + (conversation.tokenUsage?.cacheReadTokens || 0);
+        const cacheEfficiency = cacheTotal > 0
+          ? Math.round((conversation.tokenUsage?.cacheReadTokens || 0) / cacheTotal * 100)
+          : 0;
+
+        // Estimate cost (approximate Claude API pricing)
+        // Sonnet 4.5: $3/1M input, $15/1M output
+        // Cache write: $3.75/1M, Cache read: $0.30/1M
+        const inputCost = (conversation.tokenUsage?.inputTokens || 0) / 1000000 * 3;
+        const outputCost = (conversation.tokenUsage?.outputTokens || 0) / 1000000 * 15;
+        const cacheWriteCost = (conversation.tokenUsage?.cacheCreationTokens || 0) / 1000000 * 3.75;
+        const cacheReadCost = (conversation.tokenUsage?.cacheReadTokens || 0) / 1000000 * 0.30;
+        const totalCost = inputCost + outputCost + cacheWriteCost + cacheReadCost;
+
+        // Detect agents, hooks, and components used
+        const agentAnalyzer = new AgentAnalyzer();
+        const componentsUsed = {
+          agents: [],
+          slashCommands: [],
+          skills: []
+        };
+
+        messages.forEach(message => {
+          const messageContent = message.content;
+          const messageRole = message.role;
+
+          if (messageRole === 'assistant' && messageContent && Array.isArray(messageContent)) {
+            messageContent.forEach(content => {
+              // Detect Task tool with subagent_type (agents)
+              if (content.type === 'tool_use' && content.name === 'Task' && content.input?.subagent_type) {
+                const agentType = content.input.subagent_type;
+                if (!componentsUsed.agents.find(a => a.type === agentType)) {
+                  componentsUsed.agents.push({
+                    type: agentType,
+                    count: 1
+                  });
+                } else {
+                  componentsUsed.agents.find(a => a.type === agentType).count++;
+                }
+              }
+
+              // Detect SlashCommand tool (commands)
+              if (content.type === 'tool_use' && content.name === 'SlashCommand' && content.input?.command) {
+                const command = content.input.command;
+                if (!componentsUsed.slashCommands.find(c => c.name === command)) {
+                  componentsUsed.slashCommands.push({
+                    name: command,
+                    count: 1
+                  });
+                } else {
+                  componentsUsed.slashCommands.find(c => c.name === command).count++;
+                }
+              }
+
+              // Detect Skill tool (skills)
+              if (content.type === 'tool_use' && content.name === 'Skill' && content.input?.command) {
+                const skill = content.input.command;
+                if (!componentsUsed.skills.find(s => s.name === skill)) {
+                  componentsUsed.skills.push({
+                    name: skill,
+                    count: 1
+                  });
+                } else {
+                  componentsUsed.skills.find(s => s.name === skill).count++;
+                }
+              }
+            });
+          }
+        });
+
+        // Format time durations
+        const formatDuration = (ms) => {
+          const hours = Math.floor(ms / (1000 * 60 * 60));
+          const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+          if (hours > 0) return `${hours}h ${minutes}m`;
+          if (minutes > 0) return `${minutes}m ${seconds}s`;
+          return `${seconds}s`;
+        };
+
+        // Generate optimization tips based on analytics
+        const optimizationTips = [];
+
+        if (cacheEfficiency < 20 && cacheTotal > 0) {
+          optimizationTips.push('• Low cache efficiency detected. Consider restructuring prompts to maximize cache reuse.');
+        }
+        if (conversation.toolUsage?.totalToolCalls > 50) {
+          optimizationTips.push('• High tool usage detected. Review if all tool calls are necessary.');
+        }
+        if (conversation.tokenUsage?.outputTokens > conversation.tokenUsage?.inputTokens * 2) {
+          optimizationTips.push('• Output tokens significantly exceed input. Consider more concise prompts.');
+        }
+        if (messages.length > 100) {
+          optimizationTips.push('• Long conversation detected. Consider starting fresh sessions for new topics to optimize context.');
+        }
+        if (conversation.modelInfo?.hasMultipleModels) {
+          optimizationTips.push('• Multiple models used in this session. Stick to one model for consistency.');
+        }
+        if (waitTimePercent > 70) {
+          optimizationTips.push('• High execution time detected. Consider breaking down complex tasks or optimizing tool usage.');
+        }
+        if (optimizationTips.length === 0) {
+          optimizationTips.push('• Great! Your conversation shows efficient usage patterns.');
+        }
+
+        // Prepare detailed analytics response
+        const analytics = {
+          // Overview
+          messageCount: messages.length,
+          totalTokens: conversation.tokenUsage?.total || 0,
+          toolCalls: conversation.toolUsage?.totalToolCalls || 0,
+          cacheEfficiency: `${cacheEfficiency}%`,
+
+          // Token breakdown
+          tokenUsage: {
+            inputTokens: conversation.tokenUsage?.inputTokens || 0,
+            outputTokens: conversation.tokenUsage?.outputTokens || 0,
+            cacheCreationTokens: conversation.tokenUsage?.cacheCreationTokens || 0,
+            cacheReadTokens: conversation.tokenUsage?.cacheReadTokens || 0,
+            total: conversation.tokenUsage?.total || 0
+          },
+
+          // Cost estimate
+          costEstimate: {
+            total: totalCost.toFixed(4),
+            breakdown: {
+              input: inputCost.toFixed(4),
+              output: outputCost.toFixed(4),
+              cacheWrite: cacheWriteCost.toFixed(4),
+              cacheRead: cacheReadCost.toFixed(4)
+            }
+          },
+
+          // Model info with usage percentages
+          modelInfo: {
+            primaryModel: conversation.modelInfo?.primaryModel || 'Unknown',
+            serviceTier: conversation.modelInfo?.currentServiceTier || 'Unknown',
+            hasMultipleModels: conversation.modelInfo?.hasMultipleModels || false,
+            allModels: conversation.modelInfo?.models || [],
+            modelUsage: (() => {
+              // Calculate model usage percentages
+              const modelCounts = {};
+              let totalMessages = 0;
+
+              messages.forEach(msg => {
+                if (msg.model && msg.model !== '<synthetic>') {
+                  modelCounts[msg.model] = (modelCounts[msg.model] || 0) + 1;
+                  totalMessages++;
+                }
+              });
+
+              return Object.entries(modelCounts).map(([model, count]) => ({
+                model,
+                count,
+                percentage: totalMessages > 0 ? ((count / totalMessages) * 100).toFixed(1) : '0.0'
+              })).sort((a, b) => b.count - a.count);
+            })()
+          },
+
+          // Tool usage
+          toolUsage: {
+            totalCalls: conversation.toolUsage?.totalToolCalls || 0,
+            uniqueTools: conversation.toolUsage?.uniqueTools || 0,
+            breakdown: conversation.toolUsage?.toolStats || {},
+            timeline: conversation.toolUsage?.toolTimeline || []
+          },
+
+          // Session timeline
+          timeline: {
+            startTime: startTime ? startTime.toISOString() : null,
+            endTime: endTime ? endTime.toISOString() : null,
+            duration: durationHours > 0
+              ? `${durationHours}h ${durationMinutes}m`
+              : `${durationMinutes}m`,
+            durationMs: durationMs,
+            status: conversation.status || 'unknown'
+          },
+
+          // Time breakdown (conversing vs executing)
+          timeBreakdown: {
+            totalWaitTime: formatDuration(totalWaitTime),
+            totalUserTime: formatDuration(totalUserTime),
+            waitTimePercent: waitTimePercent,
+            userTimePercent: userTimePercent,
+            waitTimeMs: totalWaitTime,
+            userTimeMs: totalUserTime,
+            totalIterationTime: formatDuration(totalIterationTime)
+          },
+
+          // Components used (agents, commands, skills)
+          componentsUsed: {
+            agents: componentsUsed.agents.sort((a, b) => b.count - a.count),
+            slashCommands: componentsUsed.slashCommands.sort((a, b) => b.count - a.count),
+            skills: componentsUsed.skills.sort((a, b) => b.count - a.count),
+            totalAgents: componentsUsed.agents.length,
+            totalCommands: componentsUsed.slashCommands.length,
+            totalSkills: componentsUsed.skills.length
+          },
+
+          // Optimization tips
+          optimizationTips: optimizationTips,
+
+          // Metadata
+          conversationId: conversationId,
+          project: conversation.project || 'Unknown',
+          timestamp: new Date().toISOString()
+        };
+
+        res.json({
+          success: true,
+          analytics: analytics
+        });
+      } catch (error) {
+        console.error('Error fetching conversation analytics:', error);
+        res.status(500).json({
+          error: 'Failed to fetch analytics',
           message: error.message
         });
       }
