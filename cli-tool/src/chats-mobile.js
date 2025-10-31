@@ -1187,6 +1187,12 @@ class ChatsMobile {
    * Stop the server
    */
   async stop() {
+    // Prevent multiple stop calls
+    if (this.isStopped) {
+      return;
+    }
+    this.isStopped = true;
+
     if (this.cloudflaredProcess) {
       try {
         this.cloudflaredProcess.kill('SIGTERM');
@@ -1195,26 +1201,28 @@ class ChatsMobile {
         this.log('warn', chalk.yellow('⚠️  Error stopping Cloudflare Tunnel:', error.message));
       }
     }
-    
+
     if (this.webSocketServer) {
       try {
+        console.log(chalk.gray('🔌 Closing WebSocket server...'));
         await this.webSocketServer.close();
-        this.log('info', chalk.gray('🌐 WebSocket server stopped'));
+        console.log(chalk.green('✅ WebSocket server closed'));
       } catch (error) {
         this.log('warn', chalk.yellow('⚠️  Error stopping WebSocket server:', error.message));
       }
     }
-    
+
     if (this.httpServer) {
       await new Promise((resolve) => {
         this.httpServer.close(resolve);
       });
     }
-    
+
     if (this.fileWatcher) {
+      console.log(chalk.gray('🛑 Stopping file watchers...'));
       await this.fileWatcher.stop();
     }
-    
+
     console.log(chalk.gray('🛑 Chats Mobile server stopped'));
   }
 }
@@ -1245,14 +1253,35 @@ async function startChatsMobile(options = {}) {
     }
     
     console.log(chalk.gray('Press Ctrl+C to stop'));
-    
-    // Handle graceful shutdown
-    process.on('SIGINT', async () => {
+
+    // Handle graceful shutdown - remove existing listeners first to prevent duplicates
+    const shutdownHandler = async () => {
+      if (chatsMobile.isShuttingDown) return; // Prevent multiple shutdown attempts
+      chatsMobile.isShuttingDown = true;
+
       console.log(chalk.yellow('\n🛑 Shutting down...'));
-      await chatsMobile.stop();
-      process.exit(0);
-    });
-    
+
+      // Remove this specific handler to prevent it from being called again
+      process.removeListener('SIGINT', shutdownHandler);
+      process.removeListener('SIGTERM', shutdownHandler);
+
+      try {
+        await chatsMobile.stop();
+        process.exit(0);
+      } catch (error) {
+        console.error(chalk.red('❌ Error during shutdown:'), error);
+        process.exit(1);
+      }
+    };
+
+    // Remove any existing SIGINT/SIGTERM listeners to prevent duplicates
+    process.removeAllListeners('SIGINT');
+    process.removeAllListeners('SIGTERM');
+
+    // Add the new handler
+    process.on('SIGINT', shutdownHandler);
+    process.on('SIGTERM', shutdownHandler);
+
   } catch (error) {
     console.error(chalk.red('❌ Failed to start Chats Mobile:'), error);
     process.exit(1);
