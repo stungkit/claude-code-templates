@@ -126,6 +126,10 @@ async function createClaudeConfig(options = {}) {
 
   // Handle sandbox execution FIRST (before individual components)
   if (options.sandbox) {
+    trackingService.trackCommandExecution('sandbox', {
+      provider: options.sandbox,
+      hasPrompt: !!options.prompt
+    });
     await executeSandbox(options, targetDir);
     return;
   }
@@ -174,24 +178,28 @@ async function createClaudeConfig(options = {}) {
   
   // Handle command stats analysis (both singular and plural)
   if (options.commandStats || options.commandsStats) {
+    trackingService.trackCommandExecution('command-stats');
     await runCommandStats(options);
     return;
   }
-  
+
   // Handle hook stats analysis (both singular and plural)
   if (options.hookStats || options.hooksStats) {
+    trackingService.trackCommandExecution('hook-stats');
     await runHookStats(options);
     return;
   }
-  
+
   // Handle MCP stats analysis (both singular and plural)
   if (options.mcpStats || options.mcpsStats) {
+    trackingService.trackCommandExecution('mcp-stats');
     await runMCPStats(options);
     return;
   }
   
   // Handle analytics dashboard
   if (options.analytics) {
+    trackingService.trackCommandExecution('analytics', { tunnel: options.tunnel || false });
     trackingService.trackAnalyticsDashboard({ page: 'dashboard', source: 'command_line' });
     await runAnalytics(options);
     return;
@@ -199,6 +207,7 @@ async function createClaudeConfig(options = {}) {
 
   // Handle plugin dashboard
   if (options.plugins) {
+    trackingService.trackCommandExecution('plugins');
     trackingService.trackAnalyticsDashboard({ page: 'plugins', source: 'command_line' });
     await runPluginDashboard(options);
     return;
@@ -206,20 +215,23 @@ async function createClaudeConfig(options = {}) {
 
   // Handle chats dashboard (now points to mobile chats interface)
   if (options.chats) {
+    trackingService.trackCommandExecution('chats', { tunnel: options.tunnel || false });
     trackingService.trackAnalyticsDashboard({ page: 'chats-mobile', source: 'command_line' });
     await startChatsMobile(options);
     return;
   }
-  
+
   // Handle agents dashboard (separate from chats)
   if (options.agents) {
+    trackingService.trackCommandExecution('agents', { tunnel: options.tunnel || false });
     trackingService.trackAnalyticsDashboard({ page: 'agents', source: 'command_line' });
     await runAnalytics({ ...options, openTo: 'agents' });
     return;
   }
-  
+
   // Handle mobile chats interface
   if (options.chatsMobile) {
+    trackingService.trackCommandExecution('chats-mobile', { tunnel: options.tunnel || false });
     trackingService.trackAnalyticsDashboard({ page: 'chats-mobile', source: 'command_line' });
     await startChatsMobile(options);
     return;
@@ -269,8 +281,9 @@ async function createClaudeConfig(options = {}) {
   // Handle health check
   let shouldRunSetup = false;
   if (options.healthCheck || options.health || options.check || options.verify) {
+    trackingService.trackCommandExecution('health-check');
     const healthResult = await runHealthCheck();
-    
+
     // Track health check usage
     trackingService.trackHealthCheck({
       setup_recommended: healthResult.runSetup,

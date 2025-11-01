@@ -108,6 +108,70 @@ describe('API Endpoints - Critical Tests', () => {
 
   });
 
+  describe('🔵 Command Usage Tracking', () => {
+
+    test('POST /api/track-command-usage should be available', async () => {
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          command: 'analytics',
+          cliVersion: '1.26.3',
+          nodeVersion: 'v18.0.0',
+          platform: 'darwin',
+          arch: 'arm64',
+          sessionId: 'test-session-123',
+          metadata: { tunnel: false }
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: (status) => status < 500
+        }
+      );
+
+      // Endpoint must respond (can be 200, 400, etc. but NOT 500)
+      expect(response.status).toBeLessThan(500);
+      expect(response.status).toBeGreaterThanOrEqual(200);
+    }, TIMEOUT);
+
+    test('POST /api/track-command-usage should reject invalid commands', async () => {
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          command: 'invalid-command',
+          cliVersion: '1.26.3',
+          nodeVersion: 'v18.0.0',
+          platform: 'darwin'
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: () => true
+        }
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.data).toHaveProperty('error');
+      expect(response.data.error).toContain('Invalid command');
+    }, TIMEOUT);
+
+    test('POST /api/track-command-usage should reject requests without command', async () => {
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          cliVersion: '1.26.3',
+          platform: 'darwin'
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: () => true
+        }
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.data).toHaveProperty('error');
+    }, TIMEOUT);
+
+  });
+
   describe('📊 API Health Check', () => {
 
     test('All critical endpoints should respond within 30s', async () => {
@@ -115,12 +179,13 @@ describe('API Endpoints - Critical Tests', () => {
 
       const endpoints = [
         '/api/track-download-supabase',
+        '/api/track-command-usage',
         '/api/discord/interactions',
         '/api/claude-code-check'
       ];
 
       for (const endpoint of endpoints) {
-        const method = endpoint.includes('track-download') || endpoint.includes('discord')
+        const method = endpoint.includes('track-') || endpoint.includes('discord')
           ? 'post'
           : 'get';
 
@@ -217,6 +282,109 @@ describe('API Endpoints - Functional Tests', () => {
           expect(response.data).toHaveProperty('discord');
         }
       }
+    }, TIMEOUT);
+
+  });
+
+  describe('Command Usage Tracking - Data Validation', () => {
+
+    const validCommands = [
+      'chats',
+      'analytics',
+      'health-check',
+      'plugins',
+      'sandbox',
+      'agents',
+      'chats-mobile',
+      'studio',
+      'command-stats',
+      'hook-stats',
+      'mcp-stats'
+    ];
+
+    test('should accept all valid commands', async () => {
+      for (const command of validCommands) {
+        const response = await axios.post(
+          `${BASE_URL}/api/track-command-usage`,
+          {
+            command,
+            cliVersion: '1.26.3',
+            nodeVersion: 'v18.0.0',
+            platform: 'darwin',
+            arch: 'arm64',
+            sessionId: 'test-session',
+            metadata: { test: true }
+          },
+          {
+            timeout: TIMEOUT,
+            validateStatus: () => true
+          }
+        );
+
+        // Should be 200 (success) or 500 if DB fails, but NOT 400 (validation)
+        expect([200, 500]).toContain(response.status);
+      }
+    }, TIMEOUT * validCommands.length);
+
+    test('should handle metadata correctly', async () => {
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          command: 'analytics',
+          cliVersion: '1.26.3',
+          nodeVersion: 'v18.0.0',
+          platform: 'darwin',
+          arch: 'arm64',
+          sessionId: 'test-session',
+          metadata: {
+            tunnel: true,
+            customData: 'test-value'
+          }
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: () => true
+        }
+      );
+
+      // Should accept metadata as JSONB
+      expect([200, 500]).toContain(response.status);
+    }, TIMEOUT);
+
+    test('should reject commands that are too long', async () => {
+      const longCommand = 'a'.repeat(150);
+
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          command: longCommand,
+          cliVersion: '1.26.3',
+          platform: 'darwin'
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: () => true
+        }
+      );
+
+      expect(response.status).toBe(400);
+    }, TIMEOUT);
+
+    test('should handle missing optional fields', async () => {
+      const response = await axios.post(
+        `${BASE_URL}/api/track-command-usage`,
+        {
+          command: 'analytics'
+          // Missing optional fields like cliVersion, sessionId, metadata
+        },
+        {
+          timeout: TIMEOUT,
+          validateStatus: () => true
+        }
+      );
+
+      // Should still work with just command name
+      expect([200, 500]).toContain(response.status);
     }, TIMEOUT);
 
   });
