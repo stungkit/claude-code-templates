@@ -479,4 +479,302 @@ npm publish
 - Use relative paths (`.claude/scripts/`) instead of absolute paths
 - Review components for potential security vulnerabilities before publishing
 
-This codebase represents a comprehensive Claude Code component ecosystem with real-time analytics, modular architecture, and extensive automation capabilities. The system is designed for scalability, maintainability, and ease of use while providing powerful development workflow enhancements.
+## API Architecture & Deployment
+
+### Overview
+
+The `/api` directory contains Vercel Serverless Functions that power critical infrastructure:
+- Component download tracking (Supabase)
+- Discord bot interactions
+- Claude Code changelog monitoring (Neon Database)
+
+**⚠️ CRITICAL**: API endpoints are essential for component download metrics. Breaking these endpoints affects analytics for all `--agent`, `--command`, `--mcp`, `--hook`, `--skill`, and `--setting` installations.
+
+### API Endpoints
+
+#### 1. `/api/track-download-supabase` (CRITICAL)
+
+**Purpose**: Tracks component downloads for analytics
+
+**Method**: `POST`
+
+**Request Body**:
+```json
+{
+  "type": "agent|command|mcp|hook|setting|skill|template",
+  "name": "component-name",
+  "path": "components/path",
+  "category": "category-name",
+  "cliVersion": "1.0.0"
+}
+```
+
+**Response**: `200 OK` or `400 Bad Request`
+
+**Used By**: CLI tool (`cli-tool/bin/create-claude-config.js`) on every component installation
+
+**Database**: Supabase (component_downloads, download_stats tables)
+
+#### 2. `/api/discord/interactions`
+
+**Purpose**: Discord bot slash commands handler
+
+**Method**: `POST`
+
+**Features**:
+- `/search` - Search components
+- `/info` - Component details
+- `/install` - Installation commands
+- `/popular` - Most downloaded components
+- `/random` - Random component discovery
+
+**Authentication**: Discord signature verification
+
+#### 3. `/api/claude-code-check`
+
+**Purpose**: Monitors Claude Code releases and sends Discord notifications
+
+**Method**: `GET` (triggered by Vercel Cron every 4 hours)
+
+**Features**:
+- Fetches latest version from NPM
+- Parses CHANGELOG.md from GitHub
+- Classifies changes (features, fixes, improvements, breaking)
+- Sends formatted Discord embeds
+- Stores in Neon Database
+
+**Database**: Neon (claude_code_versions, claude_code_changes, discord_notifications_log)
+
+### Deployment Workflow
+
+#### Pre-Deployment Checklist
+
+**ALWAYS run tests before deploying**:
+
+```bash
+# 1. Run API tests
+cd api
+npm test
+
+# 2. Verify critical endpoints
+npm run test:api
+
+# 3. If tests pass, deploy
+cd ..
+vercel --prod
+```
+
+#### Vercel Configuration
+
+The `vercel.json` file in project root configures:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "docs",
+  "crons": [
+    {
+      "path": "/api/claude-code-check",
+      "schedule": "0 */4 * * *"
+    }
+  ],
+  "rewrites": [
+    // Frontend routing...
+  ]
+}
+```
+
+**Important Notes**:
+- Serverless functions MUST be in `/api` root or use proper naming (`/api/folder/file.js`)
+- ES modules (`type: "module"`) are supported
+- Environment variables configured in Vercel Dashboard
+- Cron jobs run in production only
+
+#### Environment Variables
+
+Required environment variables in Vercel:
+
+```bash
+# Supabase (download tracking)
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=xxx
+
+# Neon Database (changelog monitoring)
+NEON_DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+
+# Discord
+DISCORD_APP_ID=xxx
+DISCORD_BOT_TOKEN=xxx
+DISCORD_PUBLIC_KEY=xxx
+DISCORD_WEBHOOK_URL_CHANGELOG=https://discord.com/api/webhooks/xxx
+```
+
+### Testing API Endpoints
+
+#### Local Testing
+
+```bash
+# Install dependencies
+cd api
+npm install
+
+# Run all tests
+npm test
+
+# Run only critical endpoint tests
+npm run test:api
+
+# Watch mode for development
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+```
+
+#### Test Structure
+
+```
+api/
+├── __tests__/
+│   └── endpoints.test.js    # Critical endpoint tests
+├── jest.config.cjs           # Jest configuration
+└── package.json              # Test scripts
+```
+
+#### Critical Tests
+
+The test suite validates:
+1. ✅ All endpoints respond (< 500 status)
+2. ✅ Download tracking accepts valid component types
+3. ✅ Invalid data returns 400 errors
+4. ✅ CORS headers are present
+5. ✅ Response times are acceptable
+6. ✅ Correct HTTP method validation
+
+**Test Against Production**:
+```bash
+# Test production endpoints
+API_BASE_URL=https://aitmpl.com npm run test:api
+
+# Test staging
+API_BASE_URL=https://staging.aitmpl.com npm run test:api
+```
+
+### Common Issues & Solutions
+
+#### Issue: Endpoint Returns 401/404 After Deploy
+
+**Cause**: Vercel Deployment Protection is enabled
+
+**Solution**:
+- Use production domain (`aitmpl.com`) instead of preview URLs
+- Or disable deployment protection for API routes
+
+#### Issue: API Tests Fail Locally
+
+**Cause**: Testing against local server that isn't running
+
+**Solution**:
+```bash
+# Always test against production
+API_BASE_URL=https://aitmpl.com npm run test:api
+```
+
+#### Issue: Download Tracking Not Working
+
+**Symptoms**: No data in Supabase after component installations
+
+**Debug Steps**:
+1. Check Vercel function logs: `vercel logs aitmpl.com --follow`
+2. Verify environment variables are set
+3. Test endpoint manually:
+   ```bash
+   curl -X POST https://aitmpl.com/api/track-download-supabase \
+     -H "Content-Type: application/json" \
+     -d '{"type":"agent","name":"test","path":"test/path"}'
+   ```
+4. Check Supabase table: `select * from component_downloads order by created_at desc limit 10;`
+
+#### Issue: Functions Not Detected by Vercel
+
+**Cause**: Incorrect file structure or naming
+
+**Solution**:
+- Functions must be directly in `/api` (e.g., `/api/my-function.js`)
+- OR in named folders (e.g., `/api/my-folder/index.js` becomes `/api/my-folder`)
+- Use `export default async function handler(req, res) {}` for ES modules
+
+### Monitoring & Debugging
+
+#### Vercel Dashboard
+
+1. Go to https://vercel.com/dashboard
+2. Select project `aitmpl`
+3. Navigate to "Functions" tab
+4. View real-time logs and metrics
+
+#### Viewing Function Logs
+
+```bash
+# Real-time logs
+vercel logs aitmpl.com --follow
+
+# Filter by function
+vercel logs aitmpl.com --follow | grep track-download
+
+# Recent errors
+vercel logs aitmpl.com --since 1h
+```
+
+#### Database Queries
+
+**Supabase (Download Stats)**:
+```sql
+-- Recent downloads
+SELECT type, name, COUNT(*) as downloads
+FROM component_downloads
+WHERE download_timestamp > NOW() - INTERVAL '7 days'
+GROUP BY type, name
+ORDER BY downloads DESC
+LIMIT 20;
+```
+
+**Neon (Claude Code Versions)**:
+```sql
+-- Latest Claude Code versions
+SELECT version, published_at, discord_notified
+FROM claude_code_versions
+ORDER BY published_at DESC
+LIMIT 10;
+```
+
+### API Best Practices
+
+1. **Always Test Before Deploy**: Run `npm run test:api` before `vercel --prod`
+2. **Monitor Logs**: Check Vercel logs after deployment
+3. **Validate Environment Variables**: Ensure all required vars are set
+4. **Use Relative Paths**: Never hardcode absolute paths
+5. **Handle Errors Gracefully**: Return proper HTTP status codes
+6. **Enable CORS**: All endpoints should have CORS headers
+7. **Timeout Handling**: Set appropriate timeouts for external API calls
+8. **Rate Limiting**: Be mindful of third-party API rate limits
+
+### Emergency Rollback
+
+If a deployment breaks critical endpoints:
+
+```bash
+# 1. Check recent deployments
+vercel ls
+
+# 2. Find last working deployment
+vercel inspect <deployment-url>
+
+# 3. Promote previous deployment to production
+vercel promote <previous-deployment-url>
+
+# 4. Or rollback via dashboard
+# Go to Vercel Dashboard → Deployments → Click "..." → Promote to Production
+```
+
+This codebase represents a comprehensive Claude Code component ecosystem with real-time analytics, modular architecture, extensive automation capabilities, and production-ready API infrastructure. The system is designed for scalability, maintainability, and ease of use while providing powerful development workflow enhancements.
