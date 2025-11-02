@@ -2447,37 +2447,38 @@ async function launchClaudeCodeStudio(options, targetDir) {
 }
 
 async function executeSandbox(options, targetDir) {
-  const { sandbox, command, mcp, setting, hook, e2bApiKey, anthropicApiKey } = options;
+  const { sandbox, command, mcp, setting, hook, e2bApiKey, anthropicApiKey, yes } = options;
   let { agent, prompt } = options;
-  
+
   // Validate sandbox provider
-  if (sandbox !== 'e2b' && sandbox !== 'cloudflare') {
+  if (sandbox !== 'e2b' && sandbox !== 'cloudflare' && sandbox !== 'docker') {
     console.log(chalk.red('❌ Error: Invalid sandbox provider'));
-    console.log(chalk.yellow('💡 Available providers: e2b, cloudflare'));
+    console.log(chalk.yellow('💡 Available providers: e2b, cloudflare, docker'));
     console.log(chalk.gray('   Example: --sandbox e2b --prompt "Create a web app"'));
     console.log(chalk.gray('   Example: --sandbox cloudflare --prompt "Calculate factorial of 5"'));
+    console.log(chalk.gray('   Example: --sandbox docker --prompt "Write a function"'));
     return;
   }
-  
-  // Interactive agent selection if not provided
-  if (!agent) {
+
+  // Interactive agent selection if not provided and --yes not used
+  if (!agent && !yes) {
     const inquirer = require('inquirer');
-    
+
     console.log(chalk.blue('\n🤖 Agent Selection'));
     console.log(chalk.cyan('═══════════════════════════════════════'));
     console.log(chalk.gray('Select one or more agents for your task (use SPACE to select, ENTER to confirm).\n'));
-    
+
     // Fetch available agents
     console.log(chalk.gray('⏳ Fetching available agents...'));
     const agents = await getAvailableAgentsFromGitHub();
-    
+
     // Format agents for selection with full path
     const agentChoices = agents.map(a => ({
       name: `${a.path} ${chalk.gray(`- ${a.category}`)}`,
       value: a.path,  // This already includes folder/agent-name format
       short: a.path
     }));
-    
+
     // First ask if they want to select agents
     const { wantAgents } = await inquirer.prompt([{
       type: 'confirm',
@@ -2485,7 +2486,7 @@ async function executeSandbox(options, targetDir) {
       message: 'Do you want to select specific agents for this task?',
       default: true
     }]);
-    
+
     if (wantAgents) {
       const { selectedAgents } = await inquirer.prompt([{
         type: 'checkbox',
@@ -2495,7 +2496,7 @@ async function executeSandbox(options, targetDir) {
         pageSize: 15
         // Removed validation - allow empty selection
       }]);
-      
+
       if (selectedAgents && selectedAgents.length > 0) {
         // Join multiple agents with comma
         agent = selectedAgents.join(',');
@@ -2507,6 +2508,9 @@ async function executeSandbox(options, targetDir) {
     } else {
       console.log(chalk.yellow('⚠️ Continuing without specific agents'));
     }
+  } else if (!agent && yes) {
+    // --yes flag used without --agent, proceed without agents
+    console.log(chalk.yellow('⚠️ No agent specified, continuing without specific agents'));
   }
   
   // Get prompt from user if not provided
@@ -2603,6 +2607,19 @@ async function executeSandbox(options, targetDir) {
 
     // Execute Cloudflare sandbox
     await executeCloudflareSandbox({ sandbox, agent, prompt, command, mcp, setting, hook, anthropicKey }, targetDir);
+
+  } else if (sandbox === 'docker') {
+    if (!anthropicKey) {
+      console.log(chalk.red('❌ Error: Anthropic API key is required for Docker sandbox'));
+      console.log(chalk.yellow('💡 Options:'));
+      console.log(chalk.gray('   1. Set environment variable: ANTHROPIC_API_KEY=your_key'));
+      console.log(chalk.gray('   2. Use CLI parameter: --anthropic-api-key your_key'));
+      console.log(chalk.blue('   Get your key at: https://console.anthropic.com'));
+      return;
+    }
+
+    // Execute Docker sandbox
+    await executeDockerSandbox({ sandbox, agent, prompt, command, mcp, setting, hook, anthropicKey, yes: options.yes }, targetDir);
   }
 }
 
@@ -2814,6 +2831,199 @@ async function executeCloudflareSandbox(options, targetDir) {
   } catch (error) {
     console.log(chalk.red(`❌ Error setting up Cloudflare sandbox: ${error.message}`));
     console.log(chalk.yellow('💡 Please check your internet connection and try again'));
+  }
+}
+
+async function executeDockerSandbox(options, targetDir) {
+  const { agent, command, mcp, setting, hook, prompt, anthropicKey, yes } = options;
+
+  console.log(chalk.blue('\n🐳 Docker Sandbox Execution'));
+  console.log(chalk.cyan('═══════════════════════════════════════'));
+
+  if (agent) {
+    const agentList = agent.split(',');
+    if (agentList.length > 1) {
+      console.log(chalk.white(`📋 Agents (${agentList.length}):`));
+      agentList.forEach(a => console.log(chalk.yellow(`   • ${a.trim()}`)));
+    } else {
+      console.log(chalk.white(`📋 Agent: ${chalk.yellow(agent)}`));
+    }
+  } else {
+    console.log(chalk.white(`📋 Agent: ${chalk.yellow('default')}`));
+  }
+
+  const truncatedPrompt = prompt.length > 80 ? prompt.substring(0, 80) + '...' : prompt;
+  console.log(chalk.white(`💭 Prompt: ${chalk.cyan('"' + truncatedPrompt + '"')}`));
+  console.log(chalk.white(`🐳 Provider: ${chalk.green('Docker Local')}`));
+  console.log(chalk.gray('\n🔧 Execution details:'));
+  console.log(chalk.gray('   • Uses Claude Agent SDK for execution'));
+  console.log(chalk.gray('   • Executes in isolated Docker container'));
+  console.log(chalk.gray('   • Local execution with full filesystem access\n'));
+
+  // Skip confirmation prompt if --yes flag is used
+  if (!yes) {
+    const inquirer = require('inquirer');
+
+    const { shouldExecute } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'shouldExecute',
+      message: 'Execute this prompt in Docker sandbox?',
+      default: true
+    }]);
+
+    if (!shouldExecute) {
+      console.log(chalk.yellow('⏹️  Docker sandbox execution cancelled by user.'));
+      return;
+    }
+  }
+
+  try {
+    console.log(chalk.blue('🔮 Setting up Docker sandbox environment...'));
+
+    const spinner = ora('Installing Docker sandbox component...').start();
+
+    // Create .claude/sandbox/docker directory
+    const sandboxDir = path.join(targetDir, '.claude', 'sandbox', 'docker');
+    await fs.ensureDir(sandboxDir);
+
+    // Copy Docker component files
+    const componentsDir = path.join(__dirname, '..', 'components', 'sandbox', 'docker');
+
+    try {
+      if (await fs.pathExists(componentsDir)) {
+        console.log(chalk.gray('📦 Using local Docker component files...'));
+        console.log(chalk.dim(`   Source: ${componentsDir}`));
+        console.log(chalk.dim(`   Target: ${sandboxDir}`));
+
+        // Copy all files from docker directory
+        await fs.copy(componentsDir, sandboxDir, {
+          overwrite: true
+        });
+
+        // Verify files were copied
+        const copiedFiles = await fs.readdir(sandboxDir);
+        console.log(chalk.dim(`   Copied ${copiedFiles.length} items`));
+        if (copiedFiles.length === 0) {
+          throw new Error('No files were copied from Docker component directory');
+        }
+      } else {
+        throw new Error(`Docker component files not found at: ${componentsDir}`);
+      }
+    } catch (error) {
+      spinner.fail(`Failed to install Docker component: ${error.message}`);
+      throw error;
+    }
+
+    spinner.succeed('Docker sandbox component installed successfully');
+
+    // Check for Docker
+    const dockerSpinner = ora('Checking Docker environment...').start();
+
+    try {
+      const { spawn } = require('child_process');
+
+      // Check Docker installation
+      const checkDocker = () => {
+        return new Promise((resolve) => {
+          const check = spawn('docker', ['--version'], { stdio: 'pipe' });
+          check.on('close', (code) => resolve(code === 0));
+          check.on('error', () => resolve(false));
+        });
+      };
+
+      const dockerAvailable = await checkDocker();
+      if (!dockerAvailable) {
+        dockerSpinner.fail('Docker not found');
+        console.log(chalk.red('❌ Docker is required for Docker sandbox'));
+        console.log(chalk.yellow('💡 Please install Docker and try again'));
+        console.log(chalk.blue('   Visit: https://docs.docker.com/get-docker/'));
+        return;
+      }
+
+      // Check Docker daemon
+      const checkDockerRunning = () => {
+        return new Promise((resolve) => {
+          const check = spawn('docker', ['ps'], { stdio: 'pipe' });
+          check.on('close', (code) => resolve(code === 0));
+          check.on('error', () => resolve(false));
+        });
+      };
+
+      const dockerRunning = await checkDockerRunning();
+      if (!dockerRunning) {
+        dockerSpinner.fail('Docker daemon not running');
+        console.log(chalk.red('❌ Docker daemon is not running'));
+        console.log(chalk.yellow('💡 Please start Docker and try again'));
+        return;
+      }
+
+      dockerSpinner.succeed('Docker environment ready');
+
+      // Build components string for installation inside sandbox
+      let componentsToInstall = '';
+      if (agent) {
+        const agentList = agent.split(',').map(a => `--agent ${a.trim()}`);
+        componentsToInstall += agentList.join(' ');
+      }
+      if (command) {
+        const commandList = command.split(',').map(c => ` --command ${c.trim()}`);
+        componentsToInstall += commandList.join(' ');
+      }
+      if (mcp) {
+        const mcpList = mcp.split(',').map(m => ` --mcp ${m.trim()}`);
+        componentsToInstall += mcpList.join(' ');
+      }
+      if (setting) {
+        const settingList = setting.split(',').map(s => ` --setting ${s.trim()}`);
+        componentsToInstall += settingList.join(' ');
+      }
+      if (hook) {
+        const hookList = hook.split(',').map(h => ` --hook ${h.trim()}`);
+        componentsToInstall += hookList.join(' ');
+      }
+
+      // Execute Docker launcher
+      const execSpinner = ora('Executing Docker sandbox...').start();
+
+      const launcherPath = path.join(sandboxDir, 'docker-launcher.js');
+
+      const dockerExec = spawn('node', [launcherPath, prompt, componentsToInstall.trim()], {
+        cwd: sandboxDir,
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          ANTHROPIC_API_KEY: anthropicKey
+        }
+      });
+
+      await new Promise((resolve, reject) => {
+        dockerExec.on('close', (dockerCode) => {
+          if (dockerCode === 0) {
+            execSpinner.succeed('Docker sandbox execution completed successfully');
+            console.log(chalk.green('\n✅ Docker sandbox execution finished!'));
+            console.log(chalk.white('📁 Output files are in the output/ directory'));
+            resolve();
+          } else {
+            execSpinner.fail(`Docker sandbox execution failed with code ${dockerCode}`);
+            reject(new Error(`Docker execution failed with code ${dockerCode}`));
+          }
+        });
+
+        dockerExec.on('error', (error) => {
+          execSpinner.fail('Failed to execute Docker sandbox');
+          reject(error);
+        });
+      });
+
+    } catch (error) {
+      dockerSpinner.fail('Failed to check Docker environment');
+      console.log(chalk.red(`❌ Error: ${error.message}`));
+      throw error;
+    }
+
+  } catch (error) {
+    console.log(chalk.red(`❌ Error setting up Docker sandbox: ${error.message}`));
+    console.log(chalk.yellow('💡 Please check your Docker installation and try again'));
   }
 }
 

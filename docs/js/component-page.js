@@ -518,14 +518,14 @@ class ComponentPageManager {
         // Handle agent-specific sections
         if (this.component.type === 'agent') {
             this.renderGlobalAgentSection(componentPath);
-            this.renderE2BSandboxSection(componentPath);
+            this.renderCloudSandboxSection(componentPath);
         } else {
             // Hide agent-specific sections for non-agents
             const globalAgentSection = document.getElementById('globalAgentSection');
-            const e2bSandboxSection = document.getElementById('e2bSandboxSection');
+            const cloudSandboxSection = document.getElementById('cloudSandboxSection');
 
             if (globalAgentSection) globalAgentSection.style.display = 'none';
-            if (e2bSandboxSection) e2bSandboxSection.style.display = 'none';
+            if (cloudSandboxSection) cloudSandboxSection.style.display = 'none';
         }
     }
 
@@ -549,17 +549,30 @@ class ComponentPageManager {
         }
     }
 
-    renderE2BSandboxSection(componentPath) {
-        const e2bSandboxSection = document.getElementById('e2bSandboxSection');
+    renderCloudSandboxSection(componentPath) {
+        const cloudSandboxSection = document.getElementById('cloudSandboxSection');
+
+        // Update all sandbox command examples with the component path
         const e2bSandboxCommand = `npx claude-code-templates@latest --sandbox e2b --agent=${componentPath} --prompt "your development task"`;
+        const cloudflareSandboxCommand = `npx claude-code-templates@latest --sandbox cloudflare --agent=${componentPath} --prompt "your development task"`;
+        const dockerSandboxCommand = `npx claude-code-templates@latest --sandbox docker --agent=${componentPath} --prompt "your development task"`;
 
         const e2bSandboxCommandElement = document.getElementById('e2bSandboxCommand');
+        const cloudflareSandboxCommandElement = document.getElementById('cloudflareSandboxCommand');
+        const dockerSandboxCommandElement = document.getElementById('dockerSandboxCommand');
+
         if (e2bSandboxCommandElement) {
             e2bSandboxCommandElement.textContent = e2bSandboxCommand;
         }
-        
-        if (e2bSandboxSection) {
-            e2bSandboxSection.style.display = 'block';
+        if (cloudflareSandboxCommandElement) {
+            cloudflareSandboxCommandElement.textContent = cloudflareSandboxCommand;
+        }
+        if (dockerSandboxCommandElement) {
+            dockerSandboxCommandElement.textContent = dockerSandboxCommand;
+        }
+
+        if (cloudSandboxSection) {
+            cloudSandboxSection.style.display = 'block';
         }
     }
 
