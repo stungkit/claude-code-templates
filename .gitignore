@@ -14,7 +14,6 @@ db_backup.*
 supabase_data.*
 trending_cache.*
 analytics_data.*
-generate_trending_data.py
 update_trending.sh
 
 # Python cache and virtual environments  
