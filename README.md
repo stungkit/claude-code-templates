@@ -105,6 +105,13 @@ This collection includes components from multiple sources:
 **Commands Collection:**
 - **awesome-claude-code Commands** by [hesreallyhim](https://github.com/hesreallyhim/awesome-claude-code) - Licensed under CC0 1.0 Universal (21 commands)
 
+Some of the commands and resources included in this marketplace come from open-source community repositories originally listed in [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code).
+
+Each of these resources retains its **original license and attribution**, as defined by their respective authors (mostly MIT-licensed).  
+
+Please note that **awesome-claude-code** is **no longer licensed under CC 1.0**.  
+We respect and credit all original creators for their work and contributions to the Claude ecosystem.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
