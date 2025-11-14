@@ -1,47 +1,47 @@
 {
-  "lastUpdated": "2025-11-13T03:23:59.036406+00:00Z",
+  "lastUpdated": "2025-11-14T03:23:23.496928+00:00Z",
   "globalStats": {
-    "totalComponents": 622,
-    "totalDownloads": 196278,
-    "monthlyDownloads": 98685,
-    "weeklyDownloads": 20851,
-    "todayDownloads": 502,
-    "totalCountries": 141
+    "totalComponents": 619,
+    "totalDownloads": 200000,
+    "monthlyDownloads": 99556,
+    "weeklyDownloads": 22905,
+    "todayDownloads": 406,
+    "totalCountries": 142
   },
   "topCountries": [
     {
       "code": "US",
       "name": "United States",
       "flag": "🇺🇸",
-      "downloads": 48675,
-      "percentage": 24.8
+      "downloads": 49205,
+      "percentage": 24.6
     },
     {
       "code": "KR",
       "name": "South Korea",
       "flag": "🇰🇷",
-      "downloads": 20445,
-      "percentage": 10.4
+      "downloads": 20643,
+      "percentage": 10.3
     },
     {
       "code": "BR",
       "name": "Brazil",
       "flag": "🇧🇷",
-      "downloads": 9937,
-      "percentage": 5.1
+      "downloads": 9974,
+      "percentage": 5.0
     },
     {
       "code": "CN",
       "name": "China",
       "flag": "🇨🇳",
-      "downloads": 8501,
+      "downloads": 8668,
       "percentage": 4.3
     },
     {
       "code": "DE",
       "name": "Germany",
       "flag": "🇩🇪",
-      "downloads": 7681,
+      "downloads": 7822,
       "percentage": 3.9
     }
   ],
@@ -51,91 +51,91 @@
         "id": "command-ultra-think",
         "name": "ultra-think",
         "category": "utilities",
-        "downloadsToday": 6,
-        "downloadsWeek": 327,
-        "downloadsMonth": 1391,
-        "downloadsTotal": 2092
+        "downloadsToday": 2,
+        "downloadsWeek": 347,
+        "downloadsMonth": 1394,
+        "downloadsTotal": 2139
       },
       {
         "id": "command-generate-tests",
         "name": "generate-tests",
         "category": "testing",
-        "downloadsToday": 4,
-        "downloadsWeek": 256,
-        "downloadsMonth": 1153,
-        "downloadsTotal": 1405
+        "downloadsToday": 1,
+        "downloadsWeek": 276,
+        "downloadsMonth": 1149,
+        "downloadsTotal": 1442
       },
       {
         "id": "command-create-architecture-documentation",
         "name": "create-architecture-documentation",
         "category": "documentation",
-        "downloadsToday": 5,
-        "downloadsWeek": 168,
-        "downloadsMonth": 892,
-        "downloadsTotal": 1650
+        "downloadsToday": 3,
+        "downloadsWeek": 196,
+        "downloadsMonth": 903,
+        "downloadsTotal": 1692
       },
       {
         "id": "command-refactor-code",
         "name": "refactor-code",
         "category": "utilities",
-        "downloadsToday": 2,
-        "downloadsWeek": 155,
-        "downloadsMonth": 721,
-        "downloadsTotal": 1255
-      },
-      {
-        "id": "command-code-review",
-        "name": "code-review",
-        "category": "utilities",
-        "downloadsToday": 3,
-        "downloadsWeek": 129,
-        "downloadsMonth": 712,
-        "downloadsTotal": 1203
+        "downloadsToday": 1,
+        "downloadsWeek": 171,
+        "downloadsMonth": 725,
+        "downloadsTotal": 1289
       },
       {
         "id": "command-commit",
         "name": "commit",
         "category": "git-workflow",
-        "downloadsToday": 4,
-        "downloadsWeek": 127,
-        "downloadsMonth": 683,
-        "downloadsTotal": 1426
+        "downloadsToday": 0,
+        "downloadsWeek": 147,
+        "downloadsMonth": 688,
+        "downloadsTotal": 1456
+      },
+      {
+        "id": "command-code-review",
+        "name": "code-review",
+        "category": "utilities",
+        "downloadsToday": 2,
+        "downloadsWeek": 136,
+        "downloadsMonth": 703,
+        "downloadsTotal": 1230
       },
       {
         "id": "command-update-docs",
         "name": "update-docs",
         "category": "documentation",
-        "downloadsToday": 3,
-        "downloadsWeek": 101,
-        "downloadsMonth": 570,
-        "downloadsTotal": 1025
+        "downloadsToday": 2,
+        "downloadsWeek": 121,
+        "downloadsMonth": 571,
+        "downloadsTotal": 1052
       },
       {
         "id": "command-architecture-review",
         "name": "architecture-review",
         "category": "team",
-        "downloadsToday": 2,
-        "downloadsWeek": 89,
-        "downloadsMonth": 462,
-        "downloadsTotal": 759
+        "downloadsToday": 3,
+        "downloadsWeek": 96,
+        "downloadsMonth": 460,
+        "downloadsTotal": 782
       },
       {
         "id": "command-todo",
         "name": "todo",
         "category": "project-management",
-        "downloadsToday": 1,
-        "downloadsWeek": 74,
-        "downloadsMonth": 358,
-        "downloadsTotal": 657
+        "downloadsToday": 2,
+        "downloadsWeek": 82,
+        "downloadsMonth": 357,
+        "downloadsTotal": 673
       },
       {
         "id": "command-workflow-orchestrator",
         "name": "workflow-orchestrator",
         "category": "automation",
         "downloadsToday": 2,
-        "downloadsWeek": 69,
-        "downloadsMonth": 315,
-        "downloadsTotal": 618
+        "downloadsWeek": 72,
+        "downloadsMonth": 309,
+        "downloadsTotal": 627
       }
     ],
     "agents": [
@@ -143,91 +143,91 @@
         "id": "agent-frontend-developer",
         "name": "frontend-developer",
         "category": "development-team",
-        "downloadsToday": 17,
-        "downloadsWeek": 867,
-        "downloadsMonth": 4049,
-        "downloadsTotal": 6970
+        "downloadsToday": 21,
+        "downloadsWeek": 923,
+        "downloadsMonth": 4055,
+        "downloadsTotal": 7110
       },
       {
         "id": "agent-code-reviewer",
         "name": "code-reviewer",
         "category": "development-tools",
-        "downloadsToday": 10,
-        "downloadsWeek": 704,
-        "downloadsMonth": 2921,
-        "downloadsTotal": 5421
-      },
-      {
-        "id": "agent-ui-ux-designer",
-        "name": "ui-ux-designer",
-        "category": "development-team",
-        "downloadsToday": 15,
-        "downloadsWeek": 608,
-        "downloadsMonth": 2579,
-        "downloadsTotal": 4851
+        "downloadsToday": 31,
+        "downloadsWeek": 726,
+        "downloadsMonth": 2927,
+        "downloadsTotal": 5511
       },
       {
         "id": "agent-backend-architect",
         "name": "backend-architect",
         "category": "development-team",
-        "downloadsToday": 12,
-        "downloadsWeek": 586,
-        "downloadsMonth": 2590,
-        "downloadsTotal": 4980
+        "downloadsToday": 18,
+        "downloadsWeek": 636,
+        "downloadsMonth": 2611,
+        "downloadsTotal": 5085
       },
       {
-        "id": "agent-fullstack-developer",
-        "name": "fullstack-developer",
+        "id": "agent-ui-ux-designer",
+        "name": "ui-ux-designer",
         "category": "development-team",
-        "downloadsToday": 13,
-        "downloadsWeek": 372,
-        "downloadsMonth": 1735,
-        "downloadsTotal": 3272
+        "downloadsToday": 19,
+        "downloadsWeek": 634,
+        "downloadsMonth": 2603,
+        "downloadsTotal": 4935
       },
       {
         "id": "agent-prompt-engineer",
         "name": "prompt-engineer",
         "category": "ai-specialists",
-        "downloadsToday": 9,
-        "downloadsWeek": 369,
-        "downloadsMonth": 1779,
-        "downloadsTotal": 3679
+        "downloadsToday": 17,
+        "downloadsWeek": 386,
+        "downloadsMonth": 1775,
+        "downloadsTotal": 3731
+      },
+      {
+        "id": "agent-fullstack-developer",
+        "name": "fullstack-developer",
+        "category": "development-team",
+        "downloadsToday": 22,
+        "downloadsWeek": 381,
+        "downloadsMonth": 1737,
+        "downloadsTotal": 3335
       },
       {
         "id": "agent-python-pro",
         "name": "python-pro",
         "category": "programming-languages",
         "downloadsToday": 9,
-        "downloadsWeek": 284,
-        "downloadsMonth": 1336,
-        "downloadsTotal": 2529
+        "downloadsWeek": 296,
+        "downloadsMonth": 1327,
+        "downloadsTotal": 2554
       },
       {
         "id": "agent-debugger",
         "name": "debugger",
         "category": "development-tools",
-        "downloadsToday": 6,
-        "downloadsWeek": 256,
-        "downloadsMonth": 1306,
-        "downloadsTotal": 2670
+        "downloadsToday": 13,
+        "downloadsWeek": 282,
+        "downloadsMonth": 1319,
+        "downloadsTotal": 2721
       },
       {
         "id": "agent-typescript-pro",
         "name": "typescript-pro",
         "category": "programming-languages",
-        "downloadsToday": 1,
-        "downloadsWeek": 241,
-        "downloadsMonth": 1097,
-        "downloadsTotal": 1945
+        "downloadsToday": 5,
+        "downloadsWeek": 252,
+        "downloadsMonth": 1110,
+        "downloadsTotal": 1987
       },
       {
-        "id": "agent-context-manager",
-        "name": "context-manager",
-        "category": "development-tools",
-        "downloadsToday": 4,
-        "downloadsWeek": 233,
-        "downloadsMonth": 1119,
-        "downloadsTotal": 2242
+        "id": "agent-database-architect",
+        "name": "database-architect",
+        "category": "database",
+        "downloadsToday": 3,
+        "downloadsWeek": 246,
+        "downloadsMonth": 1061,
+        "downloadsTotal": 2031
       }
     ],
     "settings": [
@@ -235,91 +235,91 @@
         "id": "setting-context-monitor",
         "name": "context-monitor",
         "category": "statusline",
-        "downloadsToday": 11,
-        "downloadsWeek": 387,
-        "downloadsMonth": 1979,
-        "downloadsTotal": 3236
+        "downloadsToday": 12,
+        "downloadsWeek": 412,
+        "downloadsMonth": 1951,
+        "downloadsTotal": 3304
       },
       {
         "id": "setting-performance-optimization",
         "name": "performance-optimization",
         "category": "environment",
-        "downloadsToday": 3,
-        "downloadsWeek": 214,
-        "downloadsMonth": 847,
-        "downloadsTotal": 1307
+        "downloadsToday": 2,
+        "downloadsWeek": 229,
+        "downloadsMonth": 826,
+        "downloadsTotal": 1333
       },
       {
         "id": "setting-development-utils",
         "name": "development-utils",
         "category": "environment",
-        "downloadsToday": 4,
-        "downloadsWeek": 125,
-        "downloadsMonth": 570,
-        "downloadsTotal": 959
+        "downloadsToday": 1,
+        "downloadsWeek": 135,
+        "downloadsMonth": 564,
+        "downloadsTotal": 976
       },
       {
         "id": "setting-colorful-statusline",
         "name": "colorful-statusline",
         "category": "statusline",
-        "downloadsToday": 3,
-        "downloadsWeek": 84,
-        "downloadsMonth": 434,
-        "downloadsTotal": 752
+        "downloadsToday": 1,
+        "downloadsWeek": 92,
+        "downloadsMonth": 426,
+        "downloadsTotal": 767
       },
       {
         "id": "setting-allow-npm-commands",
         "name": "allow-npm-commands",
         "category": "permissions",
         "downloadsToday": 3,
-        "downloadsWeek": 81,
-        "downloadsMonth": 350,
-        "downloadsTotal": 673
+        "downloadsWeek": 87,
+        "downloadsMonth": 352,
+        "downloadsTotal": 683
       },
       {
         "id": "setting-development-mode",
         "name": "development-mode",
         "category": "permissions",
-        "downloadsToday": 4,
-        "downloadsWeek": 80,
-        "downloadsMonth": 348,
-        "downloadsTotal": 603
+        "downloadsToday": 1,
+        "downloadsWeek": 84,
+        "downloadsMonth": 351,
+        "downloadsTotal": 614
       },
       {
         "id": "setting-git-commit-settings",
         "name": "git-commit-settings",
         "category": "global",
-        "downloadsToday": 0,
-        "downloadsWeek": 57,
-        "downloadsMonth": 364,
-        "downloadsTotal": 739
+        "downloadsToday": 1,
+        "downloadsWeek": 81,
+        "downloadsMonth": 378,
+        "downloadsTotal": 769
       },
       {
         "id": "setting-enable-all-project-servers",
         "name": "enable-all-project-servers",
         "category": "mcp",
-        "downloadsToday": 2,
-        "downloadsWeek": 45,
-        "downloadsMonth": 198,
-        "downloadsTotal": 358
+        "downloadsToday": 0,
+        "downloadsWeek": 52,
+        "downloadsMonth": 199,
+        "downloadsTotal": 367
       },
       {
-        "id": "setting-git-branch-statusline",
-        "name": "git-branch-statusline",
-        "category": "statusline",
+        "id": "setting-disable-telemetry",
+        "name": "disable-telemetry",
+        "category": "telemetry",
         "downloadsToday": 0,
-        "downloadsWeek": 39,
-        "downloadsMonth": 177,
-        "downloadsTotal": 347
+        "downloadsWeek": 43,
+        "downloadsMonth": 159,
+        "downloadsTotal": 268
       },
       {
         "id": "setting-allow-git-operations",
         "name": "allow-git-operations",
         "category": "permissions",
         "downloadsToday": 0,
-        "downloadsWeek": 38,
-        "downloadsMonth": 242,
-        "downloadsTotal": 502
+        "downloadsWeek": 40,
+        "downloadsMonth": 240,
+        "downloadsTotal": 506
       }
     ],
     "hooks": [
@@ -327,91 +327,91 @@
         "id": "hook-simple-notifications",
         "name": "simple-notifications",
         "category": "automation",
-        "downloadsToday": 9,
-        "downloadsWeek": 172,
-        "downloadsMonth": 1265,
-        "downloadsTotal": 1993
+        "downloadsToday": 5,
+        "downloadsWeek": 183,
+        "downloadsMonth": 1264,
+        "downloadsTotal": 2025
       },
       {
         "id": "hook-update-search-year",
         "name": "update-search-year",
         "category": "pre-tool",
-        "downloadsToday": 3,
-        "downloadsWeek": 98,
-        "downloadsMonth": 377,
-        "downloadsTotal": 769
-      },
-      {
-        "id": "hook-smart-formatting",
-        "name": "smart-formatting",
-        "category": "development-tools",
-        "downloadsToday": 4,
-        "downloadsWeek": 89,
-        "downloadsMonth": 368,
-        "downloadsTotal": 801
+        "downloadsToday": 0,
+        "downloadsWeek": 95,
+        "downloadsMonth": 379,
+        "downloadsTotal": 777
       },
       {
         "id": "hook-lint-on-save",
         "name": "lint-on-save",
         "category": "development-tools",
-        "downloadsToday": 2,
-        "downloadsWeek": 89,
-        "downloadsMonth": 394,
-        "downloadsTotal": 896
+        "downloadsToday": 0,
+        "downloadsWeek": 94,
+        "downloadsMonth": 382,
+        "downloadsTotal": 908
+      },
+      {
+        "id": "hook-smart-formatting",
+        "name": "smart-formatting",
+        "category": "development-tools",
+        "downloadsToday": 1,
+        "downloadsWeek": 91,
+        "downloadsMonth": 354,
+        "downloadsTotal": 810
       },
       {
         "id": "hook-smart-commit",
         "name": "smart-commit",
         "category": "git-workflow",
-        "downloadsToday": 0,
-        "downloadsWeek": 77,
-        "downloadsMonth": 440,
-        "downloadsTotal": 1030
+        "downloadsToday": 1,
+        "downloadsWeek": 85,
+        "downloadsMonth": 438,
+        "downloadsTotal": 1043
       },
       {
         "id": "hook-nextjs-code-quality-enforcer",
         "name": "nextjs-code-quality-enforcer",
         "category": "development-tools",
-        "downloadsToday": 2,
-        "downloadsWeek": 56,
-        "downloadsMonth": 240,
-        "downloadsTotal": 445
+        "downloadsToday": 0,
+        "downloadsWeek": 57,
+        "downloadsMonth": 238,
+        "downloadsTotal": 453
       },
       {
         "id": "hook-dependency-checker",
         "name": "dependency-checker",
         "category": "automation",
-        "downloadsToday": 0,
-        "downloadsWeek": 50,
-        "downloadsMonth": 229,
-        "downloadsTotal": 581
+        "downloadsToday": 1,
+        "downloadsWeek": 55,
+        "downloadsMonth": 228,
+        "downloadsTotal": 589
       },
       {
         "id": "hook-format-python-files",
         "name": "format-python-files",
         "category": "post-tool",
-        "downloadsToday": 1,
-        "downloadsWeek": 35,
-        "downloadsMonth": 167,
-        "downloadsTotal": 454
+        "downloadsToday": 2,
+        "downloadsWeek": 39,
+        "downloadsMonth": 173,
+        "downloadsTotal": 461
       },
       {
         "id": "hook-agents-md-loader",
         "name": "agents-md-loader",
         "category": "automation",
         "downloadsToday": 0,
-        "downloadsWeek": 33,
-        "downloadsMonth": 124,
-        "downloadsTotal": 200
+        "downloadsWeek": 37,
+        "downloadsMonth": 127,
+        "downloadsTotal": 206
       },
       {
         "id": "hook-security-scanner",
         "name": "security-scanner",
         "category": "security",
         "downloadsToday": 0,
-        "downloadsWeek": 29,
-        "downloadsMonth": 167,
-        "downloadsTotal": 370
+        "downloadsWeek": 34,
+        "downloadsMonth": 162,
+        "downloadsTotal": 376
       }
     ],
     "mcps": [
@@ -419,91 +419,91 @@
         "id": "mcp-context7",
         "name": "context7",
         "category": "devtools",
-        "downloadsToday": 5,
-        "downloadsWeek": 401,
-        "downloadsMonth": 1820,
-        "downloadsTotal": 3691
+        "downloadsToday": 7,
+        "downloadsWeek": 418,
+        "downloadsMonth": 1818,
+        "downloadsTotal": 3744
       },
       {
         "id": "mcp-playwright-mcp-server",
         "name": "playwright-mcp-server",
         "category": "browser_automation",
-        "downloadsToday": 5,
-        "downloadsWeek": 233,
-        "downloadsMonth": 978,
-        "downloadsTotal": 1814
+        "downloadsToday": 4,
+        "downloadsWeek": 238,
+        "downloadsMonth": 970,
+        "downloadsTotal": 1841
       },
       {
         "id": "mcp-memory-integration",
         "name": "memory-integration",
         "category": "integration",
-        "downloadsToday": 4,
-        "downloadsWeek": 217,
-        "downloadsMonth": 1083,
-        "downloadsTotal": 2088
+        "downloadsToday": 5,
+        "downloadsWeek": 235,
+        "downloadsMonth": 1073,
+        "downloadsTotal": 2122
       },
       {
         "id": "mcp-supabase",
         "name": "supabase",
         "category": "database",
         "downloadsToday": 2,
-        "downloadsWeek": 138,
-        "downloadsMonth": 522,
-        "downloadsTotal": 819
+        "downloadsWeek": 142,
+        "downloadsMonth": 536,
+        "downloadsTotal": 847
       },
       {
         "id": "mcp-web-fetch",
         "name": "web-fetch",
         "category": "web",
         "downloadsToday": 3,
-        "downloadsWeek": 127,
-        "downloadsMonth": 629,
-        "downloadsTotal": 1142
+        "downloadsWeek": 140,
+        "downloadsMonth": 622,
+        "downloadsTotal": 1164
       },
       {
         "id": "mcp-postgresql-integration",
         "name": "postgresql-integration",
         "category": "database",
-        "downloadsToday": 3,
-        "downloadsWeek": 111,
+        "downloadsToday": 1,
+        "downloadsWeek": 123,
         "downloadsMonth": 505,
-        "downloadsTotal": 1006
+        "downloadsTotal": 1027
       },
       {
         "id": "mcp-chrome-devtools",
         "name": "chrome-devtools",
         "category": "devtools",
-        "downloadsToday": 2,
-        "downloadsWeek": 105,
-        "downloadsMonth": 592,
-        "downloadsTotal": 687
+        "downloadsToday": 1,
+        "downloadsWeek": 110,
+        "downloadsMonth": 595,
+        "downloadsTotal": 710
       },
       {
         "id": "mcp-github-integration",
         "name": "github-integration",
         "category": "integration",
-        "downloadsToday": 3,
-        "downloadsWeek": 88,
-        "downloadsMonth": 496,
-        "downloadsTotal": 1174
+        "downloadsToday": 2,
+        "downloadsWeek": 93,
+        "downloadsMonth": 485,
+        "downloadsTotal": 1188
       },
       {
         "id": "mcp-filesystem-access",
         "name": "filesystem-access",
         "category": "filesystem",
-        "downloadsToday": 4,
-        "downloadsWeek": 73,
-        "downloadsMonth": 414,
-        "downloadsTotal": 877
+        "downloadsToday": 3,
+        "downloadsWeek": 78,
+        "downloadsMonth": 401,
+        "downloadsTotal": 888
       },
       {
-        "id": "mcp-markitdown",
-        "name": "markitdown",
-        "category": "devtools",
-        "downloadsToday": 2,
-        "downloadsWeek": 60,
-        "downloadsMonth": 220,
-        "downloadsTotal": 270
+        "id": "mcp-browser-use-mcp-server",
+        "name": "browser-use-mcp-server",
+        "category": "browser_automation",
+        "downloadsToday": 1,
+        "downloadsWeek": 69,
+        "downloadsMonth": 323,
+        "downloadsTotal": 881
       }
     ],
     "skills": [
@@ -512,135 +512,135 @@
         "name": "skill-creator",
         "category": "development",
         "downloadsToday": 5,
-        "downloadsWeek": 233,
-        "downloadsMonth": 1116,
-        "downloadsTotal": 1116
+        "downloadsWeek": 252,
+        "downloadsMonth": 1162,
+        "downloadsTotal": 1162
       },
       {
         "id": "skill-webapp-testing",
         "name": "webapp-testing",
         "category": "development",
         "downloadsToday": 2,
-        "downloadsWeek": 167,
-        "downloadsMonth": 591,
-        "downloadsTotal": 591
+        "downloadsWeek": 172,
+        "downloadsMonth": 612,
+        "downloadsTotal": 612
       },
       {
         "id": "skill-git-commit-helper",
         "name": "git-commit-helper",
         "category": "development",
         "downloadsToday": 1,
-        "downloadsWeek": 109,
-        "downloadsMonth": 522,
-        "downloadsTotal": 522
-      },
-      {
-        "id": "skill-docx",
-        "name": "docx",
-        "category": "document-processing",
-        "downloadsToday": 1,
-        "downloadsWeek": 84,
-        "downloadsMonth": 414,
-        "downloadsTotal": 414
+        "downloadsWeek": 113,
+        "downloadsMonth": 538,
+        "downloadsTotal": 538
       },
       {
         "id": "skill-mcp-builder",
         "name": "mcp-builder",
         "category": "development",
-        "downloadsToday": 2,
-        "downloadsWeek": 81,
-        "downloadsMonth": 443,
-        "downloadsTotal": 443
+        "downloadsToday": 1,
+        "downloadsWeek": 99,
+        "downloadsMonth": 468,
+        "downloadsTotal": 468
       },
       {
         "id": "skill-pdf-processing-pro",
         "name": "pdf-processing-pro",
         "category": "document-processing",
-        "downloadsToday": 0,
-        "downloadsWeek": 75,
-        "downloadsMonth": 368,
-        "downloadsTotal": 368
+        "downloadsToday": 4,
+        "downloadsWeek": 88,
+        "downloadsMonth": 385,
+        "downloadsTotal": 385
+      },
+      {
+        "id": "skill-docx",
+        "name": "docx",
+        "category": "document-processing",
+        "downloadsToday": 5,
+        "downloadsWeek": 87,
+        "downloadsMonth": 426,
+        "downloadsTotal": 426
       },
       {
         "id": "skill-artifacts-builder",
         "name": "artifacts-builder",
         "category": "development",
         "downloadsToday": 2,
-        "downloadsWeek": 65,
-        "downloadsMonth": 285,
-        "downloadsTotal": 285
+        "downloadsWeek": 75,
+        "downloadsMonth": 302,
+        "downloadsTotal": 302
       },
       {
         "id": "skill-canvas-design",
         "name": "canvas-design",
         "category": "creative-design",
-        "downloadsToday": 1,
-        "downloadsWeek": 63,
-        "downloadsMonth": 317,
-        "downloadsTotal": 317
+        "downloadsToday": 3,
+        "downloadsWeek": 71,
+        "downloadsMonth": 329,
+        "downloadsTotal": 329
       },
       {
         "id": "skill-pptx",
         "name": "pptx",
         "category": "document-processing",
-        "downloadsToday": 4,
-        "downloadsWeek": 62,
-        "downloadsMonth": 340,
-        "downloadsTotal": 340
+        "downloadsToday": 2,
+        "downloadsWeek": 68,
+        "downloadsMonth": 351,
+        "downloadsTotal": 351
       },
       {
         "id": "skill-xlsx",
         "name": "xlsx",
         "category": "document-processing",
-        "downloadsToday": 1,
-        "downloadsWeek": 59,
-        "downloadsMonth": 334,
-        "downloadsTotal": 334
+        "downloadsToday": 4,
+        "downloadsWeek": 66,
+        "downloadsMonth": 349,
+        "downloadsTotal": 349
       }
     ],
     "templates": [
       {
-        "id": "template-none",
-        "name": "none",
-        "category": "python",
-        "downloadsToday": 0,
-        "downloadsWeek": 25,
-        "downloadsMonth": 154,
-        "downloadsTotal": 752
-      },
-      {
         "id": "template-react",
         "name": "react",
         "category": "javascript-typescript",
-        "downloadsToday": 0,
-        "downloadsWeek": 24,
-        "downloadsMonth": 84,
-        "downloadsTotal": 279
+        "downloadsToday": 1,
+        "downloadsWeek": 27,
+        "downloadsMonth": 80,
+        "downloadsTotal": 281
+      },
+      {
+        "id": "template-none",
+        "name": "none",
+        "category": "common",
+        "downloadsToday": 1,
+        "downloadsWeek": 26,
+        "downloadsMonth": 139,
+        "downloadsTotal": 751
       },
       {
         "id": "template-node",
         "name": "node",
         "category": "javascript-typescript",
         "downloadsToday": 0,
-        "downloadsWeek": 21,
-        "downloadsMonth": 58,
-        "downloadsTotal": 108
+        "downloadsWeek": 22,
+        "downloadsMonth": 54,
+        "downloadsTotal": 109
       },
       {
         "id": "template-null",
         "name": "null",
         "category": "common",
         "downloadsToday": 0,
-        "downloadsWeek": 19,
-        "downloadsMonth": 89,
-        "downloadsTotal": 265
+        "downloadsWeek": 17,
+        "downloadsMonth": 90,
+        "downloadsTotal": 269
       },
       {
         "id": "template-fastapi",
         "name": "fastapi",
         "category": "python",
-        "downloadsToday": 1,
-        "downloadsWeek": 7,
+        "downloadsToday": 0,
+        "downloadsWeek": 6,
         "downloadsMonth": 27,
         "downloadsTotal": 98
       },
@@ -648,10 +648,19 @@
         "id": "template-vue",
         "name": "vue",
         "category": "javascript-typescript",
-        "downloadsToday": 1,
+        "downloadsToday": 0,
         "downloadsWeek": 2,
-        "downloadsMonth": 14,
-        "downloadsTotal": 46
+        "downloadsMonth": 12,
+        "downloadsTotal": 45
+      },
+      {
+        "id": "template-test-template",
+        "name": "test-template",
+        "category": null,
+        "downloadsToday": 0,
+        "downloadsWeek": 1,
+        "downloadsMonth": 3,
+        "downloadsTotal": 3
       },
       {
         "id": "template-angular",
@@ -659,7 +668,7 @@
         "category": "javascript-typescript",
         "downloadsToday": 0,
         "downloadsWeek": 1,
-        "downloadsMonth": 8,
+        "downloadsMonth": 6,
         "downloadsTotal": 12
       },
       {
@@ -679,15 +688,6 @@
         "downloadsWeek": 0,
         "downloadsMonth": 6,
         "downloadsTotal": 20
-      },
-      {
-        "id": "template-rails",
-        "name": "rails",
-        "category": "ruby",
-        "downloadsToday": 0,
-        "downloadsWeek": 0,
-        "downloadsMonth": 3,
-        "downloadsTotal": 10
       }
     ],
     "all": [
@@ -695,97 +695,96 @@
         "id": "agent-frontend-developer",
         "name": "frontend-developer",
         "category": "development-team",
-        "downloadsToday": 17,
-        "downloadsWeek": 867,
-        "downloadsMonth": 4049,
-        "downloadsTotal": 6970
+        "downloadsToday": 21,
+        "downloadsWeek": 923,
+        "downloadsMonth": 4055,
+        "downloadsTotal": 7110
       },
       {
         "id": "agent-code-reviewer",
         "name": "code-reviewer",
         "category": "development-tools",
-        "downloadsToday": 10,
-        "downloadsWeek": 704,
-        "downloadsMonth": 2921,
-        "downloadsTotal": 5421
-      },
-      {
-        "id": "agent-ui-ux-designer",
-        "name": "ui-ux-designer",
-        "category": "development-team",
-        "downloadsToday": 15,
-        "downloadsWeek": 608,
-        "downloadsMonth": 2579,
-        "downloadsTotal": 4851
+        "downloadsToday": 31,
+        "downloadsWeek": 726,
+        "downloadsMonth": 2927,
+        "downloadsTotal": 5511
       },
       {
         "id": "agent-backend-architect",
         "name": "backend-architect",
         "category": "development-team",
-        "downloadsToday": 12,
-        "downloadsWeek": 586,
-        "downloadsMonth": 2590,
-        "downloadsTotal": 4980
+        "downloadsToday": 18,
+        "downloadsWeek": 636,
+        "downloadsMonth": 2611,
+        "downloadsTotal": 5085
+      },
+      {
+        "id": "agent-ui-ux-designer",
+        "name": "ui-ux-designer",
+        "category": "development-team",
+        "downloadsToday": 19,
+        "downloadsWeek": 634,
+        "downloadsMonth": 2603,
+        "downloadsTotal": 4935
       },
       {
         "id": "mcp-context7",
         "name": "context7",
         "category": "devtools",
-        "downloadsToday": 5,
-        "downloadsWeek": 401,
-        "downloadsMonth": 1820,
-        "downloadsTotal": 3691
+        "downloadsToday": 7,
+        "downloadsWeek": 418,
+        "downloadsMonth": 1818,
+        "downloadsTotal": 3744
       },
       {
         "id": "setting-context-monitor",
         "name": "context-monitor",
         "category": "statusline",
-        "downloadsToday": 11,
-        "downloadsWeek": 387,
-        "downloadsMonth": 1979,
-        "downloadsTotal": 3236
-      },
-      {
-        "id": "agent-fullstack-developer",
-        "name": "fullstack-developer",
-        "category": "development-team",
-        "downloadsToday": 13,
-        "downloadsWeek": 372,
-        "downloadsMonth": 1735,
-        "downloadsTotal": 3272
+        "downloadsToday": 12,
+        "downloadsWeek": 412,
+        "downloadsMonth": 1951,
+        "downloadsTotal": 3304
       },
       {
         "id": "agent-prompt-engineer",
         "name": "prompt-engineer",
         "category": "ai-specialists",
-        "downloadsToday": 9,
-        "downloadsWeek": 369,
-        "downloadsMonth": 1779,
-        "downloadsTotal": 3679
+        "downloadsToday": 17,
+        "downloadsWeek": 386,
+        "downloadsMonth": 1775,
+        "downloadsTotal": 3731
+      },
+      {
+        "id": "agent-fullstack-developer",
+        "name": "fullstack-developer",
+        "category": "development-team",
+        "downloadsToday": 22,
+        "downloadsWeek": 381,
+        "downloadsMonth": 1737,
+        "downloadsTotal": 3335
       },
       {
         "id": "command-ultra-think",
         "name": "ultra-think",
         "category": "utilities",
-        "downloadsToday": 6,
-        "downloadsWeek": 327,
-        "downloadsMonth": 1391,
-        "downloadsTotal": 2092
+        "downloadsToday": 2,
+        "downloadsWeek": 347,
+        "downloadsMonth": 1394,
+        "downloadsTotal": 2139
       },
       {
         "id": "agent-python-pro",
         "name": "python-pro",
         "category": "programming-languages",
         "downloadsToday": 9,
-        "downloadsWeek": 284,
-        "downloadsMonth": 1336,
-        "downloadsTotal": 2529
+        "downloadsWeek": 296,
+        "downloadsMonth": 1327,
+        "downloadsTotal": 2554
       }
     ]
   },
   "chartData": {
     "dates": [
-      "2025-10-15",
       "2025-10-16",
       "2025-10-17",
       "2025-10-18",
@@ -814,171 +813,171 @@
       "2025-11-10",
       "2025-11-11",
       "2025-11-12",
-      "2025-11-13"
+      "2025-11-13",
+      "2025-11-14"
     ],
     "series": {
       "commands": [
-        475,
-        1152,
-        1893,
-        2460,
-        2749,
-        3122,
-        3184,
-        4220,
-        4972,
-        5328,
-        5776,
-        6131,
-        6639,
-        7436,
-        7945,
-        8768,
-        9252,
-        9746,
-        10671,
-        11208,
-        11618,
-        12198,
-        12578,
-        13103,
-        13651,
-        14000,
-        14801,
-        15232,
-        15758,
-        15812
+        677,
+        1418,
+        1985,
+        2274,
+        2647,
+        2709,
+        3745,
+        4497,
+        4853,
+        5301,
+        5656,
+        6164,
+        6961,
+        7470,
+        8293,
+        8777,
+        9271,
+        10196,
+        10733,
+        11143,
+        11723,
+        12103,
+        12628,
+        13176,
+        13525,
+        14326,
+        14757,
+        15283,
+        16036,
+        16078
       ],
       "agents": [
-        1735,
-        4079,
-        6614,
-        8117,
-        9533,
-        10824,
-        11104,
-        13989,
-        16114,
-        18061,
-        19741,
-        21052,
-        23001,
-        24765,
-        26433,
-        28433,
-        30279,
-        31891,
-        33722,
-        35796,
-        37742,
-        39360,
-        40462,
-        41991,
-        43215,
-        44215,
-        46239,
-        47879,
-        50239,
-        50541
+        2344,
+        4882,
+        6385,
+        7801,
+        9092,
+        9372,
+        12257,
+        14382,
+        16329,
+        18009,
+        19320,
+        21269,
+        23033,
+        24701,
+        26701,
+        28547,
+        30159,
+        31990,
+        34064,
+        36010,
+        37628,
+        38730,
+        40259,
+        41483,
+        42483,
+        44507,
+        46147,
+        48507,
+        50755,
+        51012
       ],
       "settings": [
-        279,
-        602,
-        884,
-        1150,
-        1272,
-        1505,
-        1570,
-        1984,
-        2298,
-        2594,
-        2818,
-        2997,
-        3205,
-        3410,
-        3739,
-        3970,
-        4136,
-        4302,
-        4648,
-        4919,
-        5107,
-        5415,
-        5538,
-        5749,
-        5904,
-        6019,
-        6378,
-        6693,
-        6892,
-        6925
+        323,
+        607,
+        873,
+        995,
+        1228,
+        1293,
+        1707,
+        2021,
+        2317,
+        2541,
+        2720,
+        2928,
+        3133,
+        3462,
+        3693,
+        3859,
+        4025,
+        4371,
+        4642,
+        4830,
+        5138,
+        5261,
+        5472,
+        5627,
+        5742,
+        6101,
+        6416,
+        6615,
+        6886,
+        6910
       ],
       "hooks": [
-        187,
-        515,
-        778,
-        980,
-        1199,
-        1347,
-        1411,
-        1784,
-        2091,
-        2279,
-        2460,
-        2669,
+        328,
+        591,
+        793,
+        1012,
+        1160,
+        1224,
+        1597,
+        1904,
+        2092,
+        2273,
+        2482,
+        2666,
         2853,
-        3040,
-        3244,
-        3350,
-        3458,
-        3620,
-        3784,
-        3969,
-        4105,
-        4249,
-        4337,
-        4501,
-        4618,
-        4760,
-        4902,
-        5114,
-        5225,
-        5256
+        3057,
+        3163,
+        3271,
+        3433,
+        3597,
+        3782,
+        3918,
+        4062,
+        4150,
+        4314,
+        4431,
+        4573,
+        4715,
+        4927,
+        5038,
+        5268,
+        5280
       ],
       "mcps": [
-        386,
-        1139,
-        1614,
-        2039,
-        2292,
-        2663,
-        2746,
-        3224,
-        3558,
-        3916,
-        4241,
-        4581,
-        4945,
-        5231,
-        5498,
-        5934,
-        6231,
-        6501,
-        6935,
-        7356,
-        7627,
-        7984,
-        8223,
-        8470,
-        8710,
-        8924,
-        9387,
-        9696,
-        10048,
-        10107
+        753,
+        1228,
+        1653,
+        1906,
+        2277,
+        2360,
+        2838,
+        3172,
+        3530,
+        3855,
+        4195,
+        4559,
+        4845,
+        5112,
+        5548,
+        5845,
+        6115,
+        6549,
+        6970,
+        7241,
+        7598,
+        7837,
+        8084,
+        8324,
+        8538,
+        9001,
+        9310,
+        9662,
+        10099,
+        10133
       ],
       "skills": [
-        0,
         0,
         2,
         428,
@@ -1007,39 +1006,40 @@
         5897,
         6151,
         6360,
-        6381
+        6617,
+        6652
       ],
       "templates": [
-        10,
-        53,
-        82,
-        91,
-        97,
-        111,
+        43,
+        72,
+        81,
+        87,
+        101,
+        102,
         112,
         122,
-        132,
-        149,
-        160,
-        174,
+        139,
+        150,
+        164,
+        179,
         189,
-        199,
-        211,
-        220,
-        226,
-        244,
-        259,
-        276,
-        294,
-        315,
-        326,
-        344,
-        351,
-        359,
-        370,
-        382,
-        413,
-        415
+        201,
+        210,
+        216,
+        234,
+        249,
+        266,
+        284,
+        305,
+        316,
+        334,
+        341,
+        349,
+        360,
+        372,
+        403,
+        417,
+        419
       ]
     }
   }
