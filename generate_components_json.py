@@ -232,7 +232,7 @@ def fetch_download_stats():
         limit = 1000
 
         # Fetch all records with pagination
-        max_pages = 200  # Safety limit (200 pages * 1000 records = 200,000 max)
+        max_pages = 1000  # Safety limit (1000 pages * 1000 records = 1,000,000 max)
         for page in range(max_pages):
             paginated_headers = headers.copy()
             paginated_headers['Range'] = f'{offset}-{offset + limit - 1}'

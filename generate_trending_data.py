@@ -81,8 +81,8 @@ def main():
             offset += page_size
             
             # Safety break to prevent infinite loops - get all data for accurate totals
-            if len(all_downloads) >= 200000:  # Increased to get all historical data
-                print("⚠️  Reached safety limit of 200,000 records")
+            if len(all_downloads) >= 1000000:  # Increased to get all historical data
+                print("⚠️  Reached safety limit of 1,000,000 records")
                 break
         
         if not all_downloads:
