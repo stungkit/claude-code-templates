@@ -26,14 +26,24 @@ class SkillDashboard {
   async loadSkillsData() {
     try {
       // Load personal skills
+      console.log(chalk.gray(`📂 Scanning personal skills: ${this.personalSkillsDir}`));
       this.personalSkills = await this.loadSkillsFromDirectory(this.personalSkillsDir, 'Personal');
+      console.log(chalk.gray(`✓ Found ${this.personalSkills.length} personal skill(s)`));
 
       // Load project skills (if in a project directory)
       const projectSkillsDir = path.join(process.cwd(), '.claude', 'skills');
+      console.log(chalk.gray(`📂 Scanning project skills: ${projectSkillsDir}`));
       this.projectSkills = await this.loadSkillsFromDirectory(projectSkillsDir, 'Project');
+      console.log(chalk.gray(`✓ Found ${this.projectSkills.length} project skill(s)`));
+
+      // Load plugin skills from marketplaces
+      console.log(chalk.gray(`📂 Scanning plugin skills from marketplaces`));
+      this.pluginSkills = await this.loadPluginSkills();
+      console.log(chalk.gray(`✓ Found ${this.pluginSkills.length} plugin skill(s)`));
 
       // Combine all skills
-      this.skills = [...this.personalSkills, ...this.projectSkills];
+      this.skills = [...this.personalSkills, ...this.projectSkills, ...this.pluginSkills];
+      console.log(chalk.green(`✅ Total skills loaded: ${this.skills.length}`));
 
     } catch (error) {
       console.error(chalk.red('Error loading skills data:'), error.message);
@@ -46,38 +56,114 @@ class SkillDashboard {
 
     try {
       if (!(await fs.pathExists(skillsDir))) {
-        if (this.options.verbose) {
-          console.log(chalk.yellow(`Skills directory not found: ${skillsDir}`));
-        }
+        console.log(chalk.gray(`  ℹ Directory does not exist: ${skillsDir}`));
         return skills;
       }
 
       const skillDirs = await fs.readdir(skillsDir);
+      console.log(chalk.gray(`  📁 Found ${skillDirs.length} item(s) in ${skillsDir}`));
 
       for (const skillDir of skillDirs) {
+        // Skip hidden files and directories
+        if (skillDir.startsWith('.')) continue;
+
         const skillPath = path.join(skillsDir, skillDir);
 
         try {
           const stat = await fs.stat(skillPath);
-          if (!stat.isDirectory()) continue;
+          if (!stat.isDirectory()) {
+            console.log(chalk.gray(`  ⊘ Skipping non-directory: ${skillDir}`));
+            continue;
+          }
 
           // Look for SKILL.md
           const skillMdPath = path.join(skillPath, 'SKILL.md');
 
           if (await fs.pathExists(skillMdPath)) {
+            console.log(chalk.gray(`  ✓ Found SKILL.md in ${skillDir}`));
             const skillData = await this.parseSkill(skillMdPath, skillPath, skillDir, source);
             if (skillData) {
               skills.push(skillData);
+              console.log(chalk.green(`  ✅ Loaded skill: ${skillData.name}`));
             }
+          } else {
+            console.log(chalk.gray(`  ⊘ No SKILL.md in ${skillDir}`));
           }
         } catch (error) {
-          console.warn(chalk.yellow(`Warning: Error loading skill ${skillDir}`), error.message);
+          console.warn(chalk.yellow(`  ⚠ Error loading skill ${skillDir}:`), error.message);
         }
       }
 
       return skills;
     } catch (error) {
-      console.warn(chalk.yellow(`Warning: Error loading skills from ${skillsDir}`), error.message);
+      console.warn(chalk.yellow(`Warning: Error loading skills from ${skillsDir}:`), error.message);
+      return skills;
+    }
+  }
+
+  async loadPluginSkills() {
+    const skills = [];
+    const pluginsDir = path.join(this.claudeDir, 'plugins', 'marketplaces');
+
+    try {
+      if (!(await fs.pathExists(pluginsDir))) {
+        console.log(chalk.gray(`  ℹ Plugins directory does not exist: ${pluginsDir}`));
+        return skills;
+      }
+
+      const marketplaces = await fs.readdir(pluginsDir);
+      console.log(chalk.gray(`  📁 Found ${marketplaces.length} marketplace(s)`));
+
+      for (const marketplace of marketplaces) {
+        if (marketplace.startsWith('.')) continue;
+
+        const marketplacePath = path.join(pluginsDir, marketplace, 'plugins');
+
+        if (!(await fs.pathExists(marketplacePath))) {
+          continue;
+        }
+
+        const plugins = await fs.readdir(marketplacePath);
+        console.log(chalk.gray(`  📦 Scanning marketplace: ${marketplace} (${plugins.length} plugin(s))`));
+
+        for (const plugin of plugins) {
+          if (plugin.startsWith('.')) continue;
+
+          const skillsPath = path.join(marketplacePath, plugin, 'skills');
+
+          if (!(await fs.pathExists(skillsPath))) {
+            continue;
+          }
+
+          const skillDirs = await fs.readdir(skillsPath);
+
+          for (const skillDir of skillDirs) {
+            if (skillDir.startsWith('.')) continue;
+
+            const skillPath = path.join(skillsPath, skillDir);
+            const stat = await fs.stat(skillPath);
+
+            if (!stat.isDirectory()) {
+              continue;
+            }
+
+            const skillMdPath = path.join(skillPath, 'SKILL.md');
+
+            if (await fs.pathExists(skillMdPath)) {
+              console.log(chalk.gray(`  ✓ Found plugin skill: ${skillDir} from ${marketplace}`));
+              const skillData = await this.parseSkill(skillMdPath, skillPath, skillDir, 'Plugin');
+              if (skillData) {
+                skills.push(skillData);
+                console.log(chalk.green(`  ✅ Loaded plugin skill: ${skillData.name}`));
+              }
+            }
+          }
+        }
+      }
+
+      return skills;
+    } catch (error) {
+      console.warn(chalk.yellow(`Warning: Error loading plugin skills:`), error.message);
       return skills;
     }
   }

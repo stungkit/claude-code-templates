@@ -362,11 +362,11 @@ function updateStats() {
   document.getElementById('sidebarTotalSkills').textContent = total;
   document.getElementById('sidebarPersonalSkills').textContent = personal;
 
-  // Filter counts
-  document.getElementById('countAll').textContent = state.filteredSkills.length;
-  document.getElementById('countPersonal').textContent = state.filteredSkills.filter(s => s.source === 'Personal').length;
-  document.getElementById('countProject').textContent = state.filteredSkills.filter(s => s.source === 'Project').length;
-  document.getElementById('countPlugin').textContent = state.filteredSkills.filter(s => s.source === 'Plugin').length;
+  // Filter counts - always show totals, not filtered counts
+  document.getElementById('countAll').textContent = total;
+  document.getElementById('countPersonal').textContent = personal;
+  document.getElementById('countProject').textContent = project;
+  document.getElementById('countPlugin').textContent = plugin;
 }
 
 // Update Empty State
