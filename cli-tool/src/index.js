@@ -16,6 +16,7 @@ const { runAnalytics } = require('./analytics');
 const { startChatsMobile } = require('./chats-mobile');
 const { runHealthCheck } = require('./health-check');
 const { runPluginDashboard } = require('./plugin-dashboard');
+const { runSkillDashboard } = require('./skill-dashboard');
 const { trackingService } = require('./tracking-service');
 const { createGlobalAgent, listGlobalAgents, removeGlobalAgent, updateGlobalAgent } = require('./sdk/global-agent-manager');
 const SessionSharing = require('./session-sharing');
@@ -246,6 +247,14 @@ async function createClaudeConfig(options = {}) {
     trackingService.trackCommandExecution('plugins');
     trackingService.trackAnalyticsDashboard({ page: 'plugins', source: 'command_line' });
     await runPluginDashboard(options);
+    return;
+  }
+
+  // Handle skills dashboard
+  if (options.skills) {
+    trackingService.trackCommandExecution('skills');
+    trackingService.trackAnalyticsDashboard({ page: 'skills', source: 'command_line' });
+    await runSkillDashboard(options);
     return;
   }
 
