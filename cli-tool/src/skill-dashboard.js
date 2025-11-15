@@ -377,11 +377,23 @@ class SkillDashboard {
   }
 
   async startServer() {
-    return new Promise((resolve) => {
-      this.httpServer = this.app.listen(this.port, async () => {
-        console.log(chalk.green(`🎯 Skills dashboard started at http://localhost:${this.port}`));
-        resolve();
-      });
+    return new Promise((resolve, reject) => {
+      const tryPort = (port) => {
+        this.httpServer = this.app.listen(port, async () => {
+          this.port = port;
+          console.log(chalk.green(`🎯 Skills dashboard started at http://localhost:${this.port}`));
+          resolve();
+        }).on('error', (err) => {
+          if (err.code === 'EADDRINUSE') {
+            console.log(chalk.yellow(`⚠️  Port ${port} is in use, trying ${port + 1}...`));
+            tryPort(port + 1);
+          } else {
+            reject(err);
+          }
+        });
+      };
+
+      tryPort(this.port);
     });
   }
 
