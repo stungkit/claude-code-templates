@@ -41,7 +41,8 @@
       "Bash(npm test -- StructuralValidator.test.js)",
       "Bash(gh pr create:*)",
       "Bash(mv:*)",
-      "Read(//private/tmp/anthropic-skills/**)"
+      "Read(//private/tmp/anthropic-skills/**)",
+      "Bash(sed:*)"
     ],
     "deny": []
   },

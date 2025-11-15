@@ -70,10 +70,10 @@ Between each layer, animated flow arrows show:
 
 ```bash
 # From CLI tool directory
-npm start -- --skills
+npm start -- --skills-manager
 
 # Or globally
-npx claude-code-templates --skills
+npx claude-code-templates --skills-manager
 
 # Opens browser at http://localhost:3337
 ```

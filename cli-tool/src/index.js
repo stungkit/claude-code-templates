@@ -251,9 +251,9 @@ async function createClaudeConfig(options = {}) {
   }
 
   // Handle skills dashboard
-  if (options.skills) {
-    trackingService.trackCommandExecution('skills');
-    trackingService.trackAnalyticsDashboard({ page: 'skills', source: 'command_line' });
+  if (options.skillsManager) {
+    trackingService.trackCommandExecution('skills-manager');
+    trackingService.trackAnalyticsDashboard({ page: 'skills-manager', source: 'command_line' });
     await runSkillDashboard(options);
     return;
   }
