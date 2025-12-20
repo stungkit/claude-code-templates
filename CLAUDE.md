@@ -411,7 +411,7 @@ if (settingName.includes('statusline/')) {
 
 ### Component Generation System
 
-The `generate_components_json.py` script creates the component catalog:
+The `scripts/generate_components_json.py` script creates the component catalog:
 - Scans all component directories recursively
 - Excludes `.py` files from public listings (they remain as background dependencies)
 - Generates `docs/components.json` for the web interface at aitmpl.com
@@ -445,7 +445,7 @@ The statusline context monitor system demonstrates key architectural patterns:
 2. **Naming**: Use descriptive, hyphenated names (`security-auditor.md`)
 3. **Documentation**: Include clear descriptions and usage examples
 4. **Testing**: Add tests for complex logic components
-5. **Generation**: Run `python generate_components_json.py` to update catalog
+5. **Generation**: Run `python scripts/generate_components_json.py` to update catalog
 
 #### Modifying Existing Components
 1. **Backward Compatibility**: Ensure changes don't break existing installations
@@ -468,7 +468,7 @@ npm publish
 
 #### Pre-publish Checklist
 1. All tests passing (`npm test`)
-2. Component catalog updated (`python generate_components_json.py`)
+2. Component catalog updated (`python scripts/generate_components_json.py`)
 3. No hardcoded paths or sensitive information
 4. Version bumped appropriately
 5. Git commits include all relevant files

@@ -45,13 +45,13 @@ jobs:
           echo "SUPABASE_API_KEY=${{ secrets.SUPABASE_API_KEY }}" >> .env
 
       - name: Generate components.json
-        run: python generate_components_json.py
+        run: python scripts/generate_components_json.py
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}
 
       - name: Generate trending-data.json
-        run: python generate_trending_data.py
+        run: python scripts/generate_trending_data.py
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_API_KEY: ${{ secrets.SUPABASE_API_KEY }}

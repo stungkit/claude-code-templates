@@ -149,7 +149,7 @@ description: [Clear description]
 ```
 
 **Auto-Discovery:**
-Commands will be automatically discovered by the `generate_components_json.py` script when scanning the commands directory.
+Commands will be automatically discovered by the `scripts/generate_components_json.py` script when scanning the commands directory.
 
 ## Screenshots
 
