@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 2025 - Activity Graph</title>
+
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --text-primary: #e0e0e0;
+            --text-accent: #d97706;
+            --agent-color: #f59e0b;
+            --mcp-color: #8b5cf6;
+            --command-color: #10b981;
+            --skill-color: #ec4899;
+            --tool-color: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 10, 15, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        .current-date {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-accent);
+            margin-bottom: 15px;
+        }
+
+        .stat-line {
+            font-size: 13px;
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            color: var(--text-accent);
+            font-weight: 600;
+        }
+
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 10, 15, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            font-size: 12px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            pointer-events: auto;
+        }
+
+        /* Custom scrollbar */
+        .legend::-webkit-scrollbar,
+        #toolsList::-webkit-scrollbar,
+        #componentsList::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .legend::-webkit-scrollbar-track,
+        #toolsList::-webkit-scrollbar-track,
+        #componentsList::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+
+        .legend::-webkit-scrollbar-thumb,
+        #toolsList::-webkit-scrollbar-thumb,
+        #componentsList::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .legend::-webkit-scrollbar-thumb:hover,
+        #toolsList::-webkit-scrollbar-thumb:hover,
+        #componentsList::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        .timeline {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 1000px;
+            pointer-events: auto;
+        }
+
+        .timeline-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--text-accent), #fbbf24);
+            width: 0%;
+            box-shadow: 0 0 10px var(--text-accent);
+        }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 90px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            pointer-events: all;
+        }
+
+        .control-btn {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: var(--text-accent);
+            border-color: var(--text-accent);
+        }
+
+        .control-btn.active {
+            background: var(--text-accent);
+            border-color: var(--text-accent);
+        }
+
+        .intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .intro-title {
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--text-accent);
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px var(--text-accent);
+        }
+
+        .intro-subtitle {
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+        }
+
+        .start-btn {
+            background: var(--text-accent);
+            border: none;
+            color: white;
+            padding: 18px 36px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--text-accent);
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--text-accent);
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--text-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .event-toast {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            background: rgba(26, 26, 46, 0.95);
+            border: 2px solid var(--text-accent);
+            border-radius: 8px;
+            padding: 15px 35px;
+            text-align: center;
+            box-shadow: 0 0 30px var(--text-accent);
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+        }
+
+        .event-toast.show {
+            animation: toastSlide 2.5s ease forwards;
+        }
+
+        @keyframes toastSlide {
+            0% {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            10% {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+            90% {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+        }
+
+        .event-toast h3 {
+            font-size: 18px;
+            color: var(--text-accent);
+            margin: 0;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(26, 26, 46, 0.95);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: var(--text-primary);
+            font-size: 13px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: var(--text-accent);
+            margin-bottom: 5px;
+        }
+
+        .tooltip-info {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div id="introScreen" class="intro-screen">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading your journey...</p>
+        </div>
+        <div id="introContent" style="display: none;">
+            <h1 class="intro-title">2025</h1>
+            <p class="intro-subtitle">Your Year with Claude Code</p>
+            <button class="start-btn" onclick="startAnimation()">▶ Start</button>
+        </div>
+    </div>
+
+    <!-- Canvas -->
+    <canvas id="canvas"></canvas>
+
+    <!-- Overlay -->
+    <div class="overlay">
+        <div class="hud">
+            <div class="current-date" id="currentDate">Jan 1, 2025</div>
+            <div class="stat-line">Conversations: <span class="stat-value" id="statConversations">0</span></div>
+            <div class="stat-line">Components: <span class="stat-value" id="statComponents">0</span></div>
+            <div class="stat-line">Tool Calls: <span class="stat-value" id="statTools">0</span></div>
+            <div class="stat-line">Active Days: <span class="stat-value" id="statDays">0</span></div>
+        </div>
+
+        <div class="legend">
+            <div style="font-weight: 600; margin-bottom: 8px;">Models Used</div>
+            <div id="modelsList">
+                <!-- Models will be added dynamically -->
+            </div>
+
+            <div style="font-weight: 600; margin-bottom: 8px; margin-top: 16px;">Tools Used</div>
+            <div id="toolsList">
+                <!-- Tools will be added dynamically -->
+            </div>
+
+            <div style="font-weight: 600; margin-bottom: 8px; margin-top: 16px;">Components Used</div>
+            <div id="componentsList">
+                <!-- Components will be added dynamically -->
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-bar">
+                <div class="timeline-progress" id="timelineProgress"></div>
+            </div>
+            <div class="timeline-labels">
+                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span>
+                <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span>
+                <span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="restartAnimation()">🔄 Restart</button>
+        </div>
+    </div>
+
+    <!-- Event Toast -->
+    <div id="eventToast" class="event-toast"></div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // State
+        let animationData = null;
+        let isPlaying = false;
+        let speedMultiplier = 5; // Fixed at 5x speed
+        let startTime = null;
+        let currentDayIndex = 0;
+        let stats = { conversations: 0, components: 0, tools: 0, days: 0 };
+        let processedEvents = new Set();
+        let shownMilestones = new Set();
+        let toolNodes = new Map(); // Map of tool name -> tool node
+        let uniqueTools = new Map(); // Track unique tools with their colors
+        let modelNodes = new Map(); // Map of model name -> model node
+
+        // Mouse tracking
+        let mouseX = 0;
+        let mouseY = 0;
+        let hoveredNode = null;
+        let componentNodes = new Map(); // Map of component name -> component node (second layer)
+
+        // Graph structure
+        const centerNode = { x: 0, y: 0, name: 'Claude', color: '#d97706' };
+        const branches = {
+            agents: { nodes: [], angle: 0, color: '#f59e0b' },
+            mcps: { nodes: [], angle: Math.PI / 2, color: '#8b5cf6' },
+            commands: { nodes: [], angle: Math.PI, color: '#10b981' },
+            skills: { nodes: [], angle: 3 * Math.PI / 2, color: '#ec4899' }
+        };
+
+        // Active beams (tool calls)
+        let beams = [];
+
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            centerNode.x = canvas.width / 2;
+            centerNode.y = canvas.height / 2;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Mouse tracking for tooltips
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+
+            // Find hovered node
+            hoveredNode = null;
+
+            // Check model nodes (pie slices in center)
+            const dx = mouseX - centerNode.x;
+            const dy = mouseY - centerNode.y;
+            const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+            const mouseAngle = Math.atan2(dy, dx) + Math.PI / 2; // Offset by -90 degrees to match pie drawing
+            const normalizedAngle = (mouseAngle + Math.PI * 2) % (Math.PI * 2); // Normalize to 0-2π
+
+            modelNodes.forEach((node) => {
+                if (distanceFromCenter < node.size + 10) {
+                    const startAngle = (node.index / node.total) * Math.PI * 2;
+                    const endAngle = ((node.index + 1) / node.total) * Math.PI * 2;
+
+                    // Check if mouse angle is within this slice's angle range
+                    if (normalizedAngle >= startAngle && normalizedAngle <= endAngle) {
+                        hoveredNode = { type: 'model', node };
+                    }
+                }
+            });
+
+            // Check tool nodes
+            if (!hoveredNode) {
+                toolNodes.forEach((node) => {
+                    const dx = mouseX - node.x;
+                    const dy = mouseY - node.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < node.size + 5) {
+                        hoveredNode = { type: 'tool', node };
+                    }
+                });
+            }
+
+            // Check component nodes (second layer)
+            if (!hoveredNode) {
+                componentNodes.forEach((node) => {
+                    const dx = mouseX - node.x;
+                    const dy = mouseY - node.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < node.size + 5) {
+                        hoveredNode = { type: 'component', node };
+                    }
+                });
+            }
+
+            // Update tooltip
+            updateTooltip();
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            hoveredNode = null;
+            updateTooltip();
+        });
+
+        // Update tooltip display
+        function updateTooltip() {
+            const tooltip = document.getElementById('tooltip');
+
+            if (!hoveredNode) {
+                tooltip.classList.remove('show');
+                return;
+            }
+
+            const node = hoveredNode.node;
+            let content = '';
+
+            if (hoveredNode.type === 'model') {
+                content = `
+                    <div class="tooltip-title">${node.displayName}</div>
+                    <div class="tooltip-info">Model • Used ${node.count} times</div>
+                `;
+            } else if (hoveredNode.type === 'tool') {
+                content = `
+                    <div class="tooltip-title">${node.toolName}</div>
+                    <div class="tooltip-info">Tool • Used ${node.count} times</div>
+                `;
+            } else if (hoveredNode.type === 'component') {
+                const typeLabels = {
+                    'command': 'Command',
+                    'skill': 'Skill',
+                    'mcp': 'MCP',
+                    'subagent': 'Subagent'
+                };
+                const typeLabel = typeLabels[node.type] || node.type;
+                content = `
+                    <div class="tooltip-title">${node.name}</div>
+                    <div class="tooltip-info">${typeLabel} • Used ${node.count} times</div>
+                `;
+            }
+
+            tooltip.innerHTML = content;
+            tooltip.style.left = (mouseX + 15) + 'px';
+            tooltip.style.top = (mouseY - 10) + 'px';
+            tooltip.classList.add('show');
+        }
+
+        // Node class
+        class Node {
+            constructor(name, type, branch, index) {
+                this.name = name;
+                this.type = type;
+                this.branch = branch;
+                this.index = index;
+                this.scale = 0;
+                this.targetScale = 1;
+                this.pulse = 0;
+                this.usageCount = 0;
+
+                // Position based on branch
+                const branchData = branches[branch];
+                const radius = 150 + (index * 30);
+                const angleOffset = (index * 0.3) - (branchData.nodes.length * 0.15);
+
+                this.x = centerNode.x + Math.cos(branchData.angle + angleOffset) * radius;
+                this.y = centerNode.y + Math.sin(branchData.angle + angleOffset) * radius;
+
+                this.color = branchData.color;
+            }
+
+            update() {
+                // Smooth scale growth
+                this.scale += (this.targetScale - this.scale) * 0.1;
+
+                // Pulse decay
+                if (this.pulse > 0) {
+                    this.pulse -= 0.05;
+                }
+
+                // Gentle floating
+                const time = Date.now() * 0.001;
+                this.floatY = Math.sin(time + this.index) * 3;
+            }
+
+            draw(ctx) {
+                const x = this.x;
+                const y = this.y + (this.floatY || 0);
+                const size = 8 * this.scale;
+
+                // Glow
+                const glowSize = size + this.pulse * 10;
+                ctx.save();
+                ctx.globalAlpha = 0.3 + this.pulse * 0.4;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15 + this.pulse * 15;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Node
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Label
+                if (this.scale > 0.5) {
+                    ctx.save();
+                    ctx.font = '11px Monaco';
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(this.name, x, y + size + 5);
+                    ctx.restore();
+                }
+
+                // Connection line to center
+                if (this.scale > 0.3) {
+                    ctx.save();
+                    ctx.strokeStyle = this.color;
+                    ctx.globalAlpha = 0.2 * this.scale;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(centerNode.x, centerNode.y);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+
+            activate() {
+                this.pulse = 1;
+                this.usageCount++;
+            }
+        }
+
+        // ModelNode class (pie slice in center for each model)
+        class ModelNode {
+            constructor(modelName, color, index, total) {
+                this.modelName = modelName;
+                this.displayName = this.formatModelName(modelName);
+                this.color = color;
+                this.count = 0; // Number of conversations using this model
+                this.size = 0;
+                this.targetSize = 50; // Base size, will grow with usage
+                this.alpha = 0;
+                this.targetAlpha = 1;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+
+                // Position in pie (angle range)
+                this.index = index;
+                this.total = total;
+            }
+
+            formatModelName(modelName) {
+                const nameMap = {
+                    'claude-sonnet-4-5-20250929': 'Sonnet 4.5',
+                    'claude-haiku-4-5-20251001': 'Haiku 4.5',
+                    'claude-3-5-sonnet': 'Sonnet 3.5',
+                    'claude-3-opus': 'Opus 3',
+                    'claude-3-haiku': 'Haiku 3',
+                    'Unknown': 'Unknown'
+                };
+                return nameMap[modelName] || modelName;
+            }
+
+            addUse() {
+                this.count++;
+                // Grow size with each use (cap at 100)
+                this.targetSize = Math.min(50 + this.count * 3, 100);
+            }
+
+            updatePosition(index, total) {
+                this.index = index;
+                this.total = total;
+            }
+
+            update() {
+                // Smooth size transition
+                if (Math.abs(this.size - this.targetSize) > 0.5) {
+                    this.size += (this.targetSize - this.size) * 0.1;
+                }
+
+                // Fade in
+                if (this.alpha < this.targetAlpha) {
+                    this.alpha += 0.05;
+                }
+
+                this.pulsePhase += 0.05;
+            }
+
+            draw(ctx) {
+                if (this.size < 1) return;
+
+                const pulse = Math.sin(this.pulsePhase) * 0.15 + 0.85;
+                const startAngle = (this.index / this.total) * Math.PI * 2 - Math.PI / 2;
+                const endAngle = ((this.index + 1) / this.total) * Math.PI * 2 - Math.PI / 2;
+
+                // Draw pie slice with glow
+                ctx.save();
+                ctx.globalAlpha = this.alpha * 0.4 * pulse;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.moveTo(centerNode.x, centerNode.y);
+                ctx.arc(centerNode.x, centerNode.y, this.size + 10, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+
+                // Draw main pie slice
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.moveTo(centerNode.x, centerNode.y);
+                ctx.arc(centerNode.x, centerNode.y, this.size, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+
+                // Draw label (if slice is large enough)
+                if (this.size > 40 && this.total <= 3) {
+                    const midAngle = (startAngle + endAngle) / 2;
+                    const labelRadius = this.size * 0.6;
+                    const labelX = centerNode.x + Math.cos(midAngle) * labelRadius;
+                    const labelY = centerNode.y + Math.sin(midAngle) * labelRadius;
+
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 12px Monaco';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(this.displayName, labelX, labelY);
+                    ctx.restore();
+
+                    // Count badge
+                    if (this.count > 1) {
+                        ctx.save();
+                        ctx.globalAlpha = this.alpha * 0.8;
+                        ctx.font = 'bold 10px Monaco';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(this.count, labelX, labelY + 15);
+                        ctx.restore();
+                    }
+                }
+
+                // Draw outer label (if too many models)
+                if (this.total > 3 || this.size <= 40) {
+                    const midAngle = (startAngle + endAngle) / 2;
+                    const labelRadius = this.size + 20;
+                    const labelX = centerNode.x + Math.cos(midAngle) * labelRadius;
+                    const labelY = centerNode.y + Math.sin(midAngle) * labelRadius;
+
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 11px Monaco';
+                    ctx.fillStyle = this.color;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(this.displayName, labelX, labelY);
+
+                    if (this.count > 1) {
+                        ctx.font = 'bold 9px Monaco';
+                        ctx.fillText(`(${this.count})`, labelX, labelY + 12);
+                    }
+                    ctx.restore();
+                }
+            }
+        }
+
+        // ToolNode class (persistent growing node for each tool type)
+        class ToolNode {
+            constructor(toolName, color, index, total) {
+                this.toolName = toolName;
+                this.color = color;
+                this.count = 0; // Number of times this tool was used
+                this.size = 0;
+                this.targetSize = 10; // Will grow with each use
+                this.alpha = 0;
+                this.targetAlpha = 1;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+
+                // Position in circle around Claude
+                const radius = 250;
+                const angle = (index / total) * Math.PI * 2;
+                this.x = centerNode.x + Math.cos(angle) * radius;
+                this.y = centerNode.y + Math.sin(angle) * radius;
+                this.targetX = this.x;
+                this.targetY = this.y;
+            }
+
+            addUse() {
+                this.count++;
+                // Grow size with each use (cap at 40)
+                this.targetSize = Math.min(10 + this.count * 2, 40);
+            }
+
+            update() {
+                // Smooth size growth
+                if (this.size < this.targetSize) {
+                    this.size += (this.targetSize - this.size) * 0.1;
+                }
+
+                // Fade in
+                if (this.alpha < this.targetAlpha) {
+                    this.alpha += 0.05;
+                }
+
+                this.pulsePhase += 0.05;
+
+                // Update position (if canvas resizes)
+                this.x += (this.targetX - this.x) * 0.1;
+                this.y += (this.targetY - this.y) * 0.1;
+            }
+
+            updatePosition(index, total) {
+                const radius = 250;
+                const angle = (index / total) * Math.PI * 2;
+                this.targetX = centerNode.x + Math.cos(angle) * radius;
+                this.targetY = centerNode.y + Math.sin(angle) * radius;
+            }
+
+            draw(ctx) {
+                if (this.size < 1) return;
+
+                const pulse = Math.sin(this.pulsePhase) * 0.2 + 0.8;
+
+                // Glow
+                ctx.save();
+                ctx.globalAlpha = this.alpha * 0.3 * pulse;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size + 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Node
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Label (always visible once node appears)
+                if (this.size > 5) {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 11px Monaco';
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(this.toolName, this.x, this.y + this.size + 5);
+                    ctx.restore();
+                }
+
+                // Count badge (always visible when count > 1)
+                if (this.count > 1 && this.size > 5) {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 10px Monaco';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(this.count, this.x, this.y);
+                    ctx.restore();
+                }
+            }
+        }
+
+        // ComponentNode class (second layer: commands, skills, MCPs, subagents)
+        class ComponentNode {
+            constructor(name, type, color, index, total) {
+                this.name = name;
+                this.type = type; // 'command', 'skill', 'mcp', 'subagent'
+                this.color = color;
+                this.count = 0;
+                this.size = 0;
+                this.targetSize = 8; // Smaller base size for second layer
+                this.alpha = 0;
+                this.targetAlpha = 1;
+                this.pulsePhase = Math.random() * Math.PI * 2;
+
+                // Position in circle around center (farther than tools)
+                this.index = index;
+                this.total = total;
+                const radius = 400; // Farther from center than tools (250px)
+                const angle = (index / total) * Math.PI * 2;
+                this.x = centerNode.x + Math.cos(angle) * radius;
+                this.y = centerNode.y + Math.sin(angle) * radius;
+                this.targetX = this.x;
+                this.targetY = this.y;
+            }
+
+            addUse() {
+                this.count++;
+                // Grow size with each use (smaller max than tools)
+                this.targetSize = Math.min(8 + this.count * 1.5, 30);
+            }
+
+            updatePosition(index, total) {
+                this.index = index;
+                this.total = total;
+                const radius = 400;
+                const angle = (index / total) * Math.PI * 2;
+                this.targetX = centerNode.x + Math.cos(angle) * radius;
+                this.targetY = centerNode.y + Math.sin(angle) * radius;
+            }
+
+            update() {
+                // Smooth transitions
+                if (Math.abs(this.size - this.targetSize) > 0.5) {
+                    this.size += (this.targetSize - this.size) * 0.1;
+                }
+
+                if (this.alpha < this.targetAlpha) {
+                    this.alpha += 0.05;
+                }
+
+                this.pulsePhase += 0.05;
+
+                // Update position
+                this.x += (this.targetX - this.x) * 0.1;
+                this.y += (this.targetY - this.y) * 0.1;
+            }
+
+            draw(ctx) {
+                if (this.size < 1) return;
+
+                const pulse = Math.sin(this.pulsePhase) * 0.2 + 0.8;
+
+                // Glow
+                ctx.save();
+                ctx.globalAlpha = this.alpha * 0.3 * pulse;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size + 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Node
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Label (show for larger nodes)
+                if (this.size > 5) {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 9px Monaco';
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    // Clean up name (remove slashes and long paths)
+                    const displayName = this.name.startsWith('/') ? this.name : this.name.split('@')[0];
+                    ctx.fillText(displayName, this.x, this.y + this.size + 3);
+                    ctx.restore();
+                }
+
+                // Count badge
+                if (this.count > 1 && this.size > 5) {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.font = 'bold 8px Monaco';
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(this.count, this.x, this.y);
+                    ctx.restore();
+                }
+            }
+        }
+
+        // Beam class (tool call visualization)
+        class Beam {
+            constructor(targetNode, toolName) {
+                this.targetNode = targetNode;
+                this.toolName = toolName;
+                this.progress = 0;
+                this.speed = 0.02; // Slower for better visibility
+                this.life = 1;
+                this.color = '#3b82f6';
+                this.pointCreated = false;
+
+                // Random color based on tool type
+                const toolColors = {
+                    'Read': '#60a5fa',
+                    'Write': '#34d399',
+                    'Edit': '#fbbf24',
+                    'Bash': '#f87171',
+                    'TodoWrite': '#a78bfa',
+                    'Task': '#fb923c',
+                    'Glob': '#2dd4bf',
+                    'Grep': '#c084fc'
+                };
+                this.color = toolColors[toolName] || '#3b82f6';
+            }
+
+            update() {
+                this.progress += this.speed;
+
+                // When beam reaches destination, grow the tool node
+                if (this.progress >= 1 && !this.pointCreated) {
+                    this.pointCreated = true;
+
+                    // Increment the tool node's usage count
+                    if (this.targetNode.addUse) {
+                        this.targetNode.addUse();
+                    }
+
+                    stats.components++; // Increment components counter
+                }
+
+                if (this.progress >= 1) {
+                    this.life -= 0.02; // Slower fade for better visibility
+                }
+            }
+
+            draw(ctx) {
+                if (this.life <= 0) return;
+
+                const startX = centerNode.x;
+                const startY = centerNode.y;
+                const endX = this.targetNode.x;
+                const endY = this.targetNode.y + (this.targetNode.floatY || 0);
+
+                const currentX = startX + (endX - startX) * Math.min(this.progress, 1);
+                const currentY = startY + (endY - startY) * Math.min(this.progress, 1);
+
+                // Debug log (only log first time progress > 0)
+                if (this.progress < 0.1 && !this.logged) {
+                    console.log(`🎨 Drawing beam: ${this.toolName}, from (${startX},${startY}) to (${endX},${endY}), progress: ${this.progress}, life: ${this.life}`);
+                    this.logged = true;
+                }
+
+                // Beam
+                ctx.save();
+                ctx.strokeStyle = this.color;
+                ctx.globalAlpha = this.life * 0.8;
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+                ctx.restore();
+
+                // Tool label
+                if (this.progress > 0.3 && this.progress < 0.9) {
+                    ctx.save();
+                    ctx.font = '10px Monaco';
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.life;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(this.toolName, currentX, currentY - 10);
+                    ctx.restore();
+                }
+
+                // Particle at tip
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.life;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(currentX, currentY, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        // Add component node
+        function addComponent(name, type) {
+            const branchName = type === 'agent' ? 'agents' :
+                              type === 'mcp' ? 'mcps' :
+                              type === 'command' ? 'commands' : 'skills';
+
+            const branch = branches[branchName];
+            const index = branch.nodes.length;
+            const node = new Node(name, type, branchName, index);
+            branch.nodes.push(node);
+
+            stats.components++;
+        }
+
+        // Get or create tool node
+        function getOrCreateToolNode(toolName, color) {
+            if (!toolNodes.has(toolName)) {
+                // Create new tool node
+                const index = toolNodes.size;
+                const total = toolNodes.size + 1;
+                const node = new ToolNode(toolName, color, index, total);
+                toolNodes.set(toolName, node);
+
+                // Reposition all nodes to distribute evenly
+                let i = 0;
+                toolNodes.forEach((node, name) => {
+                    node.updatePosition(i, toolNodes.size);
+                    i++;
+                });
+
+                // Add to unique tools for legend
+                if (!uniqueTools.has(toolName)) {
+                    uniqueTools.set(toolName, color);
+                    updateToolsList();
+                }
+            }
+
+            return toolNodes.get(toolName);
+        }
+
+        // Get or create model node
+        function getOrCreateModelNode(modelName) {
+            if (!modelNodes.has(modelName)) {
+                // Assign colors to models
+                const modelColors = {
+                    'claude-sonnet-4-5-20250929': '#3b82f6', // Blue for Sonnet 4.5
+                    'claude-haiku-4-5-20251001': '#10b981',  // Green for Haiku 4.5
+                    'claude-3-5-sonnet': '#8b5cf6',          // Purple for Sonnet 3.5
+                    'claude-3-opus': '#f59e0b',              // Orange for Opus 3
+                    'claude-3-haiku': '#14b8a6',             // Teal for Haiku 3
+                    'Unknown': '#6b7280'                      // Gray for Unknown
+                };
+                const color = modelColors[modelName] || '#6b7280';
+
+                // Create new model node
+                const index = modelNodes.size;
+                const total = modelNodes.size + 1;
+                const node = new ModelNode(modelName, color, index, total);
+                modelNodes.set(modelName, node);
+
+                // Reposition all nodes to distribute evenly in pie
+                let i = 0;
+                modelNodes.forEach((node, name) => {
+                    node.updatePosition(i, modelNodes.size);
+                    i++;
+                });
+
+                console.log(`🎨 New model detected: ${node.displayName} (${modelName})`);
+
+                // Update models list in legend
+                updateModelsList();
+            }
+
+            return modelNodes.get(modelName);
+        }
+
+        // Get or create component node (second layer)
+        function getOrCreateComponentNode(name, type) {
+            const key = `${type}:${name}`;
+
+            if (!componentNodes.has(key)) {
+                // Assign colors by type
+                const typeColors = {
+                    'command': '#ec4899',    // Pink for commands
+                    'skill': '#8b5cf6',      // Purple for skills
+                    'mcp': '#f59e0b',        // Orange for MCPs
+                    'subagent': '#06b6d4'    // Cyan for subagents
+                };
+                const color = typeColors[type] || '#6b7280';
+
+                // Create new component node
+                const index = componentNodes.size;
+                const total = componentNodes.size + 1;
+                const node = new ComponentNode(name, type, color, index, total);
+                componentNodes.set(key, node);
+
+                // Reposition all nodes to distribute evenly
+                let i = 0;
+                componentNodes.forEach((node, key) => {
+                    node.updatePosition(i, componentNodes.size);
+                    i++;
+                });
+
+                console.log(`🔷 New ${type} detected: ${name}`);
+
+                // Update components list
+                updateComponentsList();
+            }
+
+            return componentNodes.get(key);
+        }
+
+        // Add tool call beam
+        function addToolBeam(toolName) {
+            // Get color for this tool
+            const toolColors = {
+                'Read': '#60a5fa',
+                'Write': '#34d399',
+                'Edit': '#fbbf24',
+                'Bash': '#f87171',
+                'TodoWrite': '#a78bfa',
+                'Task': '#fb923c',
+                'Glob': '#2dd4bf',
+                'Grep': '#c084fc',
+                'WebFetch': '#f472b6',
+                'WebSearch': '#818cf8',
+                'KillShell': '#ef4444',
+                'TaskOutput': '#06b6d4',
+                'AskUserQuestion': '#fbbf24',
+                'EnterPlanMode': '#a78bfa',
+                'ExitPlanMode': '#8b5cf6'
+            };
+            const color = toolColors[toolName] || '#3b82f6';
+
+            // Get or create the tool node
+            const targetNode = getOrCreateToolNode(toolName, color);
+
+            // Create beam to this tool node
+            const beam = new Beam(targetNode, toolName);
+            beams.push(beam);
+        }
+
+        // Load data from API ONLY (no mock data)
+        async function loadData() {
+            try {
+                console.log('🔄 Fetching real data from /api/2025...');
+                const response = await fetch('/api/2025');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Data received:', {
+                    conversations: data.totalConversations,
+                    tools: data.toolsCount,
+                    components: data.componentInstalls?.length || 0,
+                    heatmapWeeks: data.activityHeatmap?.length || 0
+                });
+
+                // Verify we have real data
+                const activeDays = [];
+                if (data.activityHeatmap) {
+                    data.activityHeatmap.forEach(week => {
+                        week.forEach(day => {
+                            if (day.count > 0) {
+                                activeDays.push(day);
+                            }
+                        });
+                    });
+                }
+
+                console.log(`📊 Active days found: ${activeDays.length}`);
+                if (activeDays.length > 0) {
+                    console.log(`📅 First: ${activeDays[0].date}, Last: ${activeDays[activeDays.length - 1].date}`);
+                    console.log(`🔧 Sample tools:`, activeDays[0].tools);
+                }
+
+                animationData = processData(data);
+
+            } catch (error) {
+                console.error('❌ Error loading data:', error);
+                document.getElementById('loading').innerHTML = `
+                    <p style="color: #ef4444;">Failed to load data</p>
+                    <p style="margin-top: 10px; font-size: 12px;">${error.message}</p>
+                    <p style="margin-top: 10px; font-size: 12px;">Make sure analytics server is running on port 3333</p>
+                `;
+                return; // Don't proceed without data
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('introContent').style.display = 'block';
+        }
+
+        // Process data into timeline
+        function processData(data) {
+            const timeline = [];
+
+            if (data.componentInstalls) {
+                data.componentInstalls.forEach(install => {
+                    const date = new Date(install.date);
+                    timeline.push({
+                        type: 'component',
+                        componentType: install.type,
+                        name: install.name,
+                        date,
+                        dayOfYear: getDayOfYear(date)
+                    });
+                });
+            }
+
+            if (data.activityHeatmap) {
+                data.activityHeatmap.forEach(week => {
+                    week.forEach(day => {
+                        if (day.count > 0) {
+                            const date = new Date(day.date);
+                            timeline.push({
+                                type: 'conversation',
+                                date,
+                                count: day.count,
+                                tools: day.tools || [],
+                                models: day.models || [],
+                                dayOfYear: getDayOfYear(date)
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Add commands, skills, MCPs, and subagents based on their actual timestamps
+            console.log('🔍 DEBUG: Component layer events:');
+
+            if (data.commands && data.commands.events) {
+                console.log(`📋 Adding ${data.commands.events.length} command events to timeline`);
+                data.commands.events.forEach((event, index) => {
+                    const eventDate = new Date(event.timestamp);
+                    const eventDayOfYear = getDayOfYear(eventDate);
+                    timeline.push({
+                        type: 'component-layer2',
+                        componentType: 'command',
+                        name: event.name,
+                        date: eventDate,
+                        dayOfYear: eventDayOfYear
+                    });
+                    if (index === 0) {
+                        console.log(`  - First command "${event.name}": date=${eventDate.toLocaleDateString()}, dayOfYear=${eventDayOfYear.toFixed(3)}`);
+                    }
+                });
+            }
+
+            if (data.skills && data.skills.events) {
+                console.log(`📚 Adding ${data.skills.events.length} skill events to timeline`);
+                data.skills.events.forEach((event, index) => {
+                    const eventDate = new Date(event.timestamp);
+                    const eventDayOfYear = getDayOfYear(eventDate);
+                    timeline.push({
+                        type: 'component-layer2',
+                        componentType: 'skill',
+                        name: event.name,
+                        date: eventDate,
+                        dayOfYear: eventDayOfYear
+                    });
+                    if (index === 0) {
+                        console.log(`  - First skill "${event.name}": date=${eventDate.toLocaleDateString()}, dayOfYear=${eventDayOfYear.toFixed(3)}`);
+                    }
+                });
+            }
+
+            if (data.mcps && data.mcps.events) {
+                console.log(`🔌 Adding ${data.mcps.events.length} MCP events to timeline`);
+                data.mcps.events.forEach((event, index) => {
+                    const eventDate = new Date(event.timestamp);
+                    const eventDayOfYear = getDayOfYear(eventDate);
+                    timeline.push({
+                        type: 'component-layer2',
+                        componentType: 'mcp',
+                        name: event.name,
+                        date: eventDate,
+                        dayOfYear: eventDayOfYear
+                    });
+                    if (index === 0) {
+                        console.log(`  - First MCP "${event.name}": date=${eventDate.toLocaleDateString()}, dayOfYear=${eventDayOfYear.toFixed(3)}`);
+                    }
+                });
+            }
+
+            if (data.subagents && data.subagents.events) {
+                console.log(`🤖 Adding ${data.subagents.events.length} subagent events to timeline`);
+                data.subagents.events.forEach((event, index) => {
+                    const eventDate = new Date(event.timestamp);
+                    const eventDayOfYear = getDayOfYear(eventDate);
+                    timeline.push({
+                        type: 'component-layer2',
+                        componentType: 'subagent',
+                        name: event.name,
+                        date: eventDate,
+                        dayOfYear: eventDayOfYear
+                    });
+                    if (index === 0) {
+                        console.log(`  - First subagent "${event.name}": date=${eventDate.toLocaleDateString()}, dayOfYear=${eventDayOfYear.toFixed(3)}`);
+                    }
+                });
+            }
+
+            timeline.sort((a, b) => a.dayOfYear - b.dayOfYear);
+
+            console.log('🔍 DEBUG: First 10 events in sorted timeline:');
+            timeline.slice(0, 10).forEach((event, i) => {
+                console.log(`  ${i}: type=${event.type}, name=${event.name || event.toolName}, dayOfYear=${event.dayOfYear?.toFixed(3)}, date=${event.date?.toLocaleDateString()}`);
+            });
+
+            // Calculate actual activity range
+            const firstActivityDay = timeline.length > 0 ? timeline[0].dayOfYear : 0;
+            const lastActivityDay = timeline.length > 0 ? timeline[timeline.length - 1].dayOfYear : 365;
+            const totalDays = lastActivityDay - firstActivityDay + 1;
+
+            const layer2Events = timeline.filter(e => e.type === 'component-layer2').length;
+            console.log(`🔷 Total component-layer2 events in timeline: ${layer2Events}`);
+            console.log(`📊 Activity range: Day ${firstActivityDay} to ${lastActivityDay} (${totalDays} days)`);
+            console.log(`📅 First activity: ${timeline[0]?.date.toLocaleDateString()}`);
+            console.log(`📅 Last activity: ${timeline[timeline.length - 1]?.date.toLocaleDateString()}`);
+
+            return {
+                timeline,
+                totalDays,
+                firstActivityDay,
+                lastActivityDay,
+                startDate: timeline[0]?.date || new Date('2025-01-01')
+            };
+        }
+
+        function getDayOfYear(date) {
+            const start = new Date(date.getFullYear(), 0, 0);
+            const diff = date - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
+        }
+
+        // Start animation
+        function startAnimation() {
+            console.log('🎬 STARTING ANIMATION');
+            console.log('Timeline events:', animationData.timeline.length);
+            console.log('Activity range: Day', animationData.firstActivityDay, 'to', animationData.lastActivityDay);
+            console.log('Total days:', animationData.totalDays);
+            console.log('First 5 events:', animationData.timeline.slice(0, 5));
+
+            document.getElementById('introScreen').style.display = 'none';
+            isPlaying = true;
+            startTime = Date.now();
+
+            // Update timeline labels based on actual data range
+            if (animationData && animationData.startDate) {
+                const startDate = new Date(animationData.startDate);
+                const endDate = new Date(animationData.timeline[animationData.timeline.length - 1]?.date || startDate);
+
+                const labels = document.querySelector('.timeline-labels');
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                // Show range in timeline
+                const rangeText = `${monthNames[startDate.getMonth()]} ${startDate.getDate()} - ${monthNames[endDate.getMonth()]} ${endDate.getDate()}, 2025`;
+                labels.innerHTML = `<span>${rangeText}</span>`;
+                labels.style.justifyContent = 'center';
+            }
+
+            animate();
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Clear canvas
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (isPlaying) {
+                updateAnimationState();
+            }
+
+            // Draw grid lines (subtle)
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Update and draw beams
+            for (let i = beams.length - 1; i >= 0; i--) {
+                beams[i].update();
+                beams[i].draw(ctx);
+                if (beams[i].isDead()) {
+                    beams.splice(i, 1);
+                }
+            }
+
+            // Update and draw tool nodes
+            toolNodes.forEach(node => {
+                node.update();
+                node.draw(ctx);
+            });
+
+            // Update and draw model nodes (pie slices in center)
+            modelNodes.forEach(node => {
+                node.update();
+                node.draw(ctx);
+            });
+
+            // Update and draw component nodes (second layer)
+            componentNodes.forEach(node => {
+                node.update();
+                node.draw(ctx);
+            });
+
+            // Update and draw all nodes
+            Object.values(branches).forEach(branch => {
+                branch.nodes.forEach(node => {
+                    node.update();
+                    node.draw(ctx);
+                });
+            });
+
+            // Draw center node only if no models detected yet
+            if (modelNodes.size === 0) {
+                ctx.save();
+                ctx.fillStyle = centerNode.color;
+                ctx.shadowBlur = 30;
+                ctx.shadowColor = centerNode.color;
+                ctx.beginPath();
+                ctx.arc(centerNode.x, centerNode.y, 35, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // Center label
+                ctx.save();
+                ctx.font = 'bold 16px Monaco';
+                ctx.fillStyle = '#e0e0e0';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Claude', centerNode.x, centerNode.y);
+                ctx.restore();
+            }
+        }
+
+        // Update animation state
+        function updateAnimationState() {
+            if (!animationData) return;
+
+            const elapsed = (Date.now() - startTime) * speedMultiplier;
+            const duration = 40000; // 40 seconds
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Map progress to actual activity range
+            const rangeStart = animationData.firstActivityDay || 0;
+            const rangeEnd = animationData.lastActivityDay || 365;
+            const rangeDuration = rangeEnd - rangeStart;
+
+            currentDayIndex = rangeStart + Math.floor(progress * rangeDuration);
+
+            document.getElementById('timelineProgress').style.width = `${progress * 100}%`;
+
+            // Use startDate from data
+            const date = new Date(animationData.startDate);
+            const dayOffset = currentDayIndex - rangeStart;
+            date.setDate(date.getDate() + dayOffset);
+
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            document.getElementById('currentDate').textContent = `${monthNames[date.getMonth()]} ${date.getDate()}`;
+
+            // Process events
+            let eventsThisFrame = 0;
+            animationData.timeline.forEach((event, index) => {
+                if (event.dayOfYear <= currentDayIndex && !processedEvents.has(index)) {
+                    processedEvents.add(index);
+                    eventsThisFrame++;
+
+                    if (event.type === 'conversation') {
+                        // Calculate actual tool count from toolCounts
+                        const actualToolCount = event.toolCounts ?
+                            Object.values(event.toolCounts).reduce((sum, count) => sum + count, 0) :
+                            event.tools.length * event.count;
+
+                        console.log(`🎬 Processing conversation on day ${event.dayOfYear}: ${event.count} conversations, ${actualToolCount} tool calls`);
+                        stats.conversations += event.count;
+                        stats.tools += actualToolCount;
+
+                        // Add tool beams using actual counts
+                        if (event.toolCounts) {
+                            Object.entries(event.toolCounts).forEach(([tool, count]) => {
+                                console.log(`  🔧 Adding ${count} beams for tool: ${tool}`);
+                                // Create multiple beams based on actual usage count
+                                for (let i = 0; i < count; i++) {
+                                    setTimeout(() => addToolBeam(tool), Math.random() * 1000 + i * 50);
+                                }
+                            });
+                        } else {
+                            // Fallback to old method if toolCounts not available
+                            event.tools.forEach(tool => {
+                                console.log(`  🔧 Adding tool beam: ${tool}`);
+                                setTimeout(() => addToolBeam(tool), Math.random() * 500);
+                            });
+                        }
+
+                        // Process models using actual counts
+                        if (event.models && event.models.length > 0) {
+                            event.models.forEach(modelName => {
+                                // Skip Unknown models
+                                if (modelName === 'Unknown') return;
+
+                                const modelNode = getOrCreateModelNode(modelName);
+
+                                // Add actual usage count from modelCounts
+                                const modelCount = event.modelCounts ? (event.modelCounts[modelName] || 1) : 1;
+                                for (let i = 0; i < modelCount; i++) {
+                                    modelNode.addUse();
+                                }
+
+                                console.log(`  🎨 Model used: ${modelNode.displayName} - added ${modelCount} uses (total: ${modelNode.count})`);
+                            });
+
+                            // Update models list after processing all models
+                            updateModelsList();
+                        }
+
+                        const uniqueDays = new Set();
+                        animationData.timeline.forEach((e, i) => {
+                            if (processedEvents.has(i)) {
+                                uniqueDays.add(Math.floor(e.dayOfYear));
+                            }
+                        });
+                        stats.days = uniqueDays.size;
+
+                    } else if (event.type === 'component') {
+                        console.log(`📦 Processing component: ${event.name} (${event.componentType})`);
+                        addComponent(event.name, event.componentType);
+                        // showEvent(`Installed: ${event.name}`); // Disabled - notifications removed
+                    } else if (event.type === 'component-layer2') {
+                        const node = getOrCreateComponentNode(event.name, event.componentType);
+                        node.addUse();
+
+                        // Create beam to this component node
+                        const beam = new Beam(node, event.name);
+                        beams.push(beam);
+
+                        console.log(`🔷 ${event.componentType}: ${event.name} at ${event.date?.toLocaleDateString()} (count: ${node.count}, size: ${node.targetSize.toFixed(1)})`);
+                    }
+                }
+            });
+
+            if (eventsThisFrame > 0) {
+                console.log(`✅ Processed ${eventsThisFrame} events this frame. Current day: ${currentDayIndex}`);
+            }
+
+            // Update stats
+            document.getElementById('statConversations').textContent = stats.conversations;
+            document.getElementById('statComponents').textContent = stats.components;
+            document.getElementById('statTools').textContent = stats.tools;
+            document.getElementById('statDays').textContent = stats.days;
+
+            // Check milestones
+            const milestones = [
+                { threshold: 10, msg: 'First 10 conversations! 🎯' },
+                { threshold: 50, msg: 'Half century! 🔥' },
+                { threshold: 100, msg: '100 conversations! 💯' },
+                { threshold: 500, msg: 'Power user! ⚡' }
+            ];
+
+            milestones.forEach(m => {
+                if (stats.conversations >= m.threshold && !shownMilestones.has(m.threshold)) {
+                    shownMilestones.add(m.threshold);
+                    // showEvent(m.msg); // Disabled - notifications removed
+                }
+            });
+
+            if (progress >= 1) {
+                isPlaying = false;
+                // showEvent('🎉 2025 Complete!'); // Disabled - notifications removed
+            }
+        }
+
+        function showEvent(message) {
+            const toast = document.getElementById('eventToast');
+            toast.innerHTML = `<h3>${message}</h3>`;
+            toast.className = 'event-toast show';
+            setTimeout(() => toast.className = 'event-toast', 2500);
+        }
+
+        // Update models list in the legend
+        function updateModelsList() {
+            const modelsList = document.getElementById('modelsList');
+            modelsList.innerHTML = '';
+
+            // Get models with counts from modelNodes
+            const modelsWithCounts = [];
+            modelNodes.forEach((node, modelName) => {
+                modelsWithCounts.push({
+                    name: node.displayName,
+                    rawName: modelName,
+                    color: node.color,
+                    count: node.count
+                });
+            });
+
+            // Sort models by count (most used first)
+            modelsWithCounts.sort((a, b) => b.count - a.count);
+
+            modelsWithCounts.forEach(model => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-dot" style="background: ${model.color};"></div>
+                    <span>${model.name}</span>
+                    <span style="margin-left: auto; color: rgba(255,255,255,0.5); font-size: 11px;">${model.count}</span>
+                `;
+                modelsList.appendChild(item);
+            });
+        }
+
+        // Update tools list in the legend
+        function updateToolsList() {
+            const toolsList = document.getElementById('toolsList');
+            toolsList.innerHTML = '';
+
+            // Get tools with counts from toolNodes
+            const toolsWithCounts = [];
+            toolNodes.forEach((node, toolName) => {
+                toolsWithCounts.push({
+                    name: toolName,
+                    color: uniqueTools.get(toolName) || '#888',
+                    count: node.count
+                });
+            });
+
+            // Sort tools alphabetically
+            toolsWithCounts.sort((a, b) => a.name.localeCompare(b.name));
+
+            toolsWithCounts.forEach(tool => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-dot" style="background: ${tool.color};"></div>
+                    <span>${tool.name}</span>
+                    <span style="margin-left: auto; color: rgba(255,255,255,0.5); font-size: 11px;">${tool.count}</span>
+                `;
+                toolsList.appendChild(item);
+            });
+        }
+
+        // Update components list in the legend
+        function updateComponentsList() {
+            const componentsList = document.getElementById('componentsList');
+            componentsList.innerHTML = '';
+
+            // Get all components from componentNodes map with counts
+            const components = [];
+            componentNodes.forEach((node, key) => {
+                components.push({
+                    name: node.name,
+                    color: node.color,
+                    type: node.type,
+                    count: node.count
+                });
+            });
+
+            // Sort by type, then by name
+            components.sort((a, b) => {
+                const typeOrder = { 'command': 1, 'skill': 2, 'mcp': 3, 'subagent': 4 };
+                const typeA = typeOrder[a.type] || 5;
+                const typeB = typeOrder[b.type] || 5;
+                if (typeA !== typeB) return typeA - typeB;
+                return a.name.localeCompare(b.name);
+            });
+
+            components.forEach(component => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-dot" style="background: ${component.color};"></div>
+                    <span>${component.name}</span>
+                    <span style="margin-left: auto; color: rgba(255,255,255,0.5); font-size: 11px;">${component.count}</span>
+                `;
+                componentsList.appendChild(item);
+            });
+        }
+
+        // Controls
+        function restartAnimation() {
+            stats = { conversations: 0, components: 0, tools: 0, days: 0 };
+            processedEvents.clear();
+            shownMilestones.clear();
+            currentDayIndex = 0;
+            beams = [];
+            toolNodes.clear(); // Clear tool nodes
+            uniqueTools.clear(); // Clear unique tools
+            modelNodes.clear(); // Clear model nodes
+            componentNodes.clear(); // Clear component nodes (second layer)
+            updateModelsList(); // Clear the models list display
+            updateToolsList(); // Clear the tools list display
+            updateComponentsList(); // Clear the components list display
+            Object.values(branches).forEach(b => b.nodes = []);
+            startTime = Date.now();
+            isPlaying = true;
+        }
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
