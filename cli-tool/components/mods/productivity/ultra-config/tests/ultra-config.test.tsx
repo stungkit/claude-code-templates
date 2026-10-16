@@ -1,13 +1,12 @@
 // Run with: claude plugin test productivity/ultra-config
 import { describe, expect, test } from 'claude-code/testing'
-import type { On } from 'claude-code'
+import type { Engine, On } from 'claude-code'
 
 import {
   PROFILES,
   applySettings,
-  categoryOf,
+  effortPath,
   matchOf,
-  nextValue,
   planFor,
   restorable,
   revertSettings,
@@ -15,7 +14,7 @@ import {
   setPath,
   userSettingsPath,
 } from '../hooks/profiles.ts'
-import type { Row } from '../hooks/profiles.ts'
+import type { Live, Row } from '../hooks/profiles.ts'
 
 const row = (key: string, label: string, kind: Row['kind'], value: Row['value'], options?: string[], isLocked = false): Row => ({
   key,
@@ -42,14 +41,10 @@ const ROWS = (): Row[] => [
   row('useAutoModeDuringPlan', 'Use auto mode during plan', 'boolean', true),
   row('checkpoints', 'Rewind code (checkpoints)', 'boolean', true),
   row('verbose', 'Verbose output', 'boolean', false),
-  row('autoContinueAtUsageLimit', 'Continue automatically at usage limit', 'boolean', true),
-  row('askUserQuestionTimeout', 'Question auto-continue timeout', 'choice', 'never', ['never', '60s', '5m', '10m']),
-  row('dialogExpiry', 'Dialog expiry', 'choice', 'default', ['default', '60s', '5m', '10m', 'never']),
   row('turnDuration', 'Show turn duration', 'boolean', true),
   row('progressBar', 'Terminal progress bar', 'boolean', false),
   row('agentPushNotifEnabled', 'Push when Claude decides', 'boolean', false),
   row('inputNeededNotifEnabled', 'Push when actions required', 'boolean', false),
-  row('theme', 'Theme', 'choice', 'dark', ['auto', 'dark', 'light']),
 ]
 
 const saver = PROFILES.find(p => p.id === 'saver')!
@@ -81,11 +76,26 @@ describe('profiles', () => {
     expect(by('config:model')).toMatchObject({ status: 'change', from: 'Default (recommended)', to: 'sonnet' })
     expect(by('config:autoCompact').status).toBe('same')
     expect(by('config:workflowKeywordTriggerEnabled').status).toBe('missing')
-    expect(by('settings:effortLevel')).toMatchObject({ status: 'change', from: 'unset', to: 'low' })
+    expect(by('effort')).toMatchObject({ status: 'change', from: 'default', to: 'low' })
     expect(by('settings:env.MAX_MCP_OUTPUT_TOKENS').status).toBe('same')
     const { same, of } = matchOf(plan)
     expect(of).toBe(plan.length - 1)
     expect(same).toBe(3)
+  })
+
+  test('effort is compared per model: the saved level for the model in use, unless the profile switches model', () => {
+    const auto = PROFILES.find(p => p.id === 'autopilot')!
+    const user = { effortLevel: 'high', modelSettings: { 'claude-sonnet-5-5': { effortLevel: 'medium' } } }
+    const at = (live: Live) => planFor(auto, ROWS(), user, live).find(p => p.id === 'effort')!
+    // a top-level effortLevel is ignored by current models, so it does not count
+    expect(at({ model: 'claude-sonnet-5-5' })).toMatchObject({ status: 'change', from: 'medium', to: 'high' })
+    expect(at({ model: 'claude-opus-5-5', effort: 'high' }).status).toBe('same')
+    expect(at({ pending: 'high' }).status).toBe('same')
+    // saver switches the model, so the current model's level says nothing
+    const s = planFor(saver, ROWS(), { modelSettings: { 'claude-sonnet-5-5': { effortLevel: 'low' } } }, { model: 'claude-sonnet-5-5' })
+    expect(s.find(p => p.id === 'effort')!.status).toBe('change')
+    expect(effortPath('claude-sonnet-5-5')).toBe('modelSettings.claude-sonnet-5-5.effortLevel')
+    expect(effortPath('us.anthropic.claude-sonnet-5-5-v1:0')).toBeUndefined()
   })
 
   test('a locked row and a value the row does not offer are skipped, not written', () => {
@@ -111,7 +121,8 @@ describe('profiles', () => {
     }
     const steps = [...saver.steps, ...guarded.steps]
     const { next, entries } = applySettings(before, steps)
-    expect(next.effortLevel).toBe('low')
+    // effort is saved per model at the next request, never as the top-level key current models ignore
+    expect(next.effortLevel).toBeUndefined()
     expect((next.env as Record<string, string>).CLAUDE_CODE_SUBAGENT_MODEL).toBe('haiku')
     expect((next.env as Record<string, string>).KEEP).toBe('1')
     const deny = (next.permissions as { deny: string[] }).deny
@@ -135,15 +146,6 @@ describe('profiles', () => {
     expect(setPath({ a: { b: 1 } }, 'a.b', undefined)).toEqual({})
   })
 
-  test('the form groups rows and cycles values', () => {
-    expect(categoryOf('permissionMode')).toBe('permissions')
-    expect(categoryOf('my-mod.option')).toBe('plugins')
-    expect(categoryOf('somethingNew')).toBe('other')
-    expect(nextValue('boolean', true)).toBe(false)
-    expect(nextValue('choice', 'large', ['small', 'medium', 'large'])).toBe('small')
-    expect(nextValue('text', 'x')).toBeUndefined()
-  })
-
   test('settings.json is found through CLAUDE_CONFIG_DIR, else the home directory', () => {
     expect(userSettingsPath('/cfg/', '/home/me')).toBe('/cfg/settings.json')
     expect(userSettingsPath(undefined, '/home/me')).toBe('/home/me/.claude/settings.json')
@@ -160,10 +162,14 @@ type World = {
   sets: { key: string; value: unknown }[]
   log: string[]
   denied: Set<string>
+  efforts: unknown[]
 }
 
+let w0: World | undefined
+
 function world(on: On, file: string | null = '{\n  "model": "opus"\n}\n', isPlaced = true): World {
-  const w: World = { rows: ROWS(), file, writes: [], sets: [], log: [], denied: new Set() }
+  const w: World = { rows: ROWS(), file, writes: [], sets: [], log: [], denied: new Set(), efforts: [] }
+  w0 = w
   const store = new Map<string, unknown>()
   on('env.get', (_$, e) => ({ value: e.name === 'HOME' ? '/home/me' : undefined }))
   on('config.list', () => ({ value: w.rows.map(r => ({ ...r, provider: { plugin: 'engine', tier: 'core' } })) }) as never)
@@ -200,7 +206,18 @@ function world(on: On, file: string | null = '{\n  "model": "opus"\n}\n', isPlac
   on('ui.log', () => ({ value: undefined }))
   on('ui.invalidate', () => ({ value: undefined }))
   on('session.start', (_$, e) => ({ cwd: e.cwd }) as never)
+  on('turn.step', async function* (_$, e) {
+    w.efforts.push(e.effort)
+    return { turnId: e.turnId, index: e.index, answer: '', toolUses: [], stopReason: 'end_turn' } as never
+  })
   return w
+}
+
+/** One main-loop request; resolves to the effort it was sent with. */
+async function step($: Engine, model: string, effort?: string) {
+  const stream = $.turn.step({ turnId: 't1', index: 0, model, messageCount: 3, ...(effort ? { effort } : {}) } as never)
+  for (;;) if ((await stream.next()).done) break
+  return w0!.efforts.at(-1)
 }
 
 const run = (args: string) =>
@@ -213,12 +230,19 @@ describe('the command', () => {
     const w = world(on)
     await $.session.start({ cwd: '/work', surface: 'terminal', isInteractive: true } as never)
     const out = (await $.command.run(run('apply saver'))) as { text: string }
-    expect(out.text).toMatch(/Token saver applied: \d+ settings changed/)
+    expect(out.text).toMatch(/Token saver activated: \d+ settings changed/)
     expect(w.sets).toContainEqual({ key: 'model', value: 'sonnet' })
     expect(w.sets).toContainEqual({ key: 'outputStyle', value: 'Concise' })
     expect(w.writes[0]).toEqual({ path: '/home/me/.claude/settings.json.ultra-config.bak', text: '{\n  "model": "opus"\n}\n' })
     const written = JSON.parse(w.file!)
-    expect(written).toMatchObject({ model: 'opus', effortLevel: 'low', env: { CLAUDE_CODE_SUBAGENT_MODEL: 'haiku', MAX_MCP_OUTPUT_TOKENS: '10000' } })
+    expect(written).toMatchObject({ model: 'opus', env: { CLAUDE_CODE_SUBAGENT_MODEL: 'haiku', MAX_MCP_OUTPUT_TOKENS: '10000' } })
+    expect(written.effortLevel).toBeUndefined()
+
+    // the next request names the model: the effort is saved under it and sent with it
+    expect(await step($, 'claude-sonnet-5-5')).toBe('low')
+    expect(JSON.parse(w.file!).modelSettings).toEqual({ 'claude-sonnet-5-5': { effortLevel: 'low' } })
+    // once saved, later requests are left as the engine made them
+    expect(await step($, 'claude-sonnet-5-5', 'medium')).toBe('medium')
 
     w.sets.length = 0
     const undone = (await $.command.run(run('undo'))) as { text: string }
@@ -256,21 +280,21 @@ describe('the command', () => {
     await $.session.start({ cwd: '/work', surface: 'terminal', isInteractive: true } as never)
     const out = (await $.command.run(run('apply saver'))) as { text: string }
     expect(out.text).toMatch(/skipped/)
-    expect(out.text).toMatch(/Effort: settings.json is not valid JSON/)
+    expect(out.text).toMatch(/Subagent model: settings.json is not valid JSON/)
     expect(w.writes.filter(x => x.path.endsWith('settings.json'))).toEqual([])
     expect(w.sets.length).toBeGreaterThan(0)
   })
 
-  test('a profile name alone previews it in the pane without writing anything', async ($, on) => {
+  test('a profile name alone opens its detail in the pane without writing anything', async ($, on) => {
     const w = world(on)
     await $.session.start({ cwd: '/work', surface: 'terminal', isInteractive: true } as never)
     const out = (await $.command.run(run('guarded'))) as { text: string }
-    expect(out.text).toBe('▣ Guarded: 5 changes previewed in the pane · /ultra-config apply guarded')
+    expect(out.text).toBe('▣ Guarded: 5 changes, shown in the pane · /ultra-config apply guarded')
     expect(w.sets).toEqual([])
     expect(w.writes).toEqual([])
   })
 
-  test('where no pane can be placed, the preview is the command output', async ($, on) => {
+  test('where no pane can be placed, the profile detail is the command output', async ($, on) => {
     const w = world(on, '{}', false)
     await $.session.start({ cwd: '/work', surface: 'terminal', isInteractive: true } as never)
     const out = (await $.command.run(run('guarded'))) as { text: string }
@@ -291,39 +315,23 @@ describe('the command', () => {
 
 describe('the pane', () => {
   for (const surface of ['terminal', 'desktop'] as const) {
-    test(`${surface}: five cards, a preview on press, and Apply writes`, async ($, on) => {
+    test(`${surface}: five profiles, the first open, another opens on press and Activate writes`, async ($, on) => {
       const w = world(on)
       await $.session.start({ cwd: '/work', surface, isInteractive: true } as never)
       await $.command.run(run(''))
       const ui = await $.ui.mount({ plugin: 'ultra-config', surface, component: 'Pane', requestId: 'ultra-config', props: PANE } as never)
       for (const p of PROFILES) expect(await ui.find({ key: `pick:${p.id}` })).toBeDefined()
-      expect(await ui.find({ key: 'apply:flow' })).toBeUndefined()
+      expect(await ui.find({ key: 'activate:saver' })).toBeDefined()
+      expect(await ui.find({ key: 'activate:flow' })).toBeUndefined()
       await ui.press({ key: 'pick:flow' })
       await ui.redraw()
+      expect(await ui.find({ key: 'activate:saver' })).toBeUndefined()
       expect(await ui.find({ type: 'Text', text: /edits\sgo\sthrough\swithout\sa\sprompt/ })).toBeDefined()
-      await ui.press({ key: 'apply:flow' })
+      await ui.press({ key: 'activate:flow' })
       await ui.redraw()
       expect(w.sets).toContainEqual({ key: 'permissionMode', value: 'acceptEdits' })
-      expect(await ui.find({ type: 'Text', text: /Fast flow applied/ })).toBeDefined()
-      await ui.unmount()
-    })
-
-    test(`${surface}: the settings tab toggles a row and cycles a choice`, async ($, on) => {
-      const w = world(on)
-      await $.session.start({ cwd: '/work', surface, isInteractive: true } as never)
-      await $.command.run(run('settings'))
-      const ui = await $.ui.mount({ plugin: 'ultra-config', surface, component: 'Pane', requestId: 'ultra-config', props: PANE } as never)
-      expect(await ui.find({ key: 'set:model' })).toBeDefined()
-      expect(await ui.find({ key: 'extra:effortLevel' })).toBeDefined()
-      await ui.press({ key: 'cat:display' })
-      await ui.redraw()
-      await ui.press({ key: 'set:verbose' })
-      await ui.redraw()
-      expect(w.sets).toEqual([{ key: 'verbose', value: true }])
-      await ui.press({ key: 'cat:model' })
-      await ui.redraw()
-      await ui.press({ key: 'extra:effortLevel' })
-      expect(JSON.parse(w.file!).effortLevel).toBe('low')
+      expect(await ui.find({ type: 'Text', text: /Fast flow activated/ })).toBeDefined()
+      expect(await ui.find({ key: 'activate:flow' })).toBeUndefined()
       await ui.unmount()
     })
   }

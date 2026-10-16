@@ -11,10 +11,6 @@ export type UltraConfigRow = {
   isLocked: boolean
 }
 
-export type UltraConfigView = 'profiles' | 'settings' | 'history'
-
-export type UltraConfigCategory = 'model' | 'permissions' | 'context' | 'display' | 'notify' | 'plugins' | 'other'
-
 /** What the pane knows about the person's configuration, read on open and after every change. */
 export type UltraConfigSnapshot = {
   rows: UltraConfigRow[]
@@ -39,14 +35,19 @@ export type UltraConfigBackup = {
   at: string
   entries: UltraConfigEntry[]
   refused: { label: string; reason: string }[]
+  /** The effort the profile set, saved per model at the next request. */
+  effort?: 'low' | 'medium' | 'high' | 'xhigh'
 }
 
+/** The main loop's model id and effort, as the last request carried them. */
+export type UltraConfigLive = { model?: string; effort?: string | number }
+
+/** An effort waiting for the next request to name the model it is saved under. */
+export type UltraConfigPending = { value: 'low' | 'medium' | 'high' | 'xhigh'; backupId: string }
+
 export type UltraConfigUi = {
-  view: UltraConfigView
-  /** The profile whose preview is open. */
+  /** The profile whose detail is open; null means the first. */
   selected: string | null
-  category: UltraConfigCategory
-  query: string
   /** A one-line result under the header (applied, undone, refused). */
   notice: { text: string; tone: 'success' | 'warning' | 'error' } | null
   isBusy: boolean
@@ -58,6 +59,8 @@ declare module 'claude-code' {
       ui: UltraConfigUi
       snapshot: UltraConfigSnapshot
       history: UltraConfigBackup[]
+      live: UltraConfigLive
+      pending: UltraConfigPending | null
     }
   }
 }
