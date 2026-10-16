@@ -48780,10 +48780,10 @@
       "path": "productivity/ultra-config",
       "category": "productivity",
       "type": "mod",
-      "description": "A designed /config: five one-press profiles (Token saver, Fast flow, Max quality, Guarded, Autopilot) that set Claude Code up for one way of working, with a preview of every change and undo, plus the whole settings menu as a categorized form with search. /config rows are written the way the menu writes them; effort, subagent model, env caps and deny rules go to ~/.claude/settings.json after a backup copy.",
+      "description": "Five setting profiles in a side pane (Token saver, Fast flow, Max quality, Guarded, Autopilot): press one to see exactly what it sets, then Activate; every activation can be undone. /config rows are written the way the menu writes them; effort, subagent model, env caps and deny rules go to ~/.claude/settings.json after a backup copy.",
       "author": "claude-code-templates",
       "repo": "https://github.com/davila7/claude-code-templates",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "license": "MIT",
       "keywords": [
         "mod",
