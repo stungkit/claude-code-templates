@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-16T03:14:55.786078+00:00",
+  "lastUpdated": "2026-10-17T03:13:05.177198+00:00",
   "totalJobs": 92,
   "sources": [
     "Anthropic",
@@ -8,6 +8,26 @@
     "WeWorkRemotely"
   ],
   "jobs": [
+    {
+      "id": "anth-5424305008",
+      "company": "Anthropic",
+      "position": "Manager, Applied AI Architects - Digital Natives, EMEA",
+      "location": "London, UK",
+      "remote": false,
+      "salary": "",
+      "description": "As Manager of the EMEA Digital Natives Applied AI Architecture team, you'll drive adoption of frontier AI across Europe's fastest-growing technology companies: SaaS scale-ups, fintechs, marketplaces, consumer platforms, and developer-tooling businesses. Your team makes Anthropic's products (Claude...",
+      "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5424305008",
+      "source": "Anthropic",
+      "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5424305008",
+      "postedAt": "2026-10-16T05:34:58-04:00",
+      "tags": [
+        "Rust",
+        "AWS",
+        "Claude Code",
+        "Anthropic"
+      ],
+      "companyIcon": "https://www.anthropic.com/favicon.ico"
+    },
     {
       "id": "anth-5454673008",
       "company": "Anthropic",
@@ -47,6 +67,29 @@
         "Anthropic"
       ],
       "companyIcon": "https://www.anthropic.com/favicon.ico"
+    },
+    {
+      "id": "rok-remote-senior-software-engineer-ii-applied-ai-wrapbook-1137527",
+      "company": "Wrapbook",
+      "position": "Senior Software Engineer II Applied AI",
+      "location": "Remote",
+      "remote": true,
+      "salary": "",
+      "description": "About Us: Wrapbook is the AI platform for production finance. We’re building a system of action that puts finance teams in control of their whole production, from payroll, to spend, to accounting. Built for feature films, TV, and commercials, Wrapbook is trusted by teams at Netflix, Paramount,...",
+      "applyUrl": "https://remoteOK.com/remote-jobs/remote-senior-software-engineer-ii-applied-ai-wrapbook-1137527",
+      "source": "RemoteOK",
+      "sourceUrl": "https://remoteok.com/remote-jobs/remote-senior-software-engineer-ii-applied-ai-wrapbook-1137527",
+      "postedAt": "2026-10-15T16:00:03+00:00",
+      "tags": [
+        "TypeScript",
+        "JavaScript",
+        "Python",
+        "Rust",
+        "Node.js",
+        "AWS",
+        "Java"
+      ],
+      "companyIcon": ""
     },
     {
       "id": "hn-50104234",
@@ -668,26 +711,6 @@
         "Anthropic"
       ],
       "companyIcon": "https://www.anthropic.com/favicon.ico"
-    },
-    {
-      "id": "wwr-sticker-mule-si-agent-engineer",
-      "company": "Sticker Mule",
-      "position": "SI agent engineer",
-      "location": "Remote",
-      "remote": true,
-      "salary": "$150,000–$250,000",
-      "description": "Headquarters: New York, NY URL: https://www.stickermule.com Sticker Mule is building the most lucrative commerce platform on the Internet by combining software, manufacturing, and super intelligence in one stack. We're hiring an engineer to build, run and manage a team of SI agents to help us...",
-      "applyUrl": "https://weworkremotely.com/remote-jobs/sticker-mule-si-agent-engineer",
-      "source": "WeWorkRemotely",
-      "sourceUrl": "https://weworkremotely.com/remote-jobs/sticker-mule-si-agent-engineer",
-      "postedAt": "2026-09-16T12:24:17+00:00",
-      "tags": [
-        "TypeScript",
-        "PostgreSQL",
-        "GCP",
-        "GraphQL"
-      ],
-      "companyIcon": ""
     },
     {
       "id": "anth-5421566008",
@@ -1574,32 +1597,6 @@
         "Python",
         "Rust",
         "AWS",
-        "Claude Code",
-        "Anthropic"
-      ],
-      "companyIcon": "https://www.anthropic.com/favicon.ico"
-    },
-    {
-      "id": "anth-5288742008",
-      "company": "Anthropic",
-      "position": "Staff+ Software Engineer, Enterprise",
-      "location": "San Francisco, CA | New York City, NY",
-      "remote": false,
-      "salary": "",
-      "description": "Enterprise is central to Anthropic's mission. The organizations that could benefit most from Claude often have the most demanding needs, with rigorous requirements around end-user experience, procurement, security, and permissions. We believe earning their trust is essential to ensuring AI benefits...",
-      "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5288742008",
-      "source": "Anthropic",
-      "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5288742008",
-      "postedAt": "2026-07-01T15:52:07-04:00",
-      "tags": [
-        "Python",
-        "Rust",
-        "Go",
-        "PostgreSQL",
-        "AWS",
-        "GCP",
-        "Azure",
-        "Kubernetes",
         "Claude Code",
         "Anthropic"
       ],
