@@ -83890,6 +83890,142 @@
       }
     },
     {
+      "name": "bluesky-feed",
+      "path": "integrations/bluesky-feed",
+      "category": "integrations",
+      "type": "mod",
+      "description": "Your Bluesky timeline in a side pane: the posts of the accounts you follow, a field to write and send a post, and a like button on every post. /bsky opens it. Logs in with a Bluesky app password; the free public API, no developer account.",
+      "author": "claude-code-templates",
+      "repo": "https://github.com/davila7/claude-code-templates",
+      "version": "0.1.0",
+      "license": "MIT",
+      "keywords": [
+        "mod",
+        "function-hooks",
+        "integrations",
+        "bluesky",
+        "atproto",
+        "social",
+        "timeline",
+        "ui"
+      ],
+      "downloads": 0,
+      "security": {
+        "validated": false,
+        "valid": null,
+        "score": null,
+        "errorCount": 0,
+        "warningCount": 0,
+        "lastValidated": null
+      },
+      "modules": [
+        "bluesky-feed.tsx"
+      ],
+      "userConfig": {
+        "handle": {
+          "type": "string",
+          "title": "Bluesky handle",
+          "description": "Your handle, e.g. dan.bsky.social (with or without @); with none set the mod does nothing",
+          "default": ""
+        },
+        "appPassword": {
+          "type": "string",
+          "title": "App password",
+          "description": "A Bluesky app password (Settings, Privacy and security, App passwords), never your account password. Used to read your timeline, post and like",
+          "default": "",
+          "sensitive": true
+        },
+        "service": {
+          "type": "string",
+          "title": "Service (PDS)",
+          "description": "Where your account lives; leave https://bsky.social unless you self-host",
+          "default": "https://bsky.social"
+        },
+        "limit": {
+          "type": "number",
+          "title": "Posts per page",
+          "description": "How many posts each read and each 'more' brings (10-50)",
+          "default": 30
+        },
+        "pollSeconds": {
+          "type": "number",
+          "title": "Refresh interval (s)",
+          "description": "Seconds between refreshes while the pane is open (30-3600)",
+          "default": 120
+        },
+        "openOnStart": {
+          "type": "boolean",
+          "title": "Open on start",
+          "description": "Open the pane when the session starts; the engine keeps an unasked pane hidden below 144 columns",
+          "default": false
+        }
+      },
+      "references": [
+        ".claude-plugin/plugin.json",
+        "hooks/bluesky-feed.tsx",
+        "hooks/bsky-api.ts",
+        "hooks/hooks.json",
+        "tests/bluesky-feed.test.tsx"
+      ],
+      "skillspector": {
+        "score": 85,
+        "severity": "CRITICAL",
+        "recommendation": "DO_NOT_INSTALL",
+        "issueCount": 8,
+        "analysis": "partial",
+        "findings": [
+          {
+            "id": "AS1",
+            "category": "Agent Snooping",
+            "severity": "HIGH",
+            "title": "Agent Config Directory Access",
+            "file": "README.md",
+            "line": 70,
+            "count": 1
+          },
+          {
+            "id": "PE3",
+            "category": "Privilege Escalation",
+            "severity": "HIGH",
+            "title": "Credential Access",
+            "file": "README.md",
+            "line": 38,
+            "count": 1
+          },
+          {
+            "id": "PE3",
+            "category": "Privilege Escalation",
+            "severity": "HIGH",
+            "title": "Credential Access",
+            "file": "hooks/bsky-api.ts",
+            "line": 195,
+            "count": 2
+          },
+          {
+            "id": "AS3",
+            "category": "Agent Snooping",
+            "severity": "MEDIUM",
+            "title": "Skill Enumeration",
+            "file": "README.md",
+            "line": 68,
+            "count": 1
+          },
+          {
+            "id": "RP1",
+            "category": "MCP Rug Pull",
+            "severity": "MEDIUM",
+            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
+            "file": "README.md",
+            "line": 64,
+            "count": 1
+          }
+        ],
+        "hash": "84a6f689c4449cac",
+        "version": "2.12.0",
+        "scannedAt": "2026-10-18T03:18:42Z"
+      }
+    },
+    {
       "name": "linear-tickets",
       "path": "integrations/linear-tickets",
       "category": "integrations",
