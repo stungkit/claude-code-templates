@@ -85818,7 +85818,7 @@
       "description": "Five setting profiles in a side pane (Token saver, Fast flow, Max quality, Guarded, Autopilot): press one to see exactly what it sets, then Activate; every activation can be undone. /config rows are written the way the menu writes them; effort, subagent model, env caps and deny rules go to ~/.claude/settings.json after a backup copy.",
       "author": "claude-code-templates",
       "repo": "https://github.com/davila7/claude-code-templates",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "license": "MIT",
       "keywords": [
         "mod",
@@ -85911,9 +85911,9 @@
             "count": 1
           }
         ],
-        "hash": "d7ad8ffe25194971",
+        "hash": "fca240638a1581d2",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-18T00:46:50Z"
       }
     },
     {
