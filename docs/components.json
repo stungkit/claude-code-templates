@@ -27263,7 +27263,7 @@
       "path": "devtools/stripe.json",
       "category": "devtools",
       "type": "mcp",
-      "description": "Official Stripe remote MCP server (mcp.stripe.com): search and call the Stripe API (customers, payments, subscriptions, invoices, refunds) and search Stripe's docs. Requires a Stripe account and uses OAuth: after installing, run /mcp in Claude Code to sign in. Headless clients can send a Stripe agent API key as a Bearer token instead.",
+      "description": "Official Stripe remote MCP server (mcp.stripe.com): search and call the Stripe API (customers, payments, subscriptions, invoices, refunds), search Stripe's docs, and start a Stripe Atlas company formation (Delaware C corp or LLC). Requires a Stripe account and uses OAuth: after installing, run /mcp in Claude Code to sign in. Headless clients can send a Stripe agent API key as a Bearer token instead. Pair with the setting permissions/stripe-mcp-confirm-writes to approve writes and money movement.",
       "author": "",
       "repo": "",
       "version": "",
@@ -27295,9 +27295,9 @@
             "count": 1
           }
         ],
-        "hash": "52855bbfc2884f44",
+        "hash": "b705273599d616ac",
         "version": "2.12.0",
-        "scannedAt": "2026-10-20T01:25:18Z"
+        "scannedAt": "2026-10-20T01:36:17Z"
       }
     },
     {
@@ -30123,6 +30123,38 @@
         "hash": "05955569392e4fd9",
         "version": "2.12.0",
         "scannedAt": "2026-10-17T20:36:45Z"
+      }
+    },
+    {
+      "name": "stripe-mcp-confirm-writes",
+      "path": "permissions/stripe-mcp-confirm-writes.json",
+      "category": "permissions",
+      "type": "setting",
+      "description": "Ask before Claude runs a Stripe MCP tool that writes data, moves money or starts a Stripe Atlas company formation; read and docs tools still run freely. Stripe's MCP docs recommend client-side tool approval, since Stripe itself only confirms some writes (refunds, outbound payments). Only covers a server named 'stripe' (as installed by --mcp devtools/stripe); under any other name nothing is prompted.",
+      "author": "",
+      "repo": "",
+      "version": "",
+      "license": "",
+      "keywords": [],
+      "downloads": 0,
+      "security": {
+        "validated": false,
+        "valid": null,
+        "score": null,
+        "errorCount": 0,
+        "warningCount": 0,
+        "lastValidated": null
+      },
+      "skillspector": {
+        "score": 0,
+        "severity": "LOW",
+        "recommendation": "SAFE",
+        "issueCount": 0,
+        "analysis": "complete",
+        "findings": [],
+        "hash": "fe1913239022c970",
+        "version": "2.12.0",
+        "scannedAt": "2026-10-20T01:36:17Z"
       }
     },
     {
@@ -59488,10 +59520,10 @@
       },
       "references": [],
       "skillspector": {
-        "score": 10,
+        "score": 12,
         "severity": "LOW",
         "recommendation": "CAUTION",
-        "issueCount": 2,
+        "issueCount": 3,
         "analysis": "partial",
         "findings": [
           {
@@ -59501,12 +59533,12 @@
             "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
             "file": "SKILL.md",
             "line": 205,
-            "count": 2
+            "count": 3
           }
         ],
-        "hash": "453cb2a7758bc942",
+        "hash": "b369253504f7474e",
         "version": "2.12.0",
-        "scannedAt": "2026-10-20T01:30:20Z"
+        "scannedAt": "2026-10-20T01:36:17Z"
       }
     },
     {
