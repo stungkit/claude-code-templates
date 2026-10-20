@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-10-19T03:19:41.616663+00:00",
-  "totalJobs": 93,
+  "lastUpdated": "2026-10-20T03:13:53.253230+00:00",
+  "totalJobs": 96,
   "sources": [
     "Anthropic",
     "HackerNews",
@@ -8,6 +8,71 @@
     "WeWorkRemotely"
   ],
   "jobs": [
+    {
+      "id": "anth-5455961008",
+      "company": "Anthropic",
+      "position": "Applied AI Demo Engineer",
+      "location": "San Francisco, CA | New York City, NY",
+      "remote": false,
+      "salary": "",
+      "description": "Anthropic's customer-facing teams are often the first place a customer sees what Claude can do. As a Demo Engineer, you'll build the demos, reference implementations, and reusable tooling that help those teams make new capabilities tangible, relevant, and trustworthy, ideally within days of a...",
+      "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5455961008",
+      "source": "Anthropic",
+      "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5455961008",
+      "postedAt": "2026-10-19T18:38:51-04:00",
+      "tags": [
+        "TypeScript",
+        "Python",
+        "Rust",
+        "AWS",
+        "Claude Code",
+        "Anthropic"
+      ],
+      "companyIcon": "https://www.anthropic.com/favicon.ico"
+    },
+    {
+      "id": "anth-5456581008",
+      "company": "Anthropic",
+      "position": "Manager of Applied AI Architecture, Industries ",
+      "location": "Paris, France",
+      "remote": false,
+      "salary": "",
+      "description": "About Anthropic Anthropic’s mission is to create reliable, interpretable, and steerable AI systems. We want AI to be safe and beneficial for our users and for society as a whole. Our team is a quickly growing group of committed researchers, engineers, policy experts, and business leaders working...",
+      "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5456581008",
+      "source": "Anthropic",
+      "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5456581008",
+      "postedAt": "2026-10-19T11:48:55-04:00",
+      "tags": [
+        "Rust",
+        "Go",
+        "AWS",
+        "Claude Code",
+        "Anthropic"
+      ],
+      "companyIcon": "https://www.anthropic.com/favicon.ico"
+    },
+    {
+      "id": "anth-5456453008",
+      "company": "Anthropic",
+      "position": "Staff+ Software Engineer, Memory & Search",
+      "location": "New York City, NY; New York City, NY | Seattle, WA; Remote-Friendly, United Stat",
+      "remote": true,
+      "salary": "",
+      "description": "Anthropic is looking for Software Engineers to join the Memory & Search team. We own how Claude remembers you and how it finds what it needs, across Claude.ai, Cowork and Claude Code. That spans the user-facing experience (what Claude remembers, how people see and edit it, how search surfaces the...",
+      "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5456453008",
+      "source": "Anthropic",
+      "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5456453008",
+      "postedAt": "2026-10-19T01:09:10-04:00",
+      "tags": [
+        "TypeScript",
+        "Python",
+        "Rust",
+        "AWS",
+        "Claude Code",
+        "Anthropic"
+      ],
+      "companyIcon": "https://www.anthropic.com/favicon.ico"
+    },
     {
       "id": "anth-5424305008",
       "company": "Anthropic",
@@ -681,7 +746,7 @@
       "location": "San Francisco, CA | New York City, NY",
       "remote": false,
       "salary": "",
-      "description": "As the Sales Enablement Trainer, Claude Products, you'll teach Anthropic's global field organization how to use our products, both to do their own work better and to position Claude credibly with customers. Anthropic ships quickly, and the surface area of what we build is growing faster than any...",
+      "description": "As a Sales Enablement Trainer, Claude Products, you'll teach Anthropic's global sales team how to use our products, both to do their own work better and to position Claude credibly with customers. Anthropic ships quickly, and the surface area of what we build is growing faster than any individual...",
       "applyUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5428790008",
       "source": "Anthropic",
       "sourceUrl": "https://job-boards.greenhouse.io/anthropic/jobs/5428790008",
