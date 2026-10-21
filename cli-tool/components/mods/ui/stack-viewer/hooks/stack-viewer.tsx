@@ -37,6 +37,7 @@ const IVORY = '#faf9f5'
 const GRAY = '#b0aea5'
 const DIM = '#87867f'
 const LINE = '#5e5d59'
+const ROW_BG = '#3d3d3a'
 
 let sections: Section[] = []
 let selected: Kind = 'skills'
@@ -287,7 +288,7 @@ export const register: Register = (on, options) => {
 
     const meta = KINDS.find(k => k.kind === section.kind)!
     const c = counts(section)
-    const INDENT = 5 // marker, rank, space: items sit under the scope label
+    const INDENT = 5 // rank, space, fold arrow: items sit under the scope label
 
     const itemRow = (s: ScopeNode, item: Item, n: number, colW: number) => {
       const rest = mainW - INDENT - 1
@@ -333,6 +334,8 @@ export const register: Register = (on, options) => {
       const isOpenScope = isExpanded(section.kind, s)
       const empty = s.items.length === 0
       const marker = empty ? ' ' : isOpenScope ? '▾' : '▸'
+      // a scope with something inside is a filled bar, so it reads as a control
+      const bg = empty ? undefined : ROW_BG
       const labelW = Math.min(19, Math.max(10, Math.floor(mainW * 0.34)))
       const whereW = Math.max(0, mainW - INDENT - labelW - 6)
       const body: RenderChildren[] = []
@@ -340,6 +343,14 @@ export const register: Register = (on, options) => {
         // names line up in one column per scope, so the details read as a table
         const colW = Math.max(0, ...s.items.map(it => Array.from(it.name).length))
         s.items.forEach((it, i) => body.push(itemRow(s, it, i, colW)))
+      } else if (!empty) {
+        // a folded scope previews what it holds, so it reads as something to open
+        body.push(
+          <Text key="peek" wrap="truncate-end">
+            <Text color={DIM}>{sp(' '.repeat(INDENT) + peek(s.items.map(it => it.name), mainW - INDENT - 16))}</Text>
+            <Text color={ORANGE}>{sp('  click to open')}</Text>
+          </Text>,
+        )
       }
       if (s.note && (isOpenScope || empty)) {
         body.push(
@@ -350,14 +361,13 @@ export const register: Register = (on, options) => {
       }
       return (
         <Box key={`s${s.id}`} flexDirection="column" marginBottom={empty ? 0 : 1}>
-          <Box key="h" flexDirection="row">
-            <Text key="m" color={DIM}>{sp(`${marker} `)}</Text>
-            <Text key="n" color={empty ? LINE : ORANGE} bold={!empty}>{sp(cell(`${rank}`, 2))}</Text>
-            <Text key="g">{' '}</Text>
-            <Button key={`scope:${section.kind}:${s.id}`} plain dimColor={empty} label={sp(cell(SCOPE[s.id].label, labelW))} onPress={noop} />
-            <Text key="c" color={empty ? LINE : IVORY} bold={!empty}>{sp(cell(empty ? '—' : `${s.items.length}`, 4, 'right'))}</Text>
-            <Text key="x">{'  '}</Text>
-            {whereW > 4 ? <Text key="w" color={LINE}>{sp(fit(s.where, whereW))}</Text> : null}
+          <Box key="h" flexDirection="row" width={mainW} backgroundColor={bg}>
+            <Text key="n" color={empty ? LINE : ORANGE} backgroundColor={bg} bold={!empty}>{sp(cell(`${rank}`, 2, 'right'))}</Text>
+            <Text key="g" backgroundColor={bg}>{' '}</Text>
+            <Button key={`scope:${section.kind}:${s.id}`} plain dimColor={empty} label={sp(cell(`${marker} ${SCOPE[s.id].label}`, labelW + 2))} onPress={noop} />
+            <Text key="c" color={empty ? LINE : IVORY} backgroundColor={bg} bold={!empty}>{sp(cell(empty ? '—' : `${s.items.length}`, 4, 'right'))}</Text>
+            <Text key="x" backgroundColor={bg}>{'  '}</Text>
+            {whereW > 4 ? <Text key="w" color={empty ? LINE : DIM} backgroundColor={bg}>{sp(cell(s.where, whereW))}</Text> : null}
           </Box>
           {body}
         </Box>
@@ -401,7 +411,7 @@ export const register: Register = (on, options) => {
             <Button key="fold" label="fold all" onPress={noop} />
             <Button key="close" label="close" onPress={noop} />
           </Box>
-          <Text key="hint" color={DIM}>{sp(fit('1-9 or click a type · click a scope to fold it · r reads the stack again', width))}</Text>
+          <Text key="hint" color={DIM}>{sp(fit('1-9 or click a type · click a scope (▸ ▾) to open or fold it · r reads again', width))}</Text>
         </Box>
       </Box>
     )
@@ -412,6 +422,19 @@ export const register: Register = (on, options) => {
 function tail(path: string, width: number): string {
   const chars = Array.from(path)
   return chars.length <= width ? path : '…' + chars.slice(chars.length - width + 1).join('')
+}
+
+/** The first names that fit `width`, then how many more: `deploy, pdf-tools +3`. */
+function peek(names: string[], width: number): string {
+  let out = ''
+  for (let i = 0; i < names.length; i++) {
+    const more = names.length - i - 1
+    const next = (out ? `${out}, ` : '') + names[i]
+    const tail = more ? ` +${more}` : ''
+    if (Array.from(next + tail).length > width) return out ? `${out} +${names.length - i}` : fit(names[i]!, width)
+    out = next
+  }
+  return out
 }
 
 /** A scope starts open when it has something to show, except the long built-in lists. */
