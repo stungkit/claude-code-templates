@@ -87377,6 +87377,113 @@
       }
     },
     {
+      "name": "stack-viewer",
+      "path": "ui/stack-viewer",
+      "category": "ui",
+      "type": "mod",
+      "description": "A side pane that maps every component your session runs and where it is installed from: skills, subagents, commands, hooks, MCP servers, plugins and mods, settings, memory and output styles. Pick a type in the sidebar to see its scopes as a tree in precedence order (Enterprise, CLI flag, Local, Project, User, Plugin, Built-in) with what each one holds, and which components are active, shadowed by a higher scope, or off.",
+      "author": "claude-code-templates",
+      "repo": "https://github.com/davila7/claude-code-templates",
+      "version": "0.1.0",
+      "license": "MIT",
+      "keywords": [
+        "mod",
+        "function-hooks",
+        "ui",
+        "skills",
+        "agents",
+        "mcp",
+        "hooks",
+        "settings",
+        "scopes",
+        "sidebar"
+      ],
+      "downloads": 0,
+      "security": {
+        "validated": false,
+        "valid": null,
+        "score": null,
+        "errorCount": 0,
+        "warningCount": 0,
+        "lastValidated": null
+      },
+      "modules": [
+        "stack-viewer.tsx"
+      ],
+      "userConfig": {
+        "columns": {
+          "type": "number",
+          "title": "Pane width",
+          "description": "Columns asked for the docked pane in the fullscreen layout (40-140); a width you drag it to wins",
+          "default": 84
+        }
+      },
+      "references": [
+        ".claude-plugin/plugin.json",
+        "hooks/hooks.json",
+        "hooks/stack-viewer.tsx",
+        "hooks/stack.ts",
+        "tests/stack-viewer.test.tsx"
+      ],
+      "skillspector": {
+        "score": 80,
+        "severity": "HIGH",
+        "recommendation": "DO_NOT_INSTALL",
+        "issueCount": 12,
+        "analysis": "partial",
+        "findings": [
+          {
+            "id": "AS1",
+            "category": "Agent Snooping",
+            "severity": "HIGH",
+            "title": "Agent Config Directory Access",
+            "file": "hooks/stack.ts",
+            "line": 369,
+            "count": 2
+          },
+          {
+            "id": "AS3",
+            "category": "Agent Snooping",
+            "severity": "MEDIUM",
+            "title": "Skill Enumeration",
+            "file": "README.md",
+            "line": 18,
+            "count": 2
+          },
+          {
+            "id": "AS3",
+            "category": "Agent Snooping",
+            "severity": "MEDIUM",
+            "title": "Skill Enumeration",
+            "file": "hooks/stack.ts",
+            "line": 444,
+            "count": 1
+          },
+          {
+            "id": "AS3",
+            "category": "Agent Snooping",
+            "severity": "MEDIUM",
+            "title": "Skill Enumeration",
+            "file": "tests/stack-viewer.test.tsx",
+            "line": 15,
+            "count": 4
+          },
+          {
+            "id": "RP1",
+            "category": "MCP Rug Pull",
+            "severity": "MEDIUM",
+            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
+            "file": "README.md",
+            "line": 93,
+            "count": 1
+          }
+        ],
+        "hash": "1639ce3d59ff7cfb",
+        "version": "2.12.0",
+        "scannedAt": "2026-10-21T14:51:39Z"
+      }
+    },
+    {
       "name": "tool-timing-badge",
       "path": "ui/tool-timing-badge",
       "category": "ui",
@@ -87547,8 +87654,8 @@
       "language": "javascript-typescript",
       "description": "Angular-App with Javascript-Typescript",
       "files": [
-        ".claude/commands/components.md",
-        ".claude/commands/services.md"
+        ".claude/commands/services.md",
+        ".claude/commands/components.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=angular-app --yes",
       "downloads": 0
@@ -87561,10 +87668,10 @@
       "category": "languages",
       "description": "Common project template",
       "files": [
-        ".claude/commands/git-workflow.md",
-        ".claude/commands/project-setup.md",
-        ".mcp.json",
         "README.md",
+        ".claude/commands/project-setup.md",
+        ".claude/commands/git-workflow.md",
+        ".mcp.json",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=common --yes",
@@ -87579,8 +87686,8 @@
       "language": "python",
       "description": "Django-App with Python",
       "files": [
-        ".claude/commands/django-model.md",
         ".claude/commands/admin.md",
+        ".claude/commands/django-model.md",
         ".claude/commands/views.md",
         "CLAUDE.md"
       ],
@@ -87596,10 +87703,10 @@
       "language": "python",
       "description": "Fastapi-App with Python",
       "files": [
-        ".claude/commands/database.md",
-        ".claude/commands/auth.md",
         ".claude/commands/api-endpoints.md",
         ".claude/commands/deployment.md",
+        ".claude/commands/database.md",
+        ".claude/commands/auth.md",
         ".claude/commands/testing.md",
         "CLAUDE.md"
       ],
@@ -87615,12 +87722,12 @@
       "language": "python",
       "description": "Flask-App with Python",
       "files": [
-        ".claude/commands/database.md",
-        ".claude/commands/app-factory.md",
-        ".claude/commands/flask-route.md",
         ".claude/commands/deployment.md",
-        ".claude/commands/testing.md",
+        ".claude/commands/database.md",
         ".claude/commands/blueprint.md",
+        ".claude/commands/flask-route.md",
+        ".claude/commands/app-factory.md",
+        ".claude/commands/testing.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=flask-app --yes",
@@ -87634,8 +87741,8 @@
       "category": "languages",
       "description": "Go project template",
       "files": [
-        ".mcp.json",
-        "README.md"
+        "README.md",
+        ".mcp.json"
       ],
       "installCommand": "npx claude-code-templates@latest --template=go --yes",
       "downloads": 0
@@ -87648,16 +87755,16 @@
       "category": "languages",
       "description": "Javascript-Typescript project template",
       "files": [
-        ".claude/settings.json",
-        ".claude/commands/refactor.md",
-        ".claude/commands/typescript-migrate.md",
-        ".claude/commands/api-endpoint.md",
-        ".claude/commands/test.md",
-        ".claude/commands/lint.md",
-        ".claude/commands/debug.md",
-        ".claude/commands/npm-scripts.md",
-        ".mcp.json",
         "README.md",
+        ".claude/settings.json",
+        ".claude/commands/npm-scripts.md",
+        ".claude/commands/typescript-migrate.md",
+        ".claude/commands/refactor.md",
+        ".claude/commands/test.md",
+        ".claude/commands/debug.md",
+        ".claude/commands/api-endpoint.md",
+        ".claude/commands/lint.md",
+        ".mcp.json",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=javascript-typescript --yes",
@@ -87672,10 +87779,10 @@
       "language": "javascript-typescript",
       "description": "Node-Api with Javascript-Typescript",
       "files": [
-        ".claude/commands/database.md",
-        ".claude/commands/api-endpoint.md",
         ".claude/commands/route.md",
         ".claude/commands/middleware.md",
+        ".claude/commands/database.md",
+        ".claude/commands/api-endpoint.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=node-api --yes",
@@ -87723,8 +87830,8 @@
       "description": "React-App with Javascript-Typescript",
       "files": [
         ".claude/commands/hooks.md",
-        ".claude/commands/state-management.md",
         ".claude/commands/component.md",
+        ".claude/commands/state-management.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=react-app --yes",
@@ -87755,8 +87862,8 @@
       "category": "languages",
       "description": "Rust project template",
       "files": [
-        ".mcp.json",
-        "README.md"
+        "README.md",
+        ".mcp.json"
       ],
       "installCommand": "npx claude-code-templates@latest --template=rust --yes",
       "downloads": 0
@@ -87770,8 +87877,8 @@
       "language": "javascript-typescript",
       "description": "Vue-App with Javascript-Typescript",
       "files": [
-        ".claude/commands/components.md",
-        ".claude/commands/composables.md"
+        ".claude/commands/composables.md",
+        ".claude/commands/components.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=vue-app --yes",
       "downloads": 0
