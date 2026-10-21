@@ -87426,10 +87426,10 @@
         "tests/stack-viewer.test.tsx"
       ],
       "skillspector": {
-        "score": 80,
-        "severity": "HIGH",
+        "score": 100,
+        "severity": "CRITICAL",
         "recommendation": "DO_NOT_INSTALL",
-        "issueCount": 12,
+        "issueCount": 14,
         "analysis": "partial",
         "findings": [
           {
@@ -87439,6 +87439,15 @@
             "title": "Agent Config Directory Access",
             "file": "hooks/stack.ts",
             "line": 369,
+            "count": 2
+          },
+          {
+            "id": "MP3",
+            "category": "Memory Poisoning",
+            "severity": "HIGH",
+            "title": "Memory Manipulation",
+            "file": "tests/stack-viewer.test.tsx",
+            "line": 88,
             "count": 2
           },
           {
@@ -87467,20 +87476,11 @@
             "file": "tests/stack-viewer.test.tsx",
             "line": 15,
             "count": 4
-          },
-          {
-            "id": "RP1",
-            "category": "MCP Rug Pull",
-            "severity": "MEDIUM",
-            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
-            "file": "README.md",
-            "line": 93,
-            "count": 1
           }
         ],
-        "hash": "1639ce3d59ff7cfb",
+        "hash": "e1955119e6f6fd31",
         "version": "2.12.0",
-        "scannedAt": "2026-10-21T14:51:39Z"
+        "scannedAt": "2026-10-21T16:12:55Z"
       }
     },
     {
