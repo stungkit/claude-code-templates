@@ -87384,7 +87384,7 @@
       "description": "A side pane that maps every component your session runs and where it is installed from: skills, subagents, commands, hooks, MCP servers, plugins and mods, settings, memory and output styles. Pick a type in the sidebar to see its scopes as a tree in precedence order (Enterprise, CLI flag, Local, Project, User, Plugin, Built-in) with what each one holds, and which components are active, shadowed by a higher scope, or off.",
       "author": "claude-code-templates",
       "repo": "https://github.com/davila7/claude-code-templates",
-      "version": "0.2.1",
+      "version": "0.3.0",
       "license": "MIT",
       "keywords": [
         "mod",
@@ -87438,7 +87438,7 @@
             "severity": "HIGH",
             "title": "Agent Config Directory Access",
             "file": "hooks/stack.ts",
-            "line": 369,
+            "line": 374,
             "count": 2
           },
           {
@@ -87465,7 +87465,7 @@
             "severity": "MEDIUM",
             "title": "Skill Enumeration",
             "file": "hooks/stack.ts",
-            "line": 444,
+            "line": 449,
             "count": 1
           },
           {
@@ -87478,9 +87478,9 @@
             "count": 4
           }
         ],
-        "hash": "cd92dfea6999be9e",
+        "hash": "0d88c05125d55346",
         "version": "2.12.0",
-        "scannedAt": "2026-10-21T18:16:11Z"
+        "scannedAt": "2026-10-21T20:53:02Z"
       }
     },
     {
