@@ -2949,7 +2949,7 @@
       "path": "data-ai/prompt-engineer.md",
       "category": "data-ai",
       "type": "agent",
-      "description": "A specialized chat mode for analyzing and improving prompts. Every user input is treated as a prompt to be improved. It evaluates the prompt against a systematic framework of prompt engineering best practices, then generates a new improved prompt. Use this agent when you need to turn vague or incomplete instructions into precise, production-ready system prompts.",
+      "description": "A specialized chat mode for analyzing and improving prompts. Every user input is treated as a prompt to be improved. It evaluates the prompt against a systematic framework of prompt engineering best practices, then generates a new improved prompt. Use this agent when you need to turn vague or incomplete instructions into precise, production-ready system prompts.\n\n<example>\n<context>User routes a vague instruction to this agent via an orchestrator.</context>\nuser: summarize emails\nassistant: <reasoning>\n- Simple Change: (no)\n- Reasoning: (no)\n- Structure: (no)\n- Examples: (no)\n- Complexity: (1) Task: (2) Necessity: (2) task is simple but current prompt lacks any guidance\n- XML Structure: (no)\n- CoT Opportunity: (no)\n- Specificity: (1)\n- Prioritization: [Structure, Specificity, Output Format]\n- Conclusion: Add task framing, specify input format, define summary length and style.\n</reasoning>\n\nYou are an email summarization assistant. Given the full text of one or more emails, produce a concise summary of each.\n\n# Output Format\n\nFor each email, output a short paragraph (2-4 sentences) covering: sender intent, key information, and any required action.\n<commentary>The agent treated \"summarize emails\" as a prompt-to-improve, not as a task to execute.</commentary>\n</example>",
       "author": "",
       "repo": "",
       "version": "",
@@ -2967,9 +2967,9 @@
       "skillspector": {
         "score": 9,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 1,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [
           {
             "id": "EA5",
@@ -2977,13 +2977,13 @@
             "severity": "MEDIUM",
             "title": "External Model or Provider Selection",
             "file": "prompt-engineer.md",
-            "line": 29,
+            "line": 30,
             "count": 1
           }
         ],
-        "hash": "2126651526e2dcc4",
+        "hash": "e5344c6df7f09f8d",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -25554,9 +25554,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "64fbf14328d0e965",
+        "hash": "5f15f2addc3376e2",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -26226,9 +26226,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "8244a3d3148daec0",
+        "hash": "59d4b7de81167ddf",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -26386,9 +26386,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "06bbf9b128dd9401",
+        "hash": "97dd818c0601688d",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -26470,7 +26470,7 @@
       "path": "devtools/jfrog.json",
       "category": "devtools",
       "type": "mcp",
-      "description": "JFrog MCP Server: providing your agents with direct access to JFrog Platform services.",
+      "description": "JFrog MCP Server: providing your agents with direct access to JFrog Platform services. Set the JFROG_PLATFORM_URL environment variable to your platform host (for example mycompany.jfrog.io).",
       "author": "",
       "repo": "",
       "version": "",
@@ -26486,34 +26486,15 @@
         "lastValidated": null
       },
       "skillspector": {
-        "score": 28,
-        "severity": "MEDIUM",
-        "recommendation": "CAUTION",
-        "issueCount": 2,
+        "score": 0,
+        "severity": "LOW",
+        "recommendation": "SAFE",
+        "issueCount": 0,
         "analysis": "complete",
-        "findings": [
-          {
-            "id": "YR4",
-            "category": "YARA Match",
-            "severity": "HIGH",
-            "title": "YARA rule 'agent_skill_mcp_tool_poisoning_metadata': MCP/tool metadata poisoning indicators in tool schemas or skill manifests [agent_skills]",
-            "file": "jfrog.json",
-            "line": 4,
-            "count": 1
-          },
-          {
-            "id": "AE4",
-            "category": "analysis-evasion",
-            "severity": "MEDIUM",
-            "title": "Suspicious Unicode normalization or mixed-script content",
-            "file": "jfrog.json",
-            "line": 1,
-            "count": 1
-          }
-        ],
-        "hash": "13548464c4422d27",
+        "findings": [],
+        "hash": "4ed1a2544d974d77",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -27221,9 +27202,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "472cd47755b495b4",
+        "hash": "546ad85945b1bac2",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -27593,9 +27574,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "66cc76331cd5a39d",
+        "hash": "bfd26bcc179dca91",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -28179,9 +28160,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "7daa24432c138908",
+        "hash": "3e5b506749358f7d",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -28247,7 +28228,7 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "Manifest references MCP server without version pin: 'npx -y datalikers-mcp'.",
+            "title": "MCP server references in the skill manifest without version pinning are a rug-pull risk.",
             "file": "SKILL.md",
             "line": 1,
             "count": 1
@@ -28256,7 +28237,7 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "MCP server referenced without pinned version: 'npx -y datalikers-mcp'.",
+            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
             "file": "SKILL.md",
             "line": 3,
             "count": 1
@@ -28265,15 +28246,15 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "MCP server referenced without pinned version: 'npx -y datalikers-mcp'.",
+            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
             "file": "datalikers.json",
             "line": 4,
             "count": 1
           }
         ],
-        "hash": "906b08d0149ab35f",
+        "hash": "07d477589023adbe",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -28335,9 +28316,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "4f61510fb14a7295",
+        "hash": "0bc0db6fc8349612",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -30120,9 +30101,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "05955569392e4fd9",
+        "hash": "e4ed35e699fd1342",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
@@ -33354,7 +33335,7 @@
             "id": "LP3",
             "category": "MCP Least Privilege",
             "severity": "MEDIUM",
-            "title": "Skill declares no tool scope ('permissions' or 'allowed-tools') but code capabilities were detected: shell.",
+            "title": "Without declared permissions the skill's intent is opaque and cannot be validated.",
             "file": "SKILL.md",
             "line": 1,
             "count": 1
@@ -33363,7 +33344,7 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "Manifest references MCP server without version pin: 'npx claude-code-templates'.",
+            "title": "MCP server references in the skill manifest without version pinning are a rug-pull risk.",
             "file": "SKILL.md",
             "line": 1,
             "count": 1
@@ -33378,9 +33359,9 @@
             "count": 1
           }
         ],
-        "hash": "3cb249d80147c779",
+        "hash": "03fea084896de705",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:21:38Z"
       }
     },
     {
