@@ -830,9 +830,9 @@
       "skillspector": {
         "score": 9,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 1,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [
           {
             "id": "EA5",
@@ -844,9 +844,9 @@
             "count": 1
           }
         ],
-        "hash": "22bba1d26361f0a8",
+        "hash": "70858aacccb72cd8",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -886,9 +886,9 @@
             "count": 1
           }
         ],
-        "hash": "5015ce173248574c",
+        "hash": "8e3889c8bcecd81e",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -928,9 +928,9 @@
             "count": 1
           }
         ],
-        "hash": "ed04fd9b6a6283d3",
+        "hash": "8ee61b55b7d36538",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -2575,25 +2575,15 @@
         "lastValidated": null
       },
       "skillspector": {
-        "score": 8,
+        "score": 0,
         "severity": "LOW",
         "recommendation": "CAUTION",
-        "issueCount": 1,
+        "issueCount": 0,
         "analysis": "partial",
-        "findings": [
-          {
-            "id": "EA1",
-            "category": "Excessive Agency",
-            "severity": "MEDIUM",
-            "title": "Unrestricted Tool Access",
-            "file": "monday-bug-fixer.md",
-            "line": 4,
-            "count": 1
-          }
-        ],
-        "hash": "84dfbb5cbe8111b8",
+        "findings": [],
+        "hash": "924b53c79a58381e",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -3867,13 +3857,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "331bdc9487c7ffc3",
+        "hash": "e69469607601a6a6",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4027,13 +4017,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "78585ec2a0cd46dd",
+        "hash": "b7ebda05d910937a",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4059,13 +4049,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "ec3f1cb8015ff894",
+        "hash": "755144d4f93693e5",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4123,13 +4113,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "85e8865fb87c26e0",
+        "hash": "ce5d20aca3e5e588",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4155,13 +4145,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "c4a6a30b0a8b70f5",
+        "hash": "0cab00dc555b945f",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4187,13 +4177,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "274973664d84cfb0",
+        "hash": "c33cf3bb5c877002",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4217,15 +4207,25 @@
         "lastValidated": null
       },
       "skillspector": {
-        "score": 0,
+        "score": 7,
         "severity": "LOW",
         "recommendation": "CAUTION",
-        "issueCount": 0,
+        "issueCount": 1,
         "analysis": "partial",
-        "findings": [],
-        "hash": "b38bdffaf992d2c7",
+        "findings": [
+          {
+            "id": "TR2",
+            "category": "Trigger Abuse",
+            "severity": "MEDIUM",
+            "title": "Shadow Command Trigger",
+            "file": "research-synthesizer.md",
+            "line": 1,
+            "count": 1
+          }
+        ],
+        "hash": "1c3a371a3da173b1",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4251,13 +4251,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "bb179ca7189f60be",
+        "hash": "5eb47f77ad60e8c1",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4708,7 +4708,7 @@
       "path": "development-team/sdd-spec-writer.md",
       "category": "development-team",
       "type": "agent",
-      "description": "",
+      "description": "Specification writer for Spec-Driven Development: turns a task description into an executable spec with exact inputs, outputs, side effects and test cases. Use before implementing a feature that needs an unambiguous contract for a human or an AI agent.",
       "author": "",
       "repo": "",
       "version": "",
@@ -4730,9 +4730,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "9ff2688e7575d164",
+        "hash": "4608d30b07264079",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T21:46:22Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -4804,9 +4804,9 @@
             "count": 1
           }
         ],
-        "hash": "ef37cced5c026142",
+        "hash": "3b2cbcab358d43cc",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -5589,10 +5589,10 @@
         "lastValidated": null
       },
       "skillspector": {
-        "score": 28,
-        "severity": "MEDIUM",
+        "score": 20,
+        "severity": "LOW",
         "recommendation": "CAUTION",
-        "issueCount": 2,
+        "issueCount": 1,
         "analysis": "partial",
         "findings": [
           {
@@ -5601,22 +5601,13 @@
             "severity": "HIGH",
             "title": "Anti-Refusal Statement",
             "file": "launchdarkly-flag-cleanup.md",
-            "line": 193,
-            "count": 1
-          },
-          {
-            "id": "EA1",
-            "category": "Excessive Agency",
-            "severity": "MEDIUM",
-            "title": "Unrestricted Tool Access",
-            "file": "launchdarkly-flag-cleanup.md",
-            "line": 5,
+            "line": 191,
             "count": 1
           }
         ],
-        "hash": "81a58cd4fb9d8b30",
+        "hash": "86aa609db2508630",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -5803,9 +5794,9 @@
             "count": 1
           }
         ],
-        "hash": "95fede451eacc1a4",
+        "hash": "2f2b655a429b66a5",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -6363,9 +6354,9 @@
             "count": 1
           }
         ],
-        "hash": "1807aa1ae11833b6",
+        "hash": "bb27b81a5ebda83a",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -6405,9 +6396,9 @@
             "count": 1
           }
         ],
-        "hash": "ae4c8f51df492cb7",
+        "hash": "d16a355b0d9c18a6",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -8288,13 +8279,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "7812cfd3b8a19abf",
+        "hash": "9845aedc5fae4d02",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -8540,13 +8531,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "d23cf3b9d707fccc",
+        "hash": "6a1610be59cad0b3",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -8576,9 +8567,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "7e73759b029fc6fd",
+        "hash": "fc40b2257de001e4",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -8671,7 +8662,7 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "Docker image referenced without tag or digest: 'docker run --rm'.",
+            "title": "Docker image references without a specific tag (:latest is implicit) or digest (@sha256:...) can be silently replaced by a malicious image.",
             "file": "droid.md",
             "line": 229,
             "count": 1
@@ -8680,15 +8671,15 @@
             "id": "RP1",
             "category": "MCP Rug Pull",
             "severity": "MEDIUM",
-            "title": "MCP server referenced without pinned version: 'npx claude-code-templates'.",
+            "title": "npx commands without a version suffix (e.g. @1.0.0) create a rug-pull risk if the upstream server is compromised and publishes a malicious update.",
             "file": "droid.md",
             "line": 114,
             "count": 1
           }
         ],
-        "hash": "e6ffb5209c5420d4",
+        "hash": "c040ab0de95a06a4",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -8852,13 +8843,13 @@
       "skillspector": {
         "score": 0,
         "severity": "LOW",
-        "recommendation": "CAUTION",
+        "recommendation": "SAFE",
         "issueCount": 0,
-        "analysis": "partial",
+        "analysis": "complete",
         "findings": [],
-        "hash": "07780e472a9fd4d7",
+        "hash": "975d41c1dbcd5610",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -9777,9 +9768,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "f591b32878436ef3",
+        "hash": "cae3cde1e010c38c",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -10146,9 +10137,9 @@
             "count": 1
           }
         ],
-        "hash": "6380eb02592517e0",
+        "hash": "b58b9dbd170724d7",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -10464,7 +10455,7 @@
       "path": "git/commit-guardian.md",
       "category": "git",
       "type": "agent",
-      "description": "",
+      "description": "Pre-commit verification agent that runs 10 automated checks before a git commit and blocks it when one fails. Use before committing to verify staged changes, security, Conventional Commits format, build and tests.",
       "author": "",
       "repo": "",
       "version": "",
@@ -10486,9 +10477,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "627d8a977eca70ee",
+        "hash": "c02ebb098c2f33a8",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T21:46:22Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -13551,9 +13542,9 @@
             "count": 1
           }
         ],
-        "hash": "4bd75c309b2a6b73",
+        "hash": "f737e78ab71718f6",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -14471,7 +14462,7 @@
       "path": "security/supply-chain-security.md",
       "category": "security",
       "type": "agent",
-      "description": "",
+      "description": "Software supply chain security analyst: dependency vulnerabilities, malicious packages, SBOM generation, license compliance and third-party risk. Use when auditing a project's dependencies or reviewing a new package before adding it.",
       "author": "",
       "repo": "",
       "version": "",
@@ -14499,7 +14490,7 @@
             "severity": "HIGH",
             "title": "Credential Access",
             "file": "supply-chain-security.md",
-            "line": 60,
+            "line": 65,
             "count": 2
           },
           {
@@ -14508,13 +14499,13 @@
             "severity": "MEDIUM",
             "title": "Unrestricted Tool Access",
             "file": "supply-chain-security.md",
-            "line": 39,
+            "line": 44,
             "count": 1
           }
         ],
-        "hash": "2ee6c4b306673d6f",
+        "hash": "8a22f1ffafa06882",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T21:46:22Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
@@ -14640,9 +14631,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "269b73c1ce88ce7a",
+        "hash": "22c70bb3725569ac",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-23T03:34:21Z"
       }
     },
     {
