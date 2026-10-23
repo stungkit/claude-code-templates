@@ -64184,6 +64184,74 @@
       }
     },
     {
+      "name": "worktree-cleaner",
+      "path": "git/worktree-cleaner",
+      "category": "git",
+      "type": "skill",
+      "description": "Inventory the git worktrees of the current repository, classify each one with evidence (merged, PR state, uncommitted or unpushed work, locked, stale, in use by a running session) and remove them one at a time or by group, always asking the user first and verifying every removal. Use when worktrees have piled up (for example one per Claude Code task or thread), when `git worktree list` is long, or when the user asks to clean up, prune or tidy worktrees.",
+      "author": "claude-code-templates",
+      "repo": "",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": [
+        "git",
+        "worktree",
+        "cleanup",
+        "maintenance"
+      ],
+      "downloads": 0,
+      "security": {
+        "validated": false,
+        "valid": null,
+        "score": null,
+        "errorCount": 0,
+        "warningCount": 0,
+        "lastValidated": null
+      },
+      "references": [
+        "scripts/worktree-inventory.sh"
+      ],
+      "skillspector": {
+        "score": 33,
+        "severity": "MEDIUM",
+        "recommendation": "CAUTION",
+        "issueCount": 3,
+        "analysis": "partial",
+        "findings": [
+          {
+            "id": "AR2",
+            "category": "Anti-Refusal",
+            "severity": "HIGH",
+            "title": "Anti-Refusal Statement",
+            "file": "SKILL.md",
+            "line": 44,
+            "count": 1
+          },
+          {
+            "id": "EA2",
+            "category": "Excessive Agency",
+            "severity": "MEDIUM",
+            "title": "Autonomous Decision Making",
+            "file": "SKILL.md",
+            "line": 116,
+            "count": 1
+          },
+          {
+            "id": "RA2",
+            "category": "Rogue Agent",
+            "severity": "MEDIUM",
+            "title": "Session Persistence",
+            "file": "SKILL.md",
+            "line": 13,
+            "count": 1
+          }
+        ],
+        "hash": "6b861ed6d4bc0790",
+        "version": "2.12.0",
+        "scannedAt": "2026-10-23T03:02:36Z"
+      }
+    },
+    {
       "name": "x-twitter-scraper",
       "path": "marketing/x-twitter-scraper",
       "category": "marketing",
