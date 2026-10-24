@@ -35815,9 +35815,9 @@
             "count": 1
           }
         ],
-        "hash": "dab66ea3ea4919c1",
+        "hash": "99bd9e479304839d",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -45265,9 +45265,9 @@
             "count": 2
           }
         ],
-        "hash": "c485362ef53ec6e2",
+        "hash": "d758d9d3112f5578",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -45298,9 +45298,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "2768e54deb95ab96",
+        "hash": "1fc616c0a1f52659",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -46274,9 +46274,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "53c67391f31129cd",
+        "hash": "794fc9e601481a0f",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -49318,9 +49318,9 @@
             "count": 1
           }
         ],
-        "hash": "1855625c08e8224a",
+        "hash": "5b1dd0930f4c0b77",
         "version": "2.12.0",
-        "scannedAt": "2026-10-24T02:20:12Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -49715,9 +49715,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "04c7eb1553337e61",
+        "hash": "f4f54fffe90fa1d8",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -54071,9 +54071,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "cd1cc53eb0fbf807",
+        "hash": "efd2127eb1a97d11",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -55712,10 +55712,10 @@
       },
       "references": [],
       "skillspector": {
-        "score": 21,
+        "score": 27,
         "severity": "MEDIUM",
         "recommendation": "CAUTION",
-        "issueCount": 1,
+        "issueCount": 2,
         "analysis": "complete",
         "findings": [
           {
@@ -55726,11 +55726,20 @@
             "file": "SKILL.md",
             "line": 79,
             "count": 1
+          },
+          {
+            "id": "RA2",
+            "category": "Rogue Agent",
+            "severity": "MEDIUM",
+            "title": "Session Persistence",
+            "file": "SKILL.md",
+            "line": 45,
+            "count": 1
           }
         ],
-        "hash": "b852fd1a17a399bd",
+        "hash": "1444af7ed96866ab",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -61791,15 +61800,15 @@
             "id": "LP3",
             "category": "MCP Least Privilege",
             "severity": "MEDIUM",
-            "title": "Skill declares no tool scope ('permissions' or 'allowed-tools') but code capabilities were detected: file_write.",
+            "title": "Without declared permissions the skill's intent is opaque and cannot be validated.",
             "file": "SKILL.md",
             "line": 1,
             "count": 1
           }
         ],
-        "hash": "a12618522c17ce9a",
+        "hash": "3fa0645b24e7eb63",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -62903,9 +62912,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "8396dc8fd7b602a6",
+        "hash": "27725c1413f24cac",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -63018,9 +63027,9 @@
         "issueCount": 0,
         "analysis": "complete",
         "findings": [],
-        "hash": "eac400cbf15b1fcf",
+        "hash": "3c0b4e03628955e3",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -63061,9 +63070,9 @@
             "count": 1
           }
         ],
-        "hash": "cca95569f494d89a",
+        "hash": "b28d9a675db757a2",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -64888,9 +64897,9 @@
             "count": 1
           }
         ],
-        "hash": "325522afc708e6c9",
+        "hash": "6ea2b46a8c0f219d",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -64921,9 +64930,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "d15ed40fc0e1e1c5",
+        "hash": "2be5ce9bf5d6a77c",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -64982,9 +64991,9 @@
             "count": 11
           }
         ],
-        "hash": "bbebf85321ed6aab",
+        "hash": "5e11b124e7e9852e",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -65025,9 +65034,9 @@
             "count": 2
           }
         ],
-        "hash": "d6f22ffc7bdc4623",
+        "hash": "83c576b66cad7970",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -65058,9 +65067,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "491d8fac729db182",
+        "hash": "4aaa79b8f8d80c81",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -65091,9 +65100,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "e25654e3aab4c77d",
+        "hash": "44683c206f5c9eed",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -75852,9 +75861,9 @@
             "count": 1
           }
         ],
-        "hash": "73b9efe3fac086e3",
+        "hash": "0359cc6e9a1c7c01",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -76061,9 +76070,9 @@
             "count": 1
           }
         ],
-        "hash": "2be1a4288efa1403",
+        "hash": "f5f57711c583fa58",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -76088,10 +76097,10 @@
       },
       "references": [],
       "skillspector": {
-        "score": 29,
+        "score": 22,
         "severity": "MEDIUM",
         "recommendation": "CAUTION",
-        "issueCount": 3,
+        "issueCount": 2,
         "analysis": "partial",
         "findings": [
           {
@@ -76102,20 +76111,11 @@
             "file": "SKILL.md",
             "line": 285,
             "count": 2
-          },
-          {
-            "id": "TR2",
-            "category": "Trigger Abuse",
-            "severity": "MEDIUM",
-            "title": "Shadow Command Trigger",
-            "file": "SKILL.md",
-            "line": 1,
-            "count": 1
           }
         ],
-        "hash": "7801f8c707df0eb6",
+        "hash": "f15458281b0d6407",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -76537,9 +76537,9 @@
             "count": 1
           }
         ],
-        "hash": "9e1eb64ad8cea9e7",
+        "hash": "24de10f0a349e967",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -76570,9 +76570,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "7ecddde96bae42c7",
+        "hash": "9879f8e838077fbe",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -76804,9 +76804,9 @@
             "count": 2
           }
         ],
-        "hash": "87a0d0b4cffa5a4d",
+        "hash": "c6eb86e921be50e8",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77039,9 +77039,9 @@
             "count": 2
           }
         ],
-        "hash": "942fe7961221ec62",
+        "hash": "2305fdb2862a55b6",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77567,9 +77567,9 @@
             "count": 3
           }
         ],
-        "hash": "9e39f9435bc28aeb",
+        "hash": "d76ccc8ab20b9b19",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77619,9 +77619,9 @@
             "count": 4
           }
         ],
-        "hash": "90e738d9f4271e25",
+        "hash": "1e87247f733b12fe",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77662,9 +77662,9 @@
             "count": 1
           }
         ],
-        "hash": "67e9aee5d732b4ee",
+        "hash": "800f108f51d092fa",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77714,9 +77714,9 @@
             "count": 1
           }
         ],
-        "hash": "b37a7983b1ffe03d",
+        "hash": "5afaa5b3aefbbe18",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -77944,9 +77944,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "a9ca1b13fa4b7086",
+        "hash": "8f8c73a83eedb9f5",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
@@ -78229,9 +78229,9 @@
         "issueCount": 0,
         "analysis": "partial",
         "findings": [],
-        "hash": "4b001b1613996ebb",
+        "hash": "01c37e2a689aa354",
         "version": "2.12.0",
-        "scannedAt": "2026-10-17T20:36:45Z"
+        "scannedAt": "2026-10-24T03:16:09Z"
       }
     },
     {
