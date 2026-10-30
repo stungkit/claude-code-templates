@@ -66950,7 +66950,46 @@
       },
       "references": [
         "scripts/rex-claude.sh"
-      ]
+      ],
+      "skillspector": {
+        "score": 64,
+        "severity": "HIGH",
+        "recommendation": "DO_NOT_INSTALL",
+        "issueCount": 4,
+        "analysis": "partial",
+        "findings": [
+          {
+            "id": "AE1",
+            "category": "analysis-evasion",
+            "severity": "HIGH",
+            "title": "Incomplete referenced artifact analysis",
+            "file": "SKILL.md",
+            "line": 10,
+            "count": 1
+          },
+          {
+            "id": "AS1",
+            "category": "Agent Snooping",
+            "severity": "HIGH",
+            "title": "Agent Config Directory Access",
+            "file": "SKILL.md",
+            "line": 21,
+            "count": 2
+          },
+          {
+            "id": "RA2",
+            "category": "Rogue Agent",
+            "severity": "MEDIUM",
+            "title": "Session Persistence",
+            "file": "SKILL.md",
+            "line": 64,
+            "count": 1
+          }
+        ],
+        "hash": "d10b5ad7aa340d15",
+        "version": "2.12.0",
+        "scannedAt": "2026-10-30T21:22:11Z"
+      }
     },
     {
       "name": "ship-learn-next",
@@ -87855,8 +87894,8 @@
       "language": "javascript-typescript",
       "description": "Angular-App with Javascript-Typescript",
       "files": [
-        ".claude/commands/components.md",
-        ".claude/commands/services.md"
+        ".claude/commands/services.md",
+        ".claude/commands/components.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=angular-app --yes",
       "downloads": 0
@@ -87870,9 +87909,9 @@
       "description": "Common project template",
       "files": [
         ".mcp.json",
-        ".claude/commands/git-workflow.md",
-        ".claude/commands/project-setup.md",
         "README.md",
+        ".claude/commands/project-setup.md",
+        ".claude/commands/git-workflow.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=common --yes",
@@ -87887,9 +87926,9 @@
       "language": "python",
       "description": "Django-App with Python",
       "files": [
-        ".claude/commands/django-model.md",
         ".claude/commands/admin.md",
         ".claude/commands/views.md",
+        ".claude/commands/django-model.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=django-app --yes",
@@ -87904,11 +87943,11 @@
       "language": "python",
       "description": "Fastapi-App with Python",
       "files": [
-        ".claude/commands/testing.md",
         ".claude/commands/deployment.md",
         ".claude/commands/auth.md",
-        ".claude/commands/api-endpoints.md",
         ".claude/commands/database.md",
+        ".claude/commands/api-endpoints.md",
+        ".claude/commands/testing.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=fastapi-app --yes",
@@ -87923,12 +87962,12 @@
       "language": "python",
       "description": "Flask-App with Python",
       "files": [
-        ".claude/commands/flask-route.md",
-        ".claude/commands/testing.md",
         ".claude/commands/deployment.md",
-        ".claude/commands/app-factory.md",
+        ".claude/commands/flask-route.md",
         ".claude/commands/blueprint.md",
+        ".claude/commands/app-factory.md",
         ".claude/commands/database.md",
+        ".claude/commands/testing.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=flask-app --yes",
@@ -87957,15 +87996,15 @@
       "description": "Javascript-Typescript project template",
       "files": [
         ".mcp.json",
+        "README.md",
         ".claude/settings.json",
-        ".claude/commands/debug.md",
-        ".claude/commands/api-endpoint.md",
+        ".claude/commands/refactor.md",
+        ".claude/commands/npm-scripts.md",
         ".claude/commands/typescript-migrate.md",
         ".claude/commands/lint.md",
-        ".claude/commands/npm-scripts.md",
-        ".claude/commands/refactor.md",
         ".claude/commands/test.md",
-        "README.md",
+        ".claude/commands/debug.md",
+        ".claude/commands/api-endpoint.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=javascript-typescript --yes",
@@ -87980,10 +88019,10 @@
       "language": "javascript-typescript",
       "description": "Node-Api with Javascript-Typescript",
       "files": [
-        ".claude/commands/api-endpoint.md",
+        ".claude/commands/database.md",
         ".claude/commands/middleware.md",
         ".claude/commands/route.md",
-        ".claude/commands/database.md",
+        ".claude/commands/api-endpoint.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=node-api --yes",
@@ -88031,8 +88070,8 @@
       "description": "React-App with Javascript-Typescript",
       "files": [
         ".claude/commands/state-management.md",
-        ".claude/commands/component.md",
         ".claude/commands/hooks.md",
+        ".claude/commands/component.md",
         "CLAUDE.md"
       ],
       "installCommand": "npx claude-code-templates@latest --template=react-app --yes",
